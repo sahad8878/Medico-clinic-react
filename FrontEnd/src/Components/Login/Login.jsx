@@ -13,11 +13,10 @@ function Login() {
     try {
       console.log(password);
       console.log(email);
-      axios.post("/clientLogin", { email, password }).then((response) => {
+      axios.post("/clientLogin",{ email,password}).then((response) => {
         const result = response.data;
         if (result.success) {
           localStorage.setItem("clientToken",result.token);
-          
           message.success("Login  successfully!");
           navigate("/");
         } else {
