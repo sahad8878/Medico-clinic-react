@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import './Login.css'
 import { message } from "antd";
 import axios from "../../Axios/Axios";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { ClassNames } from "@emotion/react";
 function Login() {
   const navigate = useNavigate();
 
@@ -13,10 +16,10 @@ function Login() {
     try {
       console.log(password);
       console.log(email);
-      axios.post("/clientLogin",{ email,password}).then((response) => {
+      axios.post("/clientLogin", { email, password }).then((response) => {
         const result = response.data;
         if (result.success) {
-          localStorage.setItem("clientToken",result.token);
+          localStorage.setItem("clientToken", result.token);
           message.success("Login  successfully!");
           navigate("/");
         } else {
@@ -30,20 +33,27 @@ function Login() {
     }
   };
   return (
-    <div>
-      <h1>login page</h1>
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-lg font-medium mb-4">Login</h2>
+     <>
+    <div className="bg-[#EDF4FE] w-screen  flex justify-center  ">
+      <div className="   w-[600px] mt-[240px]">
+        <h2 className=" text-3xl   font-mono font-bold">Log In With Email</h2>
+        <p className="mb-10 text-[#1F6CD6] cursor-pointer">
+           <Link to="/signup" >
+          Create New Account? Signup
+
+           </Link>
+          
+          </p>
         <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label
-              className="block text-gray-700 font-medium mb-2"
+              className="block text-gray-700 font-medium mb-2 "
               htmlFor="email"
             >
               Email
             </label>
             <input
-              className="bg-gray-200 p-2 rounded-lg w-full"
+              className="bg-white p-2 rounded-lg w-full"
               type="email"
               id="email"
               name="email"
@@ -54,13 +64,13 @@ function Login() {
           </div>
           <div className="mb-4">
             <label
-              className="block text-gray-700 font-medium mb-2"
+              className="block text-black font-medium mb-2"
               htmlFor="password"
             >
               Password
             </label>
             <input
-              className="bg-gray-200 p-2 rounded-lg w-full"
+              className="bg-white p-2 rounded-lg w-full"
               type="password"
               id="password"
               name="password"
@@ -69,16 +79,17 @@ function Login() {
               required
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-4 mt-10 flex justify-center">
             <input
-              className="bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg"
+              className="bg-white  hover:bg-[#194569] text-black font-medium py-2 px-32 rounded-lg"
               type="submit"
-              value="Login"
+              value="Continue"
             />
           </div>
         </form>
       </div>
     </div>
+    </>
   );
 }
 

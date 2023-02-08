@@ -1,18 +1,22 @@
 import React, { useEffect } from 'react'
+import Navbar from '../Components/Navbar/Navbar'
+import TopNav from '../Components/TopNav/TopNav'
 
 function LandingPage() {
-  useEffect(()=>{
-    const token = localStorage.getItem("clientToken")
-    if (token) {
-      axios.get()
-    } else {
-      // Navigate('/singin')
-    }
-  })
+  // useEffect(()=>{
+  //   const token = localStorage.getItem("clientToken")
+  //   if (token) {
+  //     axios.get()
+  //   } else {
+  //     // Navigate('/singin')
+  //   }
+  // })
   return (
-    <div>
-      <h1>Landig page</h1>
-    </div>
+    <>
+   <TopNav/>
+    <Navbar/>
+    <gksl/>
+    </>
   )
 }
 
