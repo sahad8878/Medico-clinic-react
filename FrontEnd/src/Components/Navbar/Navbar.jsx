@@ -2,19 +2,19 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Dropdown from "../dropdown/Dropdown";
 import CircleNotificationsRoundedIcon from "@mui/icons-material/CircleNotificationsRounded";
-import MainLogo from "../logo/logo";
+import log from '../../Assets/main-logo.png'
 function Navbar() {
   return (
     <>
       <nav style={{ position:'fixed' , width:'-webkit-fill-available' }} className="bg-[#97CADB] p-3 flex items-center h-28 justify-between mt-7">
         <span className="text-white font-bold ml-[50px] cursor-pointer">
-          <MainLogo />
+          <img className='w-[80px] h-[60px]' src={log} alt="logo" />
         </span>
         <div className="flex items-center mr-[50px]">
-          <span className="text-white px-5 hover:text-[#194569] rounded">
+          <span className="text-white font-semibold text-lg px-5 hover:text-[#194569] rounded">
             <Link to="/">Home</Link>
           </span>
-          <span className="text-white px-5 cursor-pointer hover:text-[#194569] rounded">
+          <span className="text-white font-semibold text-lg px-5 cursor-pointer hover:text-[#194569] rounded">
             Service
           </span>
           <span className="px-7">
