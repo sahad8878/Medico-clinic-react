@@ -6,8 +6,6 @@ const validator = require("validator");
 // client signup
 const signupController = async (req, res) => {
   try {
-    console.log("kkhh");
-    console.log(req.body, "]]]]");
     const { name, email, password, number } = req.body;
     if (name && email && password && number) {
       // validation
@@ -24,12 +22,10 @@ const signupController = async (req, res) => {
 
       const existingClient = await clientModel.findOne({ email: email });
       if (existingClient) {
-        console.log("existing");
         return res
           .status(200)
           .send({ message: "Client Already Exist", success: false });
       } else {
-        console.log("ethi");
         const salt = await bcrypt.genSaltSync(10);
         const hashedPassword = await bcrypt.hash(password.trim(), salt);
         const newClient = new clientModel({
@@ -53,27 +49,19 @@ const signupController = async (req, res) => {
   }
 };
 
-
-
-
 // Client Login
 
 const loginController = async (req, res) => {
   try {
-    console.log(req.body, "bodyyyyyyyyyyyy");
     const { email, password } = req.body;
     if (email && password) {
       const client = await clientModel.findOne({ email: email });
-      console.log(client, "===");
       if (!client) {
         return res
           .status(200)
-          .send({ message: "user not found", success: false });
+          .send({ message: "User not found", success: false });
       } else {
-        console.log(password, "]]]]]");
-        console.log(client.password, "=====");
         const isMatch = await bcrypt.compare(password, client.password);
-        console.log(isMatch);
         if (!isMatch) {
           return res
             .status(200)
@@ -82,7 +70,6 @@ const loginController = async (req, res) => {
           const token = jwt.sign({ id: client._id }, process.env.JWT_SECRET, {
             expiresIn: "1d",
           });
-          console.log(token);
           res
             .status(200)
             .send({ message: "Login success", success: true, token });
@@ -95,13 +82,51 @@ const loginController = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .send({
-        success: false,
-        message: `Error in LOGIN controller ${error.message}`,
-      });
+    res.status(500).send({
+      success: false,
+      message: `Error in LOGIN controller ${error.message}`,
+    });
   }
 };
 
-module.exports = { loginController, signupController };
+// Admin login
+
+const adminLogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (email && password) {
+      const admin = await clientModel.findOne({ email: email, isAdmin: true });
+      if (!admin) {
+        return res
+          .status(200)
+          .send({ message: "Admin not found", success: false });
+      } else {
+        const isMatch = await bcrypt.compare(password, admin.password);
+        if (!isMatch) {
+          return res
+            .status(200)
+            .send({ message: "Invalid Email or Password", success: false });
+        } else {
+          const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, {
+            expiresIn: "1d",
+          });
+          res
+            .status(200)
+            .send({ message: "Login success", success: true, token });
+        }
+      }
+    } else {
+      return res
+        .status(200)
+        .send({ message: "All fields must be filled", success: false });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: `Error in ADMIN LOGIN controller ${error.message}`,
+    });
+  }
+};
+
+module.exports = { loginController, signupController, adminLogin };

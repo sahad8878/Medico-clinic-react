@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React,{useState} from 'react'
 import { message } from "antd";
 import axios from "../../Axios/Axios";
 import { Link, useNavigate } from "react-router-dom";
-function Signup() {
+
+function DoctorSignup() {
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
@@ -10,37 +11,17 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignup = async (events) => {
-    try {
-      events.preventDefault();
-
-      axios
-        .post(`/clientSignup`, { name, email, password, number })
-        .then((response) => {
-          const result = response.data;
-          if (result.success) {
-            // document.cookie = `token${result.token}`
-            message.success("Signup successfully!");
-
-            navigate("/login");
-          } else {
-            // setErrMsg(result.msg)
-            message.error(result.message);
-          }
-        });
-    } catch (error) {
-      console.log(error);
-      message.error("Somthing went wrong!");
-    }
-  };
+  const handleSignup = (e)=>{
+      console.log(name)
+  }
 
   return (
     <>
-      <div className="bg-[#EDF4FE]  w-screen flex justify-center ">
+       <div className="bg-[#EDF4FE]  w-screen flex justify-center ">
         <div className="   w-[600px] mt-[240px]">
-          <h2 className=" text-3xl   font-mono font-bold">Create An Account</h2>
+          <h2 className=" text-3xl   font-mono font-bold">Start your career</h2>
           <p className="mb-10 text-[#1F6CD6] cursor-pointer">
-            <Link to="/login">Already have one? Log in</Link>
+            <Link to="/doctor/doctorLogin">Already have one? Log in</Link>
           </p>
           <form onSubmit={handleSignup}>
             <div className="mb-4">
@@ -122,7 +103,7 @@ function Signup() {
         </div>
       </div>
     </>
-  );
+  )
 }
 
-export default Signup;
+export default DoctorSignup

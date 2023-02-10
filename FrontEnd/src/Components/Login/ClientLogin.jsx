@@ -2,18 +2,17 @@ import React, { useState } from "react";
 import './Login.css'
 import { message } from "antd";
 import axios from "../../Axios/Axios";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { ClassNames } from "@emotion/react";
-function Login() {
+import { useNavigate ,Link} from "react-router-dom";
+
+function ClientLogin() {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async (event) => {
-    event.preventDefault();
     try {
+    event.preventDefault();
       console.log(password);
       console.log(email);
       axios.post("/clientLogin", { email, password }).then((response) => {
@@ -57,6 +56,7 @@ function Login() {
               type="email"
               id="email"
               name="email"
+              placeholder="Enter your Email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               required
@@ -74,6 +74,7 @@ function Login() {
               type="password"
               id="password"
               name="password"
+              placeholder="Enter your Password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               required
@@ -93,4 +94,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default ClientLogin;
