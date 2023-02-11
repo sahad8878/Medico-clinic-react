@@ -1,11 +1,9 @@
-import React from 'react'
+import React from 'react';
 
 function DoctorHome() {
   return (
-    <>
-      <h1>doctor home</h1>
-    </>
-  )
+    <h1>doctor home</h1>
+  );
 }
 
-export default DoctorHome
+export default DoctorHome;

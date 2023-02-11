@@ -1,12 +1,14 @@
-import React from 'react'
-import AdminHome from '../../Components/AdminHome/AdminHome'
+import React from 'react';
+import AdminHome from '../../Components/AdminHome/AdminHome';
 
 function AdminHomePage() {
   return (
-    <>
-      <AdminHome/>
-    </>
-  )
+    // eslint-disable-next-line react/jsx-filename-extension
+    <div>
+      <AdminHome />
+    </div>
+
+  );
 }
 
-export default AdminHomePage
+export default AdminHomePage;

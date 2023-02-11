@@ -6,11 +6,12 @@ import TopNav from '../../Components/TopNav/TopNav';
 
 function LoginPage() {
   return (
-    <div className='overflow-hidden'>
-      <TopNav/>
-      <Navbar/>
+    // eslint-disable-next-line react/jsx-filename-extension
+    <div className="overflow-hidden">
+      <TopNav />
+      <Navbar />
       <Login />
-      <Footer/>
+      <Footer />
     </div>
   );
 }

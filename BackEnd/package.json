@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "server": "nodemon server.js"
+    "server": "nodemon server.js",
+    "lint": "eslint ./"
   },
   "author": "sahad",
   "license": "ISC",
@@ -22,5 +23,10 @@
     "morgan": "^1.10.0",
     "nodemon": "^2.0.20",
     "validator": "^13.9.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.34.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5"
   }
 }

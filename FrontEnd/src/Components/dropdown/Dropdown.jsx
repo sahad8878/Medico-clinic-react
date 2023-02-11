@@ -1,12 +1,15 @@
-import { Fragment } from "react";
-import { Menu, Transition } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import { Link } from "react-router-dom";
+/* eslint-disable react/react-in-jsx-scope */
+import { Fragment } from 'react';
+import { Menu, Transition } from '@headlessui/react';
+import { ChevronDownIcon } from '@heroicons/react/20/solid';
+import { Link } from 'react-router-dom';
+
 function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
+  return classes.filter(Boolean).join(' ');
 }
 function Dropdown() {
   return (
+    // eslint-disable-next-line react/jsx-no-comment-textnodes
     <Menu as="div" className="relative inline-block text-left">
       <div>
         <Menu.Button className="inline-flex font-semibold text-lg w-full justify-center rounded-md  px-4 py-2  text-white shadow-sm  hover:text-[#194569] focus:outline-none ">
@@ -29,11 +32,10 @@ function Dropdown() {
             <Menu.Item>
               {({ active }) => (
                 <Link to="/login">
-                  {" "}
                   <span
                     className={classNames(
-                      active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                      "block px-4 py-2 text-sm"
+                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      'block px-4 py-2 text-sm',
                     )}
                   >
                     Patient Login
@@ -43,11 +45,11 @@ function Dropdown() {
             </Menu.Item>
             <Menu.Item>
               {({ active }) => (
-                   <Link to="/doctor/doctorLogin">
+                <Link to="/doctor/doctorLogin">
                   <span
                     className={classNames(
-                      active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                      "block px-4 py-2 text-sm"
+                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      'block px-4 py-2 text-sm',
                     )}
                   >
                     Doctor Login
@@ -59,6 +61,7 @@ function Dropdown() {
         </Menu.Items>
       </Transition>
     </Menu>
+
   );
 }
 

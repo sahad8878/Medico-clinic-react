@@ -1,5 +1,6 @@
-const mongoose = require("mongoose");
-const colors = require("colors");
+const mongoose = require('mongoose');
+// eslint-disable-next-line no-unused-vars
+const colors = require('colors');
 
 const connectDB = async () => {
   try {
