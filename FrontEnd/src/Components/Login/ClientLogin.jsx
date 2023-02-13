@@ -45,7 +45,7 @@ function ClientLogin() {
   };
   return (
     <div className="bg-[#EDF4FE] w-screen  flex justify-center  ">
-      <div className="   w-[600px] mt-[240px] pb-20">
+      <div className="   w-[600px] mt-[170px] lg:mt-[230px] px-4 pb-10 lg:pb-20">
         <h2 className=" text-3xl   font-mono font-bold">Log In With Email</h2>
         <p className="mb-10 text-[#1F6CD6] cursor-pointer">
           <Link to="/signup">Create New Account? Signup</Link>

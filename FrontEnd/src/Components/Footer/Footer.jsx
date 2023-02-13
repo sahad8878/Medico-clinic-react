@@ -35,7 +35,7 @@ function Footer() {
             </ul>
           </div>
 
-          <div className="w-full lg:w-3/12 px-1">
+          <div className="w-full lg:w-3/12  px-14">
             <h4 className="font-normal text-1 mb-4">Top specialities</h4>
             <ul className="list-unstyled">
               <li className="mb-2">
@@ -61,9 +61,9 @@ function Footer() {
             </ul>
           </div>
 
-          <div className="w-full lg:w-3/12 px-1">
-            <ul className="list-unstyled cursor-pointer">
-              <li className="mb-2 mt-24">
+          <div className="w-full lg:w-3/12   px-14 lg:px-0">
+            <ul className="list-unstyled  cursor-pointer">
+              <li className="mb-2 lg:pt-24 pt-2">
                 <span className="text-gray-500 hover:text-black">
                   PHONE: 1234567890
                 </span>
@@ -76,24 +76,24 @@ function Footer() {
             </ul>
           </div>
 
-          <div className="w-full lg:w-3/12 px-1 ">
+          <div className="w-full lg:w-3/12 px-14 ">
             <ul className="list-unstyled  cursor-pointer flex flex-row list-none">
-              <li className="mb-2 mt-32 px-3">
+              <li className="mb-2  lg:mt-32 mt-2 ">
                 <span className="text-black hover:text-blue-900">
                   <FacebookIcon />
                 </span>
               </li>
-              <li className="mb-2 mt-32 px-3">
+              <li className="mb-2 lg:mt-32 mt-2 px-3">
                 <span className="text-black hover:text-[#d62976]">
                   <InstagramIcon />
                 </span>
               </li>
-              <li className="mb-2 mt-32 px-3">
+              <li className="mb-2 lg:mt-32 mt-2 px-3">
                 <span className="text-black hover:text-[#00acee]">
                   <TwitterIcon />
                 </span>
               </li>
-              <li className="mb-2 mt-32 px-3">
+              <li className="mb-2 lg:mt-32 mt-2  px-3">
                 <span className="text-black hover:text-[#0A66C2]">
                   <LinkedInIcon />
                 </span>

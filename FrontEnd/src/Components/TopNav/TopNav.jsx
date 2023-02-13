@@ -2,11 +2,12 @@ import React from 'react';
 
 function TopNav() {
   return (
-    <div style={{ position: 'fixed', width: '-webkit-fill-available' }} className="bg-[#D6E8EE] h-7  ">
-      <p className="ml-5">
+    <div  className="bg-[#D6E8EE] top-0 flex flex-col md:flex-row  w-screen pb-3 min-w-screen fixed">
+      <p className="pl-2 lg:pl-10">
         Email:Medico@gmail.com
-        <span className="ml-8">Phone:1234567890</span>
       </p>
+        <span className="ml-8 ">Phone:1234567890</span>
+
     </div>
   );
 }

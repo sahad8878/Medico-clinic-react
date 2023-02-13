@@ -4,7 +4,41 @@ import doctorImg from '../../Assets/doctor-img2.png';
 
 function LandingSecond() {
   return (
-    <div className="flex bg-[#EDF4FE] h-[500px] ">
+    <>
+     <div className="flex flex-col md:flex-row bg-[#EDF4FE]">
+          
+     <div className="w-full   md:w-[50%] p-4">
+        <div className=" inset-0 flex items-center justify-center p-4">
+          <div className=" mb-5 lg:p-12  ">
+            <img src={doctorImg} alt="" />
+          </div>
+        </div>
+      </div>
+
+      <div className="  w-full    md:w-[50%] flex justify-center content-center">
+        <div className='lg:p-28 p-10 '>
+        <h1 className=" font-mono font-bold text-3xl">MEDICO FOR PRIVATE PRACTICES</h1>
+        <h2 className="mt-4 font-serif  text-3xl">
+          Are you a provider interested in
+          <br />
+          reaching new patients?
+        </h2>
+        <span className="cursor-pointer  flex justify-center  mt-10 font-semibold text-xl w-52 bg-[#194569] p-2  text-white hover:text-black">
+          List Your Practice
+          <ArrowForwardIcon
+            style={{ marginLeft: '10px', marginTop: '5px' }}
+          />
+        </span>
+        </div>
+      </div>
+      {/*  */}
+    
+
+
+    </div>
+    
+    {/*  */}
+    {/* <div className="flex bg-[#4f5e74] h-[500px] ">
       <div className="w-[50%]">
         <img className="mt-10 ml-24" src={doctorImg} alt="doctorsImg" />
       </div>
@@ -22,7 +56,8 @@ function LandingSecond() {
           />
         </span>
       </div>
-    </div>
+    </div> */}
+    </>
   );
 }
 
