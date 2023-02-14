@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 const connectDB = require('./config/db');
 const userRouter = require('./routes/clientRoutes');
 const adminRouter = require('./routes/adminRoutes');
+const doctorRouter = require('./routes/doctorRoutes')
 
 // dotenv config
 dotenv.config();
@@ -36,7 +37,7 @@ app.use(morgan('dev'));
 // routes
 app.use('/', userRouter);
 app.use('/admin', adminRouter);
-// app.use('/doctor',doctorRouter)
+app.use('/doctor', doctorRouter)
 
 // port
 const port = process.env.PORT || 8080;

@@ -1,11 +1,18 @@
 import React from 'react';
 import AdminHome from '../../Components/AdminHome/AdminHome';
+import AdminNavbar from '../../Components/AdminNavbar/AdminNavbar';
+import AdminSidebar from '../../Components/AdminSidebar/AdminSidebar';
 
 function AdminHomePage() {
   return (
-    // eslint-disable-next-line react/jsx-filename-extension
-    <div>
+    <div className='flex'>
+
+      <AdminSidebar/> 
+      <div className='flex-1'>
+      <AdminNavbar/>
       <AdminHome />
+
+      </div>
     </div>
 
   );

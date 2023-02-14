@@ -9,7 +9,8 @@ function AdminHome() {
     dispatch({ type: 'LOGOUT' });
   };
   return (
-    <div className="flex flex-col justify-center items-center">
+    <>
+    {/* <div className="flex flex-col justify-center items-center">
       <h1 className="text-3xl pt-52">admin home</h1>
       <div className="">
 
@@ -22,7 +23,11 @@ function AdminHome() {
         </div>
         )}
       </div>
-    </div>
+    </div> */}
+      <main className="sm:ml-64">
+    {/* Your main content goes here */}
+  </main>
+    </>
   );
 }
 

@@ -6,14 +6,17 @@ const validator = require('validator');
 
 const ClientModel = require('../model/clientModel');
 
+const DoctorModel = require('../model/doctorModel')
+
 // client signup
 // eslint-disable-next-line consistent-return
 const signupController = async (req, res) => {
   try {
+    console.log(req.body);
     const {
-      name, email, password, number,
+      fName,lName,dateOfBirth,age,sex, email, password, number,confirmPassword
     } = req.body;
-    if (name && email && password && number) {
+    if ( fName&&lName&&dateOfBirth&&age&&sex&& email&& password&& number&&confirmPassword) {
       // validation
       if (!validator.isEmail(email)) {
         return res
@@ -33,13 +36,21 @@ const signupController = async (req, res) => {
           .status(200)
           .send({ message: 'Client Already Exist', success: false });
       }
+      if (password != confirmPassword){
+        return res
+        .status(200)
+        .send({ message: 'password not same', success: false });
+      }
       const salt = await bcrypt.genSaltSync(10);
       const hashedPassword = await bcrypt.hash(password.trim(), salt);
       const newClient = new ClientModel({
-        // eslint-disable-next-line object-shorthand
-        name: name,
-        // eslint-disable-next-line object-shorthand
-        email: email,
+        fName,
+        lName,
+        dateOfBirth,
+        age,
+        sex,
+        email,
+        number,
         password: hashedPassword,
       });
       await newClient.save();
@@ -84,7 +95,7 @@ const loginController = async (req, res) => {
           expiresIn: '1d',
         },
       );
-      const clientName = client.name;
+      const clientName = client.fName;
       res
         .status(200)
         .send({
@@ -158,4 +169,68 @@ const adminLogin = async (req, res) => {
   }
 };
 
-module.exports = { loginController, signupController, adminLogin };
+// Doctor Signup
+
+const doctorSignup = async(req, res) => {
+try{
+console.log(req.body);
+const {
+  fName,lName,specialization,experience,location, email, password, number,confirmPassword
+} = req.body;
+if ( fName&&lName&&specialization&&experience&&location&& email&& password&& number&&confirmPassword) {
+  // validation
+  if (!validator.isEmail(email)) {
+    return res
+      .status(200)
+      .send({ message: 'Email is not valid', success: false });
+  }
+  if (!validator.isStrongPassword(password)) {
+    return res
+      .status(200)
+      .send({ message: 'Password not strong enough', success: false });
+  }
+
+  // eslint-disable-next-line object-shorthand
+  const existingDoctor= await DoctorModel.findOne({email: email });
+  if (existingDoctor) {
+    return res
+      .status(200)
+      .send({ message: 'Doctor Already Exist', success: false });
+  }
+  if (password != confirmPassword){
+    return res
+    .status(200)
+    .send({ message: 'password not same', success: false });
+  }
+  const salt = await bcrypt.genSaltSync(10);
+  const hashedPassword = await bcrypt.hash(password.trim(), salt);
+  const newDoctor = new DoctorModel({
+    fName,
+    lName,
+    specialization,
+    experience,
+    location,
+    email,
+    number,
+    status:"pending",
+    password: hashedPassword,
+  });
+  await newDoctor.save();
+  res.status(201).send({ message: 'signup successfully', success: true });
+} else {
+  return res
+    .status(200)
+    .send({ message: 'All fields must be filled', success: false });
+}
+}catch(error){
+  console.log(error);
+    res.status(500).send({
+      success: false,
+      message: `Error in Doctor Signup controller ${error.message}`,
+    });
+}
+
+}
+
+
+module.exports = { loginController, signupController, adminLogin ,doctorSignup};

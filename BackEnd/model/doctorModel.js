@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const clientSchema = new mongoose.Schema({
+const doctorSchema = new mongoose.Schema({
   fName: {
     type: String,
     required: [true, 'fName is required'],
@@ -9,17 +9,17 @@ const clientSchema = new mongoose.Schema({
     type: String,
     required: [true, 'lName is required'],
   },
-  dateOfBirth: {
-    type: Date,
-    required: [true, 'Date of birth is required'],
-  },
-  age: {
+  specialization: {
     type: String,
-    required: [true, 'age is required'],
+    required: [true, 'specialization of birth is required'],
   },
-  sex: {
+  experience: {
     type: String,
-    required: [true, 'sex is required'],
+    required: [true, 'experience is required'],
+  },
+  location: {
+    type: String,
+    required: [true, 'location is required'],
   },
   number: {
     type: String,
@@ -33,9 +33,9 @@ const clientSchema = new mongoose.Schema({
     type: String,
     required: [true, 'password is required'],
   },
-  isAdmin: {
-    type: Boolean,
-    default: false,
+  status:{
+    type:String,
+    default:"pending"
   },
   block:{
     type:Boolean,
@@ -45,5 +45,5 @@ const clientSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-const clientModel = mongoose.model('clients', clientSchema);
-module.exports = clientModel;
+const doctorModel = mongoose.model('doctors', doctorSchema);
+module.exports = doctorModel;

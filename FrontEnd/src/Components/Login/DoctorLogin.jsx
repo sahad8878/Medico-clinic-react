@@ -53,6 +53,7 @@ function DoctorLogin() {
               type="email"
               id="email"
               name="email"
+              placeholder="Enter your Email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               required
@@ -70,6 +71,7 @@ function DoctorLogin() {
               type="password"
               id="password"
               name="password"
+              placeholder="Enter your Password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               required

@@ -11,15 +11,34 @@ function ClientSignup() {
   const [number, setNumber] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+      
+  const [selectedOption, setSelectedOption] = useState("");
+
+  const handleOptionChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
 
   const handleSignup = async (events) => {
     try {
       events.preventDefault();
-
+      let data = new FormData(events.currentTarget);
+      data = {
+        fName: data.get('fName'),
+        lName: data.get('lName'),
+        dateOfBirth: data.get('dateOfBirth'),
+        age: data.get('age'),
+        sex: data.get('sex'),
+        number: data.get('number'),
+        email: data.get('email'),
+        password: data.get('password'),
+        confirmPassword: data.get('confirmPassword')
+  
+      }
+      console.log(data);
       axios
-        .post('/clientSignup', {
-          name, email, password, number,
-        })
+        .post('/clientSignup', 
+          data
+        )
         .then((response) => {
           const result = response.data;
           if (result.success) {
@@ -39,91 +58,219 @@ function ClientSignup() {
   };
 
   return (
-    <div className="bg-[#EDF4FE]  w-screen flex justify-center ">
-      <div className="   w-[600px] mt-[240px]">
-        <h2 className=" text-3xl   font-mono font-bold">Create An Account</h2>
-        <p className="mb-10 text-[#1F6CD6] cursor-pointer">
-          <Link to="/login">Already have one? Log in</Link>
-        </p>
-        <form onSubmit={handleSignup}>
-          <div className="mb-4">
+    <div className="bg-[#EDF4FE]  w-screen flex justify-center px-4">
+    <div className=" pl-5   w-[600px] mt-[170px] lg:mt-[240px] px-4">
+      <h2 className=" text-3xl   font-mono font-bold">Start your career</h2>
+      <p className="mb-10 text-[#1F6CD6] cursor-pointer">
+        <Link to="/doctor/doctorLogin">Already have one? Log in</Link>
+      </p>
+      <form omponent="form" noValidate onSubmit={handleSignup}>
+        <label
+          className="block text-gray-700 font-medium mb-2 "
+          htmlFor="name"
+        >
+          Name
+        </label>
+        <div className="mb-4 md:flex md:flex-row">
+          <input
+            className="bg-white p-2  w-full"
+            type="text"
+            id="fName"
+            name="fName"
+            placeholder="First Name"
+            // value={name}
+            // onChange={(event) => setName(event.target.value)}
+            required
+          />
+          <input
+            className="bg-white p-2 w-full md:border-l mt-5 md:mt-0 md:border-l-black"
+            type="text"
+            id="lName"
+            name="lName"
+            placeholder="Last Name"
+            // value={name}
+            // onChange={(event) => setName(event.target.value)}
+            required
+          />
+        </div>
+
+        <div className="mb-4   flex flex-row">
+          <div className>
             <label
-              className="block text-gray-700 font-medium mb-2 "
-              htmlFor="name"
+              className=" text-gray-700 font-medium mb-2 "
+              htmlFor="dateOfBirth"
             >
-              Name
+              Date Of Birth
             </label>
             <input
-              className="bg-white p-2 rounded-lg w-full"
-              type="text"
-              id="name"
-              name="name"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
+              className="bg-white p-2  w-full"
+              type="date"
+              id="dateOfBirth"
+              name="dateOfBirth"
+              // value={number}
+              // onChange={(event) => setNumber(event.target.value)}
               required
             />
           </div>
-          <div className="mb-4">
+          <div className="sm:ml-20 ml-5 w-full sm:w-72 mt-1"  >
             <label
-              className="block text-gray-700 font-medium mb-2 "
-              htmlFor="phone"
+              className=" text-gray-700 font-medium mb-2 "
+              htmlFor="age"
             >
-              Phone
+              Age
             </label>
             <input
-              className="bg-white p-2 rounded-lg w-full"
+              className="bg-white p-2   w-full"
               type="number"
-              id="number"
-              name="number"
-              value={number}
-              onChange={(event) => setNumber(event.target.value)}
+              id="age"
+              name="age"
+              placeholder="Age"
+              // value={number}
+              // onChange={(event) => setNumber(event.target.value)}
               required
             />
           </div>
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 font-medium mb-2 "
-              htmlFor="email"
+        </div>
+        {/*  */}
+        <label
+              className=" text-gray-700 font-medium mb-2 "
+              htmlFor="sex"
             >
-              Email
+              Sex
             </label>
-            <input
-              className="bg-white p-2 rounded-lg w-full"
-              type="email"
-              id="email"
-              name="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              className="block text-black font-medium mb-2"
-              htmlFor="password"
-            >
-              Password
-            </label>
-            <input
-              className="bg-white p-2 rounded-lg w-full"
-              type="password"
-              id="password"
-              name="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              required
-            />
-          </div>
-          <div className="mb-4 mt-10 flex justify-center">
-            <input
-              className="bg-white  hover:bg-[#194569] text-black font-medium py-2 px-32 mb-20 rounded-lg"
-              type="submit"
-              value="Save and Continue"
-            />
-          </div>
-        </form>
+        <div className="flex  flex-wrap mb-6 bg-white">
+       
+     <div className=" border-r border-r-black p-2 w-1/3  ">
+      <input
+      
+        type="radio"
+        id="male"
+        name="sex"
+        value="male"
+        checked={selectedOption === "male"}
+        onChange={handleOptionChange}
+      />
+      <label className="inline-block  text-gray-600 font-medium" htmlFor="male">
+        Male
+      </label>
+     </div>
+     <div className=" w-1/3 border-r border-r-black  p-2  ">
+      <input
+        type="radio"
+        id="feMale"
+        name="sex"
+        value="feMale"
+        checked={selectedOption === "feMale"}
+        onChange={handleOptionChange}
+      />
+      <label className="inline-block  text-gray-600 font-medium" htmlFor="feMale">
+        Female
+      </label>
+     </div>
+     <div className=" p-2 w-1/3">
+      <input
+        type="radio"
+        id="option3"
+        name="sex"
+        value="others"
+        checked={selectedOption === "others"}
+        onChange={handleOptionChange}
+      />
+      <label className="inline-block  text-gray-600 font-medium" htmlFor="others">
+        Others
+      </label>
       </div>
+      </div>
+        {/*  */}
+        <div className="mb-4">
+          <label
+            className="block text-gray-700 font-medium mb-2 "
+            htmlFor="number"
+          >
+            Phone
+          </label>
+          <input
+            className="bg-white p-2  w-full"
+            type="number"
+            id="number"
+            name="number"
+            placeholder="Phone Number"
+            // value={number}
+            // onChange={(event) => setNumber(event.target.value)}
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            className="block text-gray-700 font-medium mb-2 "
+            htmlFor="email"
+          >
+            Email
+          </label>
+          <input
+            className="bg-white p-2  w-full"
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Enter Your Email"
+            // value={email}
+            // onChange={(event) => setEmail(event.target.value)}
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            className="block text-black font-medium mb-2"
+            htmlFor="password"
+          >
+            Password
+          </label>
+          <input
+            className="bg-white p-2 w-full"
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter Your Password"
+            // value={password}
+            // onChange={(event) => setPassword(event.target.value)}
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            className="block text-black font-medium mb-2"
+            htmlFor="confirmPassword"
+          >
+           Confirm Password
+          </label>
+          <input
+            className="bg-white p-2 w-full"
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            placeholder="Confirm Your Password"
+            // value={conPassword}
+            // onChange={(event) => setConPassword(event.target.value)}
+            required
+          />
+        </div>
+        {/* {error && (
+        <div className="error text-red-500">
+          {error}
+        </div>
+        )} */}
+        <div className="mb-4 mt-10 flex justify-center">
+          <input
+            // disabled={isLoading}
+
+            className="bg-white  hover:bg-[#194569] text-black font-medium py-2 px-20 sm:px-32 mb-20 rounded-lg"
+            type="submit"
+            value="Save and Continue"
+          />
+        </div>
+      </form>
     </div>
+  </div>
 
   );
 }

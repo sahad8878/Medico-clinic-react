@@ -18,6 +18,7 @@ import SignupPage from './pages/Client/SignupPage';
 import DoctorHome from './pages/Doctor/DoctorHomePage';
 import DoctorLogin from './pages/Doctor/LoginPage';
 import DoctorSignup from './pages/Doctor/SignupPage';
+import DoctorPendingPage from './pages/Doctor/DoctorPendingPage';
 
 // admin pages
 import AdminLoginPage from './pages/Admin/AdminLoginPage';
@@ -40,6 +41,8 @@ function App() {
         <Route path="/doctor" element={<DoctorHome />} />
         <Route path="/doctor/doctorLogin" element={<DoctorLogin />} />
         <Route path="/doctor/doctorSignup" element={<DoctorSignup />} />
+        <Route path="/doctor/doctorPendingPage" element={<DoctorPendingPage />} />
+         
 
         {/* Admin routes */}
         <Route path="/admin" element={!admin ? <AdminLoginPage /> : <Navigate to="/admin/adminHome" />} />
