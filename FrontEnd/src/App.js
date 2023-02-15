@@ -23,6 +23,7 @@ import DoctorPendingPage from './pages/Doctor/DoctorPendingPage';
 // admin pages
 import AdminLoginPage from './pages/Admin/AdminLoginPage';
 import AdminHomePage from './pages/Admin/AdminHomePage';
+import AdminClientPage from './pages/Admin/AdminClientPage';
 
 function App() {
   const { user } = useAuthContext();
@@ -47,6 +48,8 @@ function App() {
         {/* Admin routes */}
         <Route path="/admin" element={!admin ? <AdminLoginPage /> : <Navigate to="/admin/adminHome" />} />
         <Route path="/admin/adminHome" element={admin ? <AdminHomePage /> : <Navigate to="/admin" />} />
+        <Route path="/admin/adminClientPage" element={ <AdminClientPage/> } />
+
       </Routes>
     </BrowserRouter>
   );

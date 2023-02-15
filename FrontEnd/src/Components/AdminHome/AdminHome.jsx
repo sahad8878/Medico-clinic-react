@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAdminAuthContext } from '../../Hooks/useAdminAuthContext';
+import log from "../../Assets/main-logo.png";
 
 function AdminHome() {
   const { admin, dispatch } = useAdminAuthContext();
@@ -10,23 +11,32 @@ function AdminHome() {
   };
   return (
     <>
-    {/* <div className="flex flex-col justify-center items-center">
-      <h1 className="text-3xl pt-52">admin home</h1>
+    <div className="flex flex-col justify-center items-center">
+      <h1 className="text-3xl mt-80 ">admin home</h1>
+      <span className="block sm:flex items-center px-4 ">
+            <img className="" src={log} alt="logo" />
+          </span> <span className="block sm:flex items-center px-4 ">
+            <img className="" src={log} alt="logo" />
+          </span> <span className="block sm:flex items-center px-4 ">
+            <img className="" src={log} alt="logo" />
+          </span>
       <div className="">
 
         {admin && (
         <div>
           <h1 className="font-bold py-11 text-cyan-900">{admin.AdminEmail}</h1>
-          <button type="button" className="text-white bg-neutral-600 px-3" onClick={handleLogout}>
+          <button type="button" className="text-white bg-blue-gray-500 px-3" onClick={handleLogout}>
             log out
           </button>
         </div>
         )}
       </div>
-    </div> */}
-      <main className="sm:ml-64">
-    {/* Your main content goes here */}
-  </main>
+    </div>
+
+      {/* <main className="sm:ml-64">
+    Your main content goes here
+  </main> */}
+
     </>
   );
 }
