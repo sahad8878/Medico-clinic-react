@@ -33,6 +33,9 @@ const clientSchema = new mongoose.Schema({
     type: String,
     required: [true, 'password is required'],
   },
+  clientImage: {
+    type: String,
+  },
   isAdmin: {
     type: Boolean,
     default: false,
