@@ -1,39 +1,18 @@
-import React from 'react'
-
-
-
-
-
-
-const people = [
-    {
-      name: 'Jane Cooper',
-      email: 'Sahad@gmail.com',
-      department: 'dentist',
-      number: '123456789',
-      status: 'pending',
-      image: 'https://bit.ly/33HnjK0',
-    },
-    {
-      name: 'John Doe',
-      email: 'Sahad@gmail.com',
-      department: 'dentist',
-      number: '123456789',
-      status: 'approved',
-      image: 'https://bit.ly/3I9nL2D',
-    },
-    {
-      name: 'Veronica Lodge',
-      email: 'Sahad@gmail.com',
-      department: 'dentist',
-      number: '123456789',
-      status: 'pending',
-      image: 'https://bit.ly/3vaOTe1',
-    },
-    // More people...
-  ];
+import React,{useState,useEffect} from 'react'
+import axios from '../../Axios/Axios'
   
 function AdminDoctors() {
+
+  const [ doctors , setdoctors ] = useState([])
+
+  useEffect(()=>{
+    axios
+    .get('/doctor/getDoctorsDetails'
+    ).then((response)=>{
+      setdoctors(response.data.doctors)
+    })
+  },[])
+
   return (
 
     <>
@@ -66,27 +45,27 @@ function AdminDoctors() {
         </thead>
         <tbody className=" bg-white divide-y divide-gray-200">
           {
-            people.map(person =>(
-          <tr className="">
+            doctors.map(doctor =>(
+          <tr  key={doctor._id} className="">
             <td className=" p-3 text-sm w-6 text-gray-700 ">
               <div className="h-10 w-10">
-                <img className="h-10 w-10 rounded-full" src={person.image} alt="" />
+                <img className="h-10 w-10 rounded-full" src={""} alt="" />
               </div>
             </td> 
             <td className=" p-3 text-sm text-gray-700 whitespace-nowrap">
-                {person.name}
+                {doctor.fName}
             </td>
             <td className=" p-3 text-sm text-gray-700 whitespace-nowrap">
-                {person.email}
+                {doctor.email}
             </td>
             <td className=" p-3 text-sm text-gray-700 whitespace-nowrap">
-                {person.number}
+                {doctor.number}
             </td>
             <td className=" p-3 text-sm text-gray-700 whitespace-nowrap">
-               <span className="p-1.5 text-xs font-medium uppercase tracking-wider text-yellow-800 bg-yellow-200 rounded-lg bg-opacity-50"> {person.status}</span>
+               <span className="p-1.5 text-xs font-medium uppercase tracking-wider text-yellow-800 bg-yellow-200 rounded-lg bg-opacity-50"> {doctor.status}</span>
             </td>
             <td className=" p-3 text-sm text-gray-700 whitespace-nowrap">
-                <span className=" px-3 rounded-2xl bg-slate-600">block</span>
+                <span className=" p-1.5 text-xs font-medium uppercase tracking-wider text-gray-100 bg-red-800 rounded-lg bg-opacity-75">block</span>
             </td>
           </tr>
           ))

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAdminAuthContext } from '../../Hooks/useAdminAuthContext';
 import log from "../../Assets/main-logo.png";
+import ExNavbar from '../AdminNavbar/ExNavbar';
 
 function AdminHome() {
   const { admin, dispatch } = useAdminAuthContext();
@@ -13,11 +14,8 @@ function AdminHome() {
     <>
     <div className="flex flex-col justify-center items-center">
       <h1 className="text-3xl mt-16 ">admin home</h1>
+     
       <span className="block sm:flex items-center px-4 ">
-            <img className="" src={log} alt="logo" />
-          </span> <span className="block sm:flex items-center px-4 ">
-            <img className="" src={log} alt="logo" />
-          </span> <span className="block sm:flex items-center px-4 ">
             <img className="" src={log} alt="logo" />
           </span>
       <div className="">

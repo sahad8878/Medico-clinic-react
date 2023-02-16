@@ -16,7 +16,7 @@ function AdminSidebar() {
   };
   return (
 
-    <aside className="  h-screen  ">
+    <aside className="  h-screen fixed hidden sm:block ">
       <div className=" ">
         <div className=" h-screen  p-3 bg-[#194569] shadow w-60 sm:w-72">
           <div className="space-y-3">
@@ -71,7 +71,7 @@ function AdminSidebar() {
                   >
                     <img className=" h-7" src={inboxIcon} alt="logo" />
 
-                    <span className="text-gray-100 ">Inbox</span>
+                    <span className="text-gray-100 ">Appointments</span>
                   </span>
                   </Link>
                 </li>
