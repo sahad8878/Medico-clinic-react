@@ -1,18 +1,18 @@
 import React from "react";
-import AdminClient from "../../Components/AdminHome/AdminClient";
+import AdminAppointments from "../../Components/AdminHome/AdminAppointment";
 import AdminNavbar from "../../Components/AdminNavbar/AdminNavbar";
 
-function AdminClientPage() {
+function AdminAppointmentspage() {
   return (
     <>
       <div className="flex">
         <AdminNavbar />
         <div className=" pt-[88px] w-screen  sm:pt-[96px]  sm:pl-[280px]">
-          <AdminClient />
+          <AdminAppointments/>
         </div>
       </div>
     </>
   );
 }
 
-export default AdminClientPage;
+export default AdminAppointmentspage;

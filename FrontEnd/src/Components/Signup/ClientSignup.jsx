@@ -60,7 +60,7 @@ function ClientSignup() {
   return (
     <div className="bg-[#EDF4FE]  w-screen flex justify-center px-4">
     <div className=" pl-5   w-[600px] mt-[170px] lg:mt-[240px] px-4">
-      <h2 className=" text-3xl   font-mono font-bold">Start your career</h2>
+      <h2 className=" text-3xl   font-mono font-bold">Create an account</h2>
       <p className="mb-10 text-[#1F6CD6] cursor-pointer">
         <Link to="/doctor/doctorLogin">Already have one? Log in</Link>
       </p>

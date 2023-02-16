@@ -1,26 +1,18 @@
 import React from 'react';
 import AdminHome from '../../Components/AdminHome/AdminHome';
 import AdminNavbar from '../../Components/AdminNavbar/AdminNavbar';
-import AdminSidebar from '../../Components/AdminSidebar/AdminSidebar';
-// import ExNavbar from '../../Components/AdminNavbar/ExNavbar';
-// import ExSidebar from '../../Components/AdminSidebar/ExSidebar';
-// import ClientTable from '../../Components/Tables/ClientTable';
-
 
 function AdminHomePage() {
   return (
     <>
-      <AdminNavbar/>
-       <AdminHome />
 
-    
-       {/* <ClientTable/> */}
+<div className="flex">
+        <AdminNavbar />
+        <div className=" pt-[88px] w-screen  sm:pt-[96px]  sm:pl-[280px]">
+        <AdminHome />
+        </div>
+      </div>
      </>
-  //  <div>
-  //   <ExNavbar/>
-  //   <ExSidebar/>
-
-  //  </div>
   );
 }
 

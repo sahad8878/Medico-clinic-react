@@ -216,7 +216,7 @@ if ( fName&&lName&&specialization&&experience&&location&& email&& password&& num
     password: hashedPassword,
   });
   await newDoctor.save();
-  res.status(201).send({ message: 'signup successfully', success: true });
+  res.status(201).send({ email, message: 'signup successfully', success: true });
 } else {
   return res
     .status(200)

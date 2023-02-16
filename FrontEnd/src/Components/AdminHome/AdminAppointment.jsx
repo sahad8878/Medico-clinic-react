@@ -33,12 +33,12 @@ const people = [
     // More people...
   ];
   
-function AdminClient() {
+function AdminAppointments() {
   return (
 
     <>
                <div className=" p-6 sm:p-16 h-screen border-gray-200 ">
-      <h1 className="font-semibold mb-2 pb-9 font-serif text-2xl"> Clients</h1>
+      <h1 className="font-semibold mb-2 pb-9 font-serif text-2xl">Appointments</h1>
 
       <div className="overflow-auto rounded-lg shadow">
 
@@ -103,4 +103,4 @@ function AdminClient() {
   )
 }
 
-export default AdminClient
+export default AdminAppointments

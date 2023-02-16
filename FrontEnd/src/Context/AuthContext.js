@@ -29,7 +29,6 @@ export function AuthContextProvider({ children }) {
   console.log('AuthContext state: ', state);
 
   return (
-    // eslint-disable-next-line react/react-in-jsx-scope, react/jsx-filename-extension
     <AuthContext.Provider value={{ ...state, dispatch }}>
       { children}
     </AuthContext.Provider>

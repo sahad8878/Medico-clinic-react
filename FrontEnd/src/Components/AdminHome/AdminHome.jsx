@@ -12,7 +12,7 @@ function AdminHome() {
   return (
     <>
     <div className="flex flex-col justify-center items-center">
-      <h1 className="text-3xl mt-80 ">admin home</h1>
+      <h1 className="text-3xl mt-16 ">admin home</h1>
       <span className="block sm:flex items-center px-4 ">
             <img className="" src={log} alt="logo" />
           </span> <span className="block sm:flex items-center px-4 ">

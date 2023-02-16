@@ -1,5 +1,5 @@
 import React from "react";
-import AdminClient from "../../Components/AdminHome/AdminClient";
+import AdminDoctors from "../../Components/AdminHome/AdminDoctors";
 import AdminNavbar from "../../Components/AdminNavbar/AdminNavbar";
 
 function AdminClientPage() {
@@ -8,7 +8,7 @@ function AdminClientPage() {
       <div className="flex">
         <AdminNavbar />
         <div className=" pt-[88px] w-screen  sm:pt-[96px]  sm:pl-[280px]">
-          <AdminClient />
+          <AdminDoctors/>
         </div>
       </div>
     </>

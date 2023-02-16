@@ -17,7 +17,7 @@ export default function Nav() {
   return (
     <nav
 
-      className="w-full bg-[#97CADB] fixed top-7"
+      className="w-full z-10 bg-[#97CADB] fixed top-7"
     >
       <div className="justify-between px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-5">
         <div>
@@ -78,7 +78,8 @@ export default function Nav() {
               </li>
               <li className="">
               <span className="text-white font-semibold text-lg px-5 cursor-pointer hover:text-[#194569] rounded">
-            Service
+                <Link to='/service'>Service</Link>
+          
           </span>
               </li>
               {user&&(
