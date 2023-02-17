@@ -6,11 +6,6 @@ import axios from '../../Axios/Axios';
 
 function ClientSignup() {
   const navigate = useNavigate();
-
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
       
   const [selectedOption, setSelectedOption] = useState("");
 

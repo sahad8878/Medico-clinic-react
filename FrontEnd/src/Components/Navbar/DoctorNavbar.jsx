@@ -1,19 +1,26 @@
 import React,{useState} from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import CircleNotificationsRoundedIcon from '@mui/icons-material/CircleNotificationsRounded';
 import log from '../../Assets/main-logo.png';
+import {useDoctorAuthContext} from '../../Hooks/useDoctorAuthContext'
+
 
 function DoctorNavbar() {
+  const Navigate = useNavigate()
+  const { doctor, dispatch } = useDoctorAuthContext();
+
   const [navbar, setNavbar] = useState(false);
   const handleLogout = () => {
-    localStorage.removeItem("clientToken");
-    // dispatch({ type: "LOGOUT" });
+    localStorage.removeItem("doctorToken");
+    dispatch({ type: "LOGOUT" })
+    Navigate('/')
+
   };
   return (
     <>
     <nav
 
-className="w-full bg-[#97CADB] fixed top-7"
+className="w-full z-10 bg-[#97CADB] fixed top-7"
 >
 <div className="justify-between px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-5">
   <div>
@@ -77,7 +84,7 @@ className="w-full bg-[#97CADB] fixed top-7"
       Appointments
     </span>
         </li>
-        {/* {user&&(
+        {/* {doctor&&(
         
        
           <li>
@@ -88,8 +95,8 @@ className="w-full bg-[#97CADB] fixed top-7"
           </li>
        
         
-        )}
-        {user&&(
+        )} */}
+        {doctor&&(
         
         <li className="">
           
@@ -101,7 +108,7 @@ className="w-full bg-[#97CADB] fixed top-7"
         </button>
         </li>
         
-        )} */}
+        )}
        
       </ul>
     </div>

@@ -19,8 +19,8 @@ export function AdminAuthContextProvider({ children }) {
   const [state, dispatch] = useReducer(adminAuthReducer, { admin: null });
 
   useEffect(() => {
-    const admin = JSON.parse(localStorage.getItem('AdminToken'));
-    //  console.log(admin,"dfsdf");
+    const admin = JSON.parse(localStorage.getItem('adminToken'));
+     console.log(admin,"dfsdf");
     if (admin) {
       dispatch({ type: 'LOGIN', payload: admin });
     }
@@ -29,7 +29,6 @@ export function AdminAuthContextProvider({ children }) {
   console.log('AdminAuthContext state: ', state);
 
   return (
-    // eslint-disable-next-line react/react-in-jsx-scope, react/jsx-filename-extension
     <AdminAuthContext.Provider value={{ ...state, dispatch }}>
       { children}
     </AdminAuthContext.Provider>

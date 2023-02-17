@@ -1,10 +1,34 @@
-import React from "react";
+import React, { useEffect,useState } from "react";
 import DoctorNavbar from '../../Components/Navbar/DoctorNavbar'
 import Footer from '../../Components/Footer/Footer'
 import TopNav from '../../Components/TopNav/TopNav'
+import { useDoctorAuthContext } from '../../Hooks/useDoctorAuthContext';
+import { useNavigate } from "react-router-dom";
+import axios from '../../Axios/Axios'
 
 
 function DoctorPendingPage() {
+  const { doctor } = useDoctorAuthContext()
+const navigate = useNavigate()
+const [ refresh , setRefresh ] = useState(false)
+
+  useEffect(()=>{
+    const doctor = JSON.parse(localStorage.getItem('doctorToken'));
+    console.log(doctor.doctorId);
+    axios.get(`/doctor/statusChecking?id=${doctor.doctorId}`).then((response) => {
+    const result = response.data
+    console.log(result.doctorStatus,"aaa");
+    if(result.doctorStatus === "approved"){
+     navigate('/doctor/doctorDetailsForm')
+     setRefresh(!refresh)
+    }
+    if(result.doctorStatus === "active"){
+      navigate('/doctor')
+     setRefresh(!refresh)
+     } 
+    })
+   
+  },[refresh])
   return (
     <>
     <TopNav/>

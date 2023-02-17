@@ -1,6 +1,6 @@
 const express = require('express');
-const { doctorSignup} = require('../controller/authController');
-const {doctorDetails,getDoctorsDetails,getPendingDoctors,acceptDoctorAppointment,rejectDoctorAppointment} = require('../controller/doctorController')
+const { doctorSignup,doctorLogin} = require('../controller/authController');
+const {doctorDetails,getDoctorsDetails,getPendingDoctors,acceptDoctorAppointment,rejectDoctorAppointment,doctorStatusChecking} = require('../controller/doctorController')
 
 // route object
 const router = express.Router();
@@ -9,6 +9,10 @@ const router = express.Router();
 
 // Doctor Signup || post
 router.post('/doctorSignup', doctorSignup);
+
+// Doctor Login || Post
+
+router.post('/doctorLogin',doctorLogin )
 
 // Doctor Details || post
 
@@ -29,5 +33,9 @@ router.patch('/acceptAppointment',acceptDoctorAppointment)
 // Reject Doctor Appointment || Patch
 
 router.patch('/rejectAppointment', rejectDoctorAppointment)
+
+// Doctor Status Checking || Get
+
+router.get('/statusChecking',doctorStatusChecking)
 
 module.exports = router;

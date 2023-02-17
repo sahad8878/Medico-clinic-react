@@ -23,7 +23,7 @@ function AdminLogin() {
       axios.post('/admin/admin', { email, password }).then((response) => {
         const result = response.data;
         if (result.success) {
-          localStorage.setItem('AdminToken', JSON.stringify(result));
+          localStorage.setItem('adminToken', JSON.stringify(result));
           dispatch({ type: 'LOGIN', payload: result });
           setIsLoading(false);
           message.success('Login  successfully!');

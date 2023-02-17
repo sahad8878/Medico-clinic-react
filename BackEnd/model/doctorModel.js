@@ -33,6 +33,27 @@ const doctorSchema = new mongoose.Schema({
     type: String,
     required: [true, 'password is required'],
   },
+ 
+  education: {
+    type: String,
+  
+  },
+  address: {
+    type: String,
+    required: [true, 'password is required'],
+  },
+  startingTime: {
+   type: String,    
+  },
+  endingTime: {
+    type: String,    
+   },
+   doctorImg: {
+    type: String,    
+   },
+   availableDate: {
+    type: Array,    
+   },
   status:{
     type:String,
     default:"pending"

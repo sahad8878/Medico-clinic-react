@@ -2,21 +2,20 @@
 import React, { useState } from "react";
 import { Link,useNavigate } from "react-router-dom";
 import { message } from 'antd';
-
+import {useDoctorAuthContext} from '../../Hooks/useDoctorAuthContext'
 import axios from '../../Axios/Axios';
 
 function DoctorSignup() {
   const navigate = useNavigate();
 
-  const [name, setName] = useState("");
-  const [number, setNumber] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(null);
+  const { dispatch } = useDoctorAuthContext();
   const handleSignup = (event) => {
     try {
     event.preventDefault();
+    setIsLoading(true);
+    setError(null);
     let data = new FormData(event.currentTarget);
     data = {
       fName: data.get('fName'),
@@ -38,12 +37,14 @@ function DoctorSignup() {
     .then((response) => {
       const result = response.data;
       if (result.success) {
-        // document.cookie = `token${result.token}`
+        localStorage.setItem('doctorToken', JSON.stringify(result));
+          dispatch({ type: 'LOGIN', payload: result });
+          setIsLoading(false);
         message.success('Signup successfully!');
-
         navigate('/doctor/doctorPendingPage');
       } else {
-        // setErrMsg(result.msg)
+        setIsLoading(false);
+        setError(result.message);
         message.error(result.message);
       }
     });

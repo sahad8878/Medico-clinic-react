@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { message } from 'antd';
@@ -8,43 +8,46 @@ import { ref, uploadString, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../Firebase/confic';
 
 function DoctorDetailForm() {
-  const navigate = useNavigate()
-  const data = [
+  
+const navigate = useNavigate()
+  const [selectedValue, setSelectedValue] = useState([]);
+  const days = [
     {
-      value: 1,
+      value:"Monday",
       label: "Monday",
     },
     {
-      value: 2,
+      value: "Tuesday",
       label: "Tuesday",
     },
     {
-      value: 3,
+      value: "wednesday",
       label: "wednesday",
     },
     {
-      value: 4,
+      value: "Thursday",
       label: "Thursday",
     },
     {
-      value: 5,
+      value: "Friday",
       label: "Friday",
     },
     {
-      value: 6,
+      value: "Saturday",
       label: "Saturday",
     },
     {
-      value: 7,
+      value: "Sunday",
       label: "Sunday",
     },
   ];
      
-  const [selectedValue, setSelectedValue] = useState([]);
 
   const handleDetails =async (event) => {
     try {
       event.preventDefault();
+      const doctor = JSON.parse(localStorage.getItem('doctorToken'));
+    
     let data = new FormData(event.currentTarget);
     data = {
       education: data.get('education'),
@@ -52,7 +55,8 @@ function DoctorDetailForm() {
       startingTime: data.get('startingTime'),
       endingTime: data.get('endingTime'),
       doctorImg: data.get('profileImg'),
-      availableDate:selectedValue
+      availableDate:selectedValue,
+      doctorId:doctor.doctorId
     }
     console.log(selectedValue,"image value");
     console.log(data);
@@ -78,15 +82,15 @@ function DoctorDetailForm() {
     } else {
       data.doctorImg = '';
     }
+ 
     axios
     .post('/doctor/doctorDetails', 
-      data
+    data
     )
     .then((response) => {
       const result = response.data;
       if (result.success) {
         message.success('Your Details saved!');
-
         navigate('/doctor');
       } else {
         // setErrMsg(result.msg)
@@ -106,7 +110,7 @@ function DoctorDetailForm() {
     <div className="bg-[#EDF4FE]  w-screen flex justify-center px-4 ">
       <div className=" pl-5   w-[600px] mt-[170px] lg:mt-[240px] px-4">
         <h2 className=" text-3xl   font-mono font-bold">Fill The Form</h2>
-        <form component="form" noValidate onSubmit={handleDetails}>
+        <form component="form"  onSubmit={handleDetails}>
           {/* <label
             className="block text-gray-700 font-medium mb-2 "
             htmlFor="name"
@@ -195,8 +199,8 @@ function DoctorDetailForm() {
               className="dropdown"
               name="availableDates"
               placeholder="Select Option"
-              value={data.filter((obj) => selectedValue.includes(obj.value))} // set selected values
-              options={data} // set list of the data
+              value={days.filter((obj) => selectedValue.includes(obj.value))} // set selected values
+              options={days} // set list of the data
               onChange={handleChange} // assign onChange function
               isMulti
               isClearable

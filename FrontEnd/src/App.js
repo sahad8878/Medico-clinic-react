@@ -7,6 +7,9 @@ import {
 } from 'react-router-dom';
 import { useAuthContext } from './Hooks/useAuthContext';
 import { useAdminAuthContext } from './Hooks/useAdminAuthContext';
+import { useDoctorAuthContext } from './Hooks/useDoctorAuthContext';
+
+
 import './App.css';
 
 // client pages
@@ -32,7 +35,7 @@ import AdminAppointmentspage from './pages/Admin/AdminAppointmentsPage';
 function App() {
   const { user } = useAuthContext();
   const { admin } = useAdminAuthContext();
-
+  const { doctor } = useDoctorAuthContext()
   return (
     // eslint-disable-next-line react/react-in-jsx-scope, react/jsx-filename-extension
     <BrowserRouter>
@@ -45,9 +48,9 @@ function App() {
 
 
         {/* Doctor routes */}
-        <Route path="/doctor" element={<DoctorHome />} />
-        <Route path="/doctor/doctorLogin" element={<DoctorLogin />} />
-        <Route path="/doctor/doctorSignup" element={<DoctorSignup />} />
+        <Route path="/doctor" element={<DoctorHome /> } />
+        <Route path="/doctor/doctorLogin" element={!doctor ? <DoctorLogin /> : <Navigate to="/doctor"/>} />
+        <Route path="/doctor/doctorSignup" element={ !doctor ? <DoctorSignup /> : <Navigate to="/doctor"/>} />
         <Route path="/doctor/doctorPendingPage" element={<DoctorPendingPage />} />
         <Route path="/doctor/doctorDetailsForm" element={<DoctorDetailsForm />} />
 

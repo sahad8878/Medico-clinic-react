@@ -9,7 +9,6 @@ const ClientModel = require('../model/clientModel');
 const DoctorModel = require('../model/doctorModel')
 
 // client signup
-// eslint-disable-next-line consistent-return
 const signupController = async (req, res) => {
   try {
     console.log(req.body);
@@ -29,7 +28,6 @@ const signupController = async (req, res) => {
           .send({ message: 'Password not strong enough', success: false });
       }
 
-      // eslint-disable-next-line object-shorthand
       const existingClient = await ClientModel.findOne({ email: email });
       if (existingClient) {
         return res
@@ -70,7 +68,6 @@ const signupController = async (req, res) => {
 
 // Client Login
 
-// eslint-disable-next-line consistent-return
 const loginController = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -120,7 +117,6 @@ const loginController = async (req, res) => {
 
 // Admin login
 
-// eslint-disable-next-line consistent-return
 const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -139,7 +135,6 @@ const adminLogin = async (req, res) => {
           .send({ message: 'Invalid Email or Password', success: false });
       }
       const adminToken = jwt.sign(
-        // eslint-disable-next-line no-underscore-dangle
         { id: admin._id },
         process.env.JWT_SECRET,
         {
@@ -190,7 +185,6 @@ if ( fName&&lName&&specialization&&experience&&location&& email&& password&& num
       .send({ message: 'Password not strong enough', success: false });
   }
 
-  // eslint-disable-next-line object-shorthand
   const existingDoctor= await DoctorModel.findOne({email: email });
   if (existingDoctor) {
     return res
@@ -215,8 +209,20 @@ if ( fName&&lName&&specialization&&experience&&location&& email&& password&& num
     status:"pending",
     password: hashedPassword,
   });
-  await newDoctor.save();
-  res.status(201).send({ email, message: 'signup successfully', success: true });
+  await newDoctor.save().then((doctor)=>{
+    const doctorToken = jwt.sign(
+      { id: doctor._id },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: '1d',
+      },
+    );
+    const doctorId = doctor._id;
+    const doctorStatus = doctor.status
+    res.status(201).send({doctorId,doctorStatus , doctorToken,message: 'signup successfully', success: true });
+  })
+
+  
 } else {
   return res
     .status(200)
@@ -232,5 +238,65 @@ if ( fName&&lName&&specialization&&experience&&location&& email&& password&& num
 
 }
 
+// Doctor Login
 
-module.exports = { loginController, signupController, adminLogin ,doctorSignup};
+const doctorLogin = async(req, res) => {
+  try {
+    console.log(req.body);
+    const { email, password } = req.body;
+    if (email && password) {
+      const doctor = await DoctorModel.findOne({email});
+      if (!doctor) {
+        console.log("doctor not found");
+        return res
+          .status(200)
+          .send({ message:'Doctor not found', success: false });
+      }else{
+        const isMatch = await bcrypt.compare(password, doctor.password);
+        if (!isMatch) {
+          console.log("invalid email or password");
+          return res
+            .status(200)
+            .send({ message: 'Invalid Email or Password', success: false });
+        }else{
+
+        const doctorToken = jwt.sign(
+          { id: doctor._id },
+          process.env.JWT_SECRET,
+          {
+            expiresIn: '1d',
+          },
+        );
+        const doctorId = doctor._id;
+        const doctorStatus = doctor.status
+        res
+          .status(200)
+          .send({
+            message: 'Login success',
+            success: true,
+            doctorId,
+            doctorStatus,
+            doctorToken,
+          });
+
+        
+        }
+      }
+      
+    } else {
+      return res
+        .status(200)
+        .send({ message: 'All fields must be filled', success: false });
+    }
+  }catch(error){
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: `Error in Doctor Login controller ${error.message}`,
+    });
+  }
+
+}
+
+
+module.exports = { loginController, signupController, adminLogin ,doctorSignup,doctorLogin};

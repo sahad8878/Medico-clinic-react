@@ -49,7 +49,7 @@ function AdminDoctors() {
           <tr  key={doctor._id} className="">
             <td className=" p-3 text-sm w-6 text-gray-700 ">
               <div className="h-10 w-10">
-                <img className="h-10 w-10 rounded-full" src={""} alt="" />
+                <img className="h-10 w-10 rounded-full" src={doctor.doctorImg} alt="" />
               </div>
             </td> 
             <td className=" p-3 text-sm text-gray-700 whitespace-nowrap">

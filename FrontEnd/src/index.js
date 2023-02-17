@@ -4,15 +4,18 @@ import './index.css';
 import App from './App';
 import { AuthContextProvider } from './Context/AuthContext';
 import { AdminAuthContextProvider } from './Context/AdminAuthContext';
+import { DoctorAuthContextProvider } from './Context/DoctorAuthContext';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  // eslint-disable-next-line react/jsx-filename-extension
   <React.StrictMode>
     <AdminAuthContextProvider>
+      <DoctorAuthContextProvider>
       <AuthContextProvider>
         <App />
       </AuthContextProvider>
+      </DoctorAuthContextProvider>
     </AdminAuthContextProvider>
   </React.StrictMode>,
 );
