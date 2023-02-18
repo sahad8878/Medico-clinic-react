@@ -40,7 +40,7 @@ const doctorSchema = new mongoose.Schema({
   },
   address: {
     type: String,
-    required: [true, 'password is required'],
+
   },
   startingTime: {
    type: String,    

@@ -19,12 +19,12 @@ const [ refresh , setRefresh ] = useState(false)
     const result = response.data
     console.log(result.doctorStatus,"aaa");
     if(result.doctorStatus === "approved"){
-     navigate('/doctor/doctorDetailsForm')
-     setRefresh(!refresh)
+      setRefresh(!refresh)
+      navigate('/doctor/doctorDetailsForm')
     }
     if(result.doctorStatus === "active"){
+      setRefresh(!refresh)
       navigate('/doctor')
-     setRefresh(!refresh)
      } 
     })
    

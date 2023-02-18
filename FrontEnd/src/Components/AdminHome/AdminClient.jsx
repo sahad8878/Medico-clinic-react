@@ -17,7 +17,7 @@ function AdminClient() {
 
     <>
                <div className=" p-6 sm:p-16 h-screen border-gray-200  pb-7 ">
-      <h1 className="font-semibold mb-2 pb-9 font-serif text-2xl"> Clients</h1>
+      <h1 className="font-semibold text-center sm:text-left mb-2 pb-9 font-serif text-2xl"> Clients</h1>
 
       <div className="overflow-auto rounded-lg shadow">
 

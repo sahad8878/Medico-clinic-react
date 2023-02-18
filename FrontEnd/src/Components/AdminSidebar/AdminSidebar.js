@@ -4,6 +4,7 @@ import docIcon from "../../Assets/doctor.ico";
 import clientIcon from "../../Assets/group.ico";
 import homeIcon from "../../Assets/home.ico";
 import inboxIcon from "../../Assets/book-appointments.ico";
+import departmentIcon from '../../Assets/department.png'
 import { useAdminAuthContext } from '../../Hooks/useAdminAuthContext';
 
 
@@ -95,6 +96,16 @@ function AdminSidebar() {
                   >
                     <img className=" h-7" src={docIcon} alt="logo" />
                     <span className="text-gray-100">Doctors</span>
+                  </span>
+                  </Link>
+                </li>
+                <li className="rounded-sm">
+                <Link to="/admin/AdminDepartmentPage" >
+                  <span
+                    className="flex items-center p-2 space-x-3 rounded-md"
+                  >
+                    <img className=" h-7" src={departmentIcon} alt="logo" />
+                    <span className="text-gray-100">Departments</span>
                   </span>
                   </Link>
                 </li>

@@ -17,7 +17,7 @@ function AdminDoctors() {
 
     <>
                <div className=" p-6 sm:p-16 h-screen border-gray-200 ">
-      <h1 className="font-semibold mb-2 pb-9 font-serif text-2xl">Doctors</h1>
+      <h1 className="font-semibold text-center sm:text-left mb-2 pb-9 font-serif text-2xl">Doctors</h1>
 
       <div className="overflow-auto rounded-lg shadow">
 

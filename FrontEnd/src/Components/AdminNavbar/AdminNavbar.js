@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import log from "../../Assets/main-logo.png";
 
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import AdminSidebar from "../AdminSidebar/AdminSidebar";
 import { Link } from "react-router-dom";
 import docIcon from "../../Assets/doctor.ico";
 import clientIcon from "../../Assets/group.ico";
 import homeIcon from "../../Assets/home.ico";
 import inboxIcon from "../../Assets/book-appointments.ico";
+import departmentIcon from '../../Assets/department.png'
+
 import { useAdminAuthContext } from "../../Hooks/useAdminAuthContext";
 function AdminNavbar() {
   const [navbar, setNavbar] = useState(false);
@@ -164,6 +165,16 @@ function AdminNavbar() {
                         </span>
                       </Link>
                     </li>
+                    <li className="rounded-sm">
+                <Link to="/admin/AdminDepartmentPage" >
+                  <span
+                    className="flex items-center p-2 space-x-3 rounded-md"
+                  >
+                    <img className=" h-7" src={departmentIcon} alt="logo" />
+                    <span className="text-gray-100">Departments</span>
+                  </span>
+                  </Link>
+                </li>
                     {admin && (
                       <li className="rounded-sm">
                         <span
