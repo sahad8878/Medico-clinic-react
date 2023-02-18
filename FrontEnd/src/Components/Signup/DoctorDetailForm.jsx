@@ -43,7 +43,7 @@ const navigate = useNavigate()
   ];
      
 
-  const handleDetails =async (event) => {
+  const handleDetails = async (event) => {
     try {
       event.preventDefault();
       const doctor = JSON.parse(localStorage.getItem('doctorToken'));

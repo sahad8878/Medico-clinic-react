@@ -45,7 +45,9 @@ function DoctorSignup() {
       } else {
         setIsLoading(false);
         setError(result.message);
-        message.error(result.message);
+        message.error(result.message).then(()=>{
+          setError(null)
+        })
       }
     });
   } catch (error) {

@@ -10,7 +10,7 @@ function AdminAppointments() {
 
   useEffect(()=>{
     axios
-    .get('/doctor/getPendingDoctors'
+    .get('/admin/getPendingDoctors'
     ).then((response)=>{
       if(response.data.success){
         setpenDoctors(response.data.pendingDoctors)
@@ -23,10 +23,10 @@ function AdminAppointments() {
 // accept appointment
   const acceptAppointment = (id) =>{
 
-    axios.patch('/doctor/acceptAppointment',{id}).then((response) => {
+    axios.patch('/admin/acceptAppointment',{id}).then((response) => {
       if(response.data.success){
         message.success(response.data.message)
-        setRefresh(!refresh)
+        setRefresh(!refresh) 
       }else{
         message.error(response.data.message)
       }
@@ -37,7 +37,7 @@ function AdminAppointments() {
   // reject appointment requests
 
   const rejectAppointment = (id) =>{
-    axios.patch('/doctor/rejectAppointment',{id}).then((response) => {
+    axios.patch('/admin/rejectAppointment',{id}).then((response) => {
       if(response.data.success){
         message.success(response.data.message)
         setRefresh(!refresh)
