@@ -110,7 +110,7 @@ function AdminSidebar() {
                   </Link>
                 </li>
                 {admin && (
-                <li className="rounded-sm">
+                <li className="rounded-sm cursor-pointer">
                   <span onClick={handleLogout}
                     className="flex items-center p-2 space-x-3 rounded-md"
                   >

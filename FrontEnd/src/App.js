@@ -17,6 +17,7 @@ import LandingPage from './pages/Client/LandingPage';
 import LoginPage from './pages/Client/LoginPage';
 import SignupPage from './pages/Client/SignupPage';
 import ServicePage from './pages/Client/ServicePage';
+import DepartmentDoctorsPage from './pages/Client/DepartmentDoctorsPage';
 
 // doctor pages
 import DoctorHome from './pages/Doctor/DoctorHomePage';
@@ -46,7 +47,8 @@ function App() {
         <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/" />} />
         <Route path="/signup" element={!user ? <SignupPage /> : <Navigate to="/" />} />
         <Route path="/service" element={ user ? <ServicePage /> : <Navigate to="/" />} />
-
+        <Route path="/departmentDoctors/:departmentId" element={<DepartmentDoctorsPage />} />
+         
 
         {/* Doctor routes */}
         <Route path="/doctor" element={<DoctorHome /> } />

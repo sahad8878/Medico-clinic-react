@@ -1,4 +1,7 @@
 const DoctorModel = require("../model/doctorModel");
+const DepartmentModel = require('../model/departmentModel')
+
+
 
 // post doctor details
 const doctorDetails = async (req, res) => {
@@ -39,6 +42,11 @@ const doctorDetails = async (req, res) => {
       );
       console.log(doctor);
       if (doctor) {
+        const department = await  DepartmentModel.findOneAndUpdate({department:doctor.specialization},
+          {doctors:doctor._id}
+          )
+          console.log(department);
+
         res
           .status(201)
           .send({ message: "your details have been saved", success: true });

@@ -5,6 +5,12 @@ const departmentSchema = new mongoose.Schema(
     department: {
       type: String,
     },
+    doctors:[
+      { 
+         type: mongoose.Schema.Types.ObjectId,
+        ref: "doctors",
+      },
+    ],
     departmentImg: {
       type: String,
     },

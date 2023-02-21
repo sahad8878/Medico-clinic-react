@@ -33,7 +33,10 @@ const doctorSchema = new mongoose.Schema({
     type: String,
     required: [true, 'password is required'],
   },
- 
+  licenceImg: {
+    type: String,
+    required: [true, 'licence is required'],
+  },
   education: {
     type: String,
   

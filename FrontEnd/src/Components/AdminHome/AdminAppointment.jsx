@@ -1,8 +1,8 @@
 import { message } from 'antd';
 import React,{useState,useEffect} from 'react'
-import Moment from 'react-moment';
 
 import axios from '../../Axios/Axios'
+import SingleAppointment from './SingleAppointment';
 
 function AdminAppointments() {
   const [ penDoctors , setpenDoctors ] = useState([])
@@ -20,32 +20,9 @@ function AdminAppointments() {
     })
   },[refresh])
 
-// accept appointment
-  const acceptAppointment = (id) =>{
-
-    axios.patch('/admin/acceptAppointment',{id}).then((response) => {
-      if(response.data.success){
-        message.success(response.data.message)
-        setRefresh(!refresh) 
-      }else{
-        message.error(response.data.message)
-      }
-    })
-  }
 
 
-  // reject appointment requests
 
-  const rejectAppointment = (id) =>{
-    axios.patch('/admin/rejectAppointment',{id}).then((response) => {
-      if(response.data.success){
-        message.success(response.data.message)
-        setRefresh(!refresh)
-      }else{
-        message.error(response.data.message)
-      }
-    })
-  }
   return (
 
     <>
@@ -74,6 +51,9 @@ function AdminAppointments() {
               Location
             </th>
             <th className="p-3 text-sm font-semibold tracking-wide text-left">
+              Licence
+            </th>
+            <th className="p-3 text-sm font-semibold tracking-wide text-left">
               Date
             </th>
             <th className="p-3 text-sm font-semibold tracking-wide text-left">
@@ -83,43 +63,7 @@ function AdminAppointments() {
         <tbody className=" bg-white divide-y divide-gray-200">
           {
             penDoctors.map(penDoctor =>(
-          <tr key={penDoctor._id} className="">
-            {/* <td className=" p-3 text-sm w-6 text-gray-700 ">
-              <div className="h-10 w-10">
-                <img className="h-10 w-10 rounded-full" src={person.image} alt="" />
-              </div>
-            </td>  */}
-            <td className=" p-3 text-sm text-gray-700 whitespace-nowrap">
-                {penDoctor.fName}
-            </td>
-            <td className=" p-3 text-sm text-gray-700 whitespace-nowrap">
-                {penDoctor.email}
-            </td>
-            <td className=" p-3 text-sm text-gray-700 whitespace-nowrap">
-                {penDoctor.number}
-            </td>
-            <td className=" p-3 text-sm text-gray-700 whitespace-nowrap">
-                {penDoctor.specialization}
-            </td>
-            <td className=" p-3 text-sm text-gray-700 whitespace-nowrap">
-                {penDoctor.location}
-            </td>
-            <td className=" p-3 text-sm text-gray-700 whitespace-nowrap">
-              <Moment format='YYYY/MM/DD' >
-                {penDoctor.createdAt}
-
-              </Moment>
-            </td>
-            <td className=" p-3 text-sm text-gray-700 whitespace-nowrap cursor-pointer">
-
-               <button onClick={()=>acceptAppointment(penDoctor._id)} className="p-1.5 text-xs font-medium uppercase tracking-wider text-yellow-800 bg-yellow-200 rounded-lg bg-opacity-80 hover:bg-opacity-50">Accept</button>
-               
-            <button onClick={()=>rejectAppointment(penDoctor._id)} className="p-1.5 ml-5 text-xs font-medium uppercase tracking-wider text-red-600 bg-yellow-200 rounded-lg bg-opacity-80 hover:bg-opacity-50">Reject</button>
-         
-               
-            </td>
-          
-          </tr>
+            <SingleAppointment penDoctor={penDoctor} refresh={refresh} setRefresh={setRefresh}/>
           ))
            }   
         </tbody>

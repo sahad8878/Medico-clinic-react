@@ -88,7 +88,7 @@ function DoctorLogin() {
             />
           </div>
           {error && (
-          <div className="error text-center w-full p-2 bg-red-600 bg-opacity-30 text-red-500">
+          <div className="error text-center w-full p-2  bg-red-600 bg-opacity-30 text-red-500">
             {error}
           </div>
           )}

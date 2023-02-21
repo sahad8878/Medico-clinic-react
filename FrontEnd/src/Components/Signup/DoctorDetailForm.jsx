@@ -10,6 +10,8 @@ import { storage } from '../../Firebase/confic';
 function DoctorDetailForm() {
   
 const navigate = useNavigate()
+const [error, setError] = useState(null);
+
   const [selectedValue, setSelectedValue] = useState([]);
   const days = [
     {
@@ -46,6 +48,7 @@ const navigate = useNavigate()
   const handleDetails = async (event) => {
     try {
       event.preventDefault();
+      setError(null)
       const doctor = JSON.parse(localStorage.getItem('doctorToken'));
     
     let data = new FormData(event.currentTarget);
@@ -93,8 +96,10 @@ const navigate = useNavigate()
         message.success('Your Details saved!');
         navigate('/doctor');
       } else {
-        // setErrMsg(result.msg)
-        message.error(result.message);
+        setError(result.msg)
+        message.error(result.message).then(() => {
+          setError(null)
+        })
       }
     });
     } catch (error) {
@@ -111,34 +116,7 @@ const navigate = useNavigate()
       <div className=" pl-5   w-[600px] mt-[170px] lg:mt-[240px] px-4">
         <h2 className=" text-3xl   font-mono font-bold">Fill The Form</h2>
         <form component="form"  onSubmit={handleDetails}>
-          {/* <label
-            className="block text-gray-700 font-medium mb-2 "
-            htmlFor="name"
-          >
-            Name
-          </label>
-          <div className="mb-4 md:flex md:flex-row">
-            <input
-              className="bg-white p-2  w-full"
-              type="text"
-              id="fName"
-              name="fName"
-              placeholder="First Name"
-              // value={name}
-              // onChange={(event) => setName(event.target.value)}
-              required
-            />
-            <input
-              className="bg-white p-2 w-full md:border-l mt-5 md:mt-0 md:border-l-black"
-              type="text"
-              id="lName"
-              name="lName"
-              placeholder="Last Name"
-              // value={name}
-              // onChange={(event) => setName(event.target.value)}
-              required
-            />
-          </div> */}
+         
           <div className="mb-4 mt-9">
             <label
               className="block text-gray-700 font-medium mb-2 "
@@ -176,7 +154,7 @@ const navigate = useNavigate()
           <div className="mb-4 ">
             <label
               className="block text-gray-700 font-medium mb-2 "
-              htmlFor="education"
+              htmlFor="profileImg"
             >
               Profile image
             </label>
@@ -243,16 +221,13 @@ const navigate = useNavigate()
               />
             </div>
           </div>
-          {/*  */}
+    
 
-          {/*  */}
-         
-
-          {/* {error && (
-          <div className="error text-red-500">
+          {error && (
+          <div className="text-center error text-red-500 w-full bg-red-500 bg-opacity-50 ">
             {error}
           </div>
-          )} */}
+          )}
           <div className="mb-4 mt-10 flex justify-center">
             <input
               // disabled={isLoading}

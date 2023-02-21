@@ -1,8 +1,10 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Link,useNavigate } from "react-router-dom";
 import { message } from 'antd';
 import {useDoctorAuthContext} from '../../Hooks/useDoctorAuthContext'
+import { ref, uploadString, getDownloadURL } from 'firebase/storage';
+import { storage } from '../../Firebase/confic';
 import axios from '../../Axios/Axios';
 
 function DoctorSignup() {
@@ -11,7 +13,18 @@ function DoctorSignup() {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
   const { dispatch } = useDoctorAuthContext();
-  const handleSignup = (event) => {
+
+  const [departments, setDepartments] = useState([]);
+  const [refresh, setRefresh] = useState(false);
+  useEffect(() => {
+    axios.get("/admin/getdepartments").then((response) => {
+      console.log(response.data);
+      setDepartments(response.data.departments);
+    });
+  }, [refresh]);
+
+  
+  const handleSignup = async(event) => {
     try {
     event.preventDefault();
     setIsLoading(true);
@@ -26,10 +39,33 @@ function DoctorSignup() {
       number: data.get('number'),
       email: data.get('email'),
       password: data.get('password'),
-      confirmPassword: data.get('confirmPassword')
-
+      confirmPassword: data.get('confirmPassword'),
+      licenceImg:data.get('licenceImg')
     }
     console.log(data);
+    if (data.licenceImg.name) {
+      const date = Date.now();
+      const rand = Math.random();
+      const image = data.licenceImg;
+      const imageRef = ref(storage, `/licenceImages/${date}${rand}_${image?.name}`);
+      const toBase64 = (image) =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(image);
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = (error) => reject(error);
+        }).catch((err) => {
+          console.log(err);
+        });
+      const imgBase = await toBase64(image);
+      await uploadString(imageRef, imgBase, 'data_url').then(async () => {
+        const downloadURL = await getDownloadURL(imageRef);
+        data.licenceImg = downloadURL;
+      });
+    } else {
+      data.licenceImg = '';
+    }
+ 
     axios
     .post('/doctor/doctorSignup', 
       data
@@ -99,7 +135,7 @@ function DoctorSignup() {
             >
               Specialization
             </label>
-            <input
+            {/* <input
               className="bg-white p-2  w-full"
               type="text"
               id="specialization"
@@ -108,7 +144,18 @@ function DoctorSignup() {
               // value={email}
               // onChange={(event) => setEmail(event.target.value)}
               required
-            />
+            /> */}
+               <select
+              class="bg-white p-2  w-full"
+              name="specialization"
+            >
+           { departments.map((department) => (
+             <option key={department._id}>{department.department}</option>
+            ))
+                 }
+
+            </select>
+
           </div>
           <div className="mb-4   flex flex-row">
             <div className>
@@ -147,6 +194,21 @@ function DoctorSignup() {
                 required
               />
             </div>
+          </div>
+          <div className="mb-4 ">
+            <label
+              className="block text-gray-700 font-medium mb-2 "
+              htmlFor="licenceImg"
+            >
+              Licence
+            </label>
+            <input
+              className="bg-white p-2  w-full"
+              type="file"
+              id="licenceImg"
+              name="licenceImg"
+              placeholder="Add your licence Image"
+            />
           </div>
           {/*  */}
         
@@ -223,11 +285,11 @@ function DoctorSignup() {
               required
             />
           </div>
-          {/* {error && (
-          <div className="error text-red-500">
+          {error && (
+          <div className="error text-center w-full p-2 bg-red-600 bg-opacity-30 text-red-500">
             {error}
           </div>
-          )} */}
+          )}
           <div className="mb-4 mt-10 flex justify-center">
             <input
               // disabled={isLoading}

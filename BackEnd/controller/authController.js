@@ -8,6 +8,8 @@ const ClientModel = require('../model/clientModel');
 
 const DoctorModel = require('../model/doctorModel')
 
+const DepartmentModel = require('../model/departmentModel');
+
 // client signup
 const signupController = async (req, res) => {
   try {
@@ -170,9 +172,9 @@ const doctorSignup = async(req, res) => {
 try{
 console.log(req.body);
 const {
-  fName,lName,specialization,experience,location, email, password, number,confirmPassword
+  fName,lName,specialization,experience,location,licenceImg, email, password, number,confirmPassword
 } = req.body;
-if ( fName&&lName&&specialization&&experience&&location&& email&& password&& number&&confirmPassword) {
+if ( fName&&lName&&specialization&&experience&&licenceImg&&location&& email&& password&& number&&confirmPassword) {
   // validation
   if (!validator.isEmail(email)) {
     return res
@@ -204,12 +206,15 @@ if ( fName&&lName&&specialization&&experience&&location&& email&& password&& num
     specialization,
     experience,
     location,
+    licenceImg,
     email,
     number,
     status:"pending",
     password: hashedPassword,
   });
-  await newDoctor.save().then((doctor)=>{
+  await newDoctor.save().then(async(doctor)=>{
+    
+ 
     const doctorToken = jwt.sign(
       { id: doctor._id },
       process.env.JWT_SECRET,
