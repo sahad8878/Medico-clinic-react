@@ -2,8 +2,17 @@
 import React from 'react';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import doctorImage from '../../Assets/doctor-image.jpg';
+import { useAuthContext } from "../../Hooks/useAuthContext";
+import { Link } from 'react-router-dom';
+import { message } from 'antd';
+
 
 function LandingFirst() {
+  const { user } = useAuthContext();
+
+  const notLogin = () => {
+    message.error('You must be logged in to continue')
+  }
   return (
      <>
  <div className="flex flex-col md:flex-row mt-[110px]  md:mt-[129px]">
@@ -13,12 +22,25 @@ function LandingFirst() {
         LET'S FIND YOUR
           DOCTOR
         </h1>
+        {
+          user ? (
+          <Link to='/service'>
         <span className="cursor-pointer  flex justify-center  mt-10 font-semibold text-xl w-48 bg-[#194569] p-2  text-white hover:text-black">
           Appointment
           <ArrowForwardIcon
             style={{ marginLeft: '10px', marginTop: '5px' }}
           />
         </span>
+        </Link> 
+          ) : (
+            <span onClick={notLogin} className="cursor-pointer  flex justify-center  mt-10 font-semibold text-xl w-48 bg-[#194569] p-2  text-white hover:text-black">
+            Appointment
+            <ArrowForwardIcon
+              style={{ marginLeft: '10px', marginTop: '5px' }}
+            />
+          </span>
+          )
+        }
 
         </div>
 

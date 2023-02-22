@@ -13,7 +13,7 @@ function LandigThird() {
           <br />
           HEALTHCARE
         </h1>
-        <h1 className="mt-10 text-3xl font-serif px-6 lg:text-center text-justify">
+        <h1 className="mt-10 text-lg sm:text-3xl font-serif px-6 lg:text-center text-justify">
           A place where every type of patient can find every type of care. A
           place where they can see comprehensive providers and treatment
           options, with cost and quality info . A place where they can choose

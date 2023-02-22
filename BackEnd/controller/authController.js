@@ -26,9 +26,19 @@ const signupController = async (req, res) => {
       }
       if (!validator.isStrongPassword(password)) {
         return res
-          .status(200)
-          .send({ message: 'Password not strong enough', success: false });
+        .status(200)
+        .send({ message: 'Password not strong enough', success: false });
       }
+      if(!validator.isMobilePhone(number,'en-IN')) {
+        return res
+        .status(200)
+        .send({ message: 'Phone Number is not valid', success: false });
+      }
+      // if(!validator.isLength(fName,2,12)){
+      //   return res
+      //   .status(200)
+      //   .send({ message: ' first name is valid only if it is more than minimum  2 letters and less than 12 letters', success: false });
+      // }
 
       const existingClient = await ClientModel.findOne({ email: email });
       if (existingClient) {
@@ -185,6 +195,11 @@ if ( fName&&lName&&specialization&&experience&&licenceImg&&location&& email&& pa
     return res
       .status(200)
       .send({ message: 'Password not strong enough', success: false });
+  }
+  if(!validator.isMobilePhone(number,'en-IN')) {
+    return res
+    .status(200)
+    .send({ message: 'Phone Number is not Valid', success: false });
   }
 
   const existingDoctor= await DoctorModel.findOne({email: email });

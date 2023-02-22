@@ -1,8 +1,13 @@
 import React from 'react';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import doctorImg from '../../Assets/doctor-img2.png';
+import { useDoctorAuthContext } from "../../Hooks/useDoctorAuthContext";
+import { Link } from 'react-router-dom';
+
 
 function LandingSecond() {
+  const { doctor } = useDoctorAuthContext();
+
   return (
     <>
      <div className="flex flex-col md:flex-row bg-[#EDF4FE]">
@@ -23,12 +28,29 @@ function LandingSecond() {
           <br />
           reaching new patients?
         </h2>
-        <span className="cursor-pointer  flex justify-center  mt-10 font-semibold text-xl w-52 bg-[#194569] p-2  text-white hover:text-black">
+       {
+        doctor ? (
+       <Link to ="/doctor">
+       <span className="cursor-pointer  flex justify-center  mt-10 font-semibold text-xl w-52 bg-[#194569] p-2  text-white hover:text-black">
           List Your Practice
           <ArrowForwardIcon
             style={{ marginLeft: '10px', marginTop: '5px' }}
           />
         </span>
+        </Link>
+        )
+        :(
+
+        <Link to ="/doctor/doctorLogin">
+        <span className="cursor-pointer  flex justify-center  mt-10 font-semibold text-xl w-52 bg-[#194569] p-2  text-white hover:text-black">
+           List Your Practice
+           <ArrowForwardIcon
+             style={{ marginLeft: '10px', marginTop: '5px' }}
+           />
+         </span>
+         </Link>
+        )
+        }
         </div>
       </div>
       {/*  */}

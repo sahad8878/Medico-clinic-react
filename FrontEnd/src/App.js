@@ -18,6 +18,7 @@ import LoginPage from './pages/Client/LoginPage';
 import SignupPage from './pages/Client/SignupPage';
 import ServicePage from './pages/Client/ServicePage';
 import DepartmentDoctorsPage from './pages/Client/DepartmentDoctorsPage';
+import DoctorDetailsPage from './pages/Client/DoctorDetailsPage'
 
 // doctor pages
 import DoctorHome from './pages/Doctor/DoctorHomePage';
@@ -48,6 +49,8 @@ function App() {
         <Route path="/signup" element={!user ? <SignupPage /> : <Navigate to="/" />} />
         <Route path="/service" element={ user ? <ServicePage /> : <Navigate to="/" />} />
         <Route path="/departmentDoctors/:departmentId" element={<DepartmentDoctorsPage />} />
+        <Route path="/doctorDetails/:doctorId" element={<DoctorDetailsPage />} />
+
          
 
         {/* Doctor routes */}

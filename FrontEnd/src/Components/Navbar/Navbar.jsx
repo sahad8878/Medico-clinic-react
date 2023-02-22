@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import CircleNotificationsRoundedIcon from "@mui/icons-material/CircleNotificationsRounded";
+import { message } from 'antd';
+
 
 import Dropdown from "../dropdown/Dropdown";
 import log from "../../Assets/main-logo.png";
@@ -14,11 +16,13 @@ export default function Nav() {
     localStorage.removeItem("clientToken");
     dispatch({ type: "LOGOUT" });
   };
-  return (
-    <nav
 
-      className="w-full z-10 bg-[#97CADB] fixed top-7"
-    >
+  const notLogin = () => {
+    message.error("Your must be logged in to continue");
+
+  }
+  return (
+    <nav className="w-full z-10 bg-[#97CADB] fixed top-7">
       <div className="justify-between px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-5">
         <div>
           <div className="flex items-center px-6 justify-between py-3 md:py-5 md:block">
@@ -77,56 +81,52 @@ export default function Nav() {
                 </span>
               </li>
               <li className="">
-              <span className="text-white font-semibold text-lg px-5 cursor-pointer hover:text-[#194569] rounded">
-                <Link to='/service'>Service</Link>
-          
-          </span>
+                {user ? (
+                  <Link to="/service">
+                    <span className="text-white font-semibold text-lg px-5 cursor-pointer hover:text-[#194569] rounded">
+                      Service
+                    </span>
+                  </Link>
+                ) : (
+                  <span onClick={notLogin} className="text-white font-semibold text-lg px-5 cursor-pointer hover:text-[#194569] rounded">
+                    Service
+                  </span>
+                )}
               </li>
-              {user&&(
-              
-             
+              {user && (
                 <li>
-                 <span className=" font-semibold text-lg px-5 cursor-pointer hover:text-[#194569] rounded">
-               {user.clientName}
-                </span>
-
+                  <span className=" font-semibold text-lg px-5 cursor-pointer hover:text-[#194569] rounded">
+                    {user.clientName}
+                  </span>
                 </li>
-             
-              
               )}
-              {user&&(
-              
-              <li className="">
-                
-              <button
-                onClick={handleLogout}
-                className="text-white font-semibold text-lg px-5 cursor-pointer hover:text-[#194569] rounded"
-              >
-                Logout
-              </button>
-              </li>
-              
+              {user && (
+                <li className="">
+                  <button
+                    onClick={handleLogout}
+                    className="text-white font-semibold text-lg px-5 cursor-pointer hover:text-[#194569] rounded"
+                  >
+                    Logout
+                  </button>
+                </li>
               )}
-          {!user&&(
-              <li className="">
-              <span className="">
-              <Dropdown />
-            </span>
-              </li>
+              {!user && (
+                <li className="">
+                  <span className="">
+                    <Dropdown />
+                  </span>
+                </li>
               )}
               <li className="text-gray-600 ">
-              <span className="text-white font-semibold text-lg px-5 hover:text-[#194569] rounded">
-                
+                <span className="text-white font-semibold text-lg px-5 hover:text-[#194569] rounded">
                   <CircleNotificationsRoundedIcon
                     sx={{
-                  
                       color: "#194569",
                       fontSize: "30px",
                       cursor: "pointer",
                     }}
                   />
                 </span>
-                
               </li>
             </ul>
           </div>

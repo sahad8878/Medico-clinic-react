@@ -11,7 +11,7 @@ function SelectDepartments() {
   const [departments, setDepartments] = useState([]);
   useEffect(() => {
     axios.get("/getdepartments").then((response) => {
-      console.log(response.data);
+      console.log(response.data.departments,"sadfasdfsadf")
       setDepartments(response.data.departments);
     });
   }, []);

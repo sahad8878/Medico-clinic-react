@@ -24,7 +24,7 @@ const doctorDetails = async (req, res) => {
       doctorImg &&
       availableDate
     ) {
-      console.log(req.body);
+      console.log(req.body,"gpppppppppppppp");
       const doctor = await DoctorModel.findByIdAndUpdate(
         doctorId,
         {
@@ -39,22 +39,26 @@ const doctorDetails = async (req, res) => {
           },
         },
         { new: true }
-      );
-      console.log(doctor);
-      if (doctor) {
-        const department = await  DepartmentModel.findOneAndUpdate({department:doctor.specialization},
-          {doctors:doctor._id}
-          )
-          console.log(department);
-
-        res
-          .status(201)
-          .send({ message: "your details have been saved", success: true });
-      } else {
-        return res
-          .status(200)
-          .send({ message: "No doctor exist ", success: false });
-      }
+      ).then(async(doctor) => {
+        let spec = doctor.specialization
+        if (doctor) {
+          let regExp = new RegExp(spec, "i");
+          const department = await  DepartmentModel.findOneAndUpdate({ department: { $regex: regExp }},
+           {$set:{doctors:doctor._id}},
+            {new: true}
+            )
+  
+          res
+            .status(201)
+            .send({ message: "your details have been saved", success: true });
+        } else {
+          return res
+            .status(200)
+            .send({ message: "No doctor exist ", success: false });
+        }
+        
+      })
+     
     } else {
       return res
         .status(200)
