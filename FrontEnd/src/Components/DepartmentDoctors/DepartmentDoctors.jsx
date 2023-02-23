@@ -6,17 +6,29 @@ import SingleDoctor from "./SingleDoctor";
 
 
 function DepartmentDoctors() {
-
+  
+  const [results, setResults] = useState([]);
     const [Doctors,setDoctors ] = useState([])
   const { departmentId } = useParams();
     useEffect(()=> {
       axios.get(`/getDepartmentDoctors/${departmentId}`).then((response) => {
         if(response.data.success){
-    
             setDoctors(response.data.doctors)
         }
       })
     },[])
+
+
+  const handleSearch = (location) => {
+ 
+
+  axios.get(`/getSearchDoctor?departmentId=${departmentId}&location=${location}`).then((response) => {
+
+    if(response.data.success){
+      setResults(response.data.searchResults);
+    }
+  })
+  }
 
   return (
     <div className=" p-5 sm:p-20 pb-10">
@@ -28,6 +40,7 @@ function DepartmentDoctors() {
       <div className="bg-[#D6E8EE] mb-11">
       <dir className="sm:px-36 pt-7 px-10 ">
         <div className="relative ">
+          
           <span className="absolute inset-y-0 left-0 flex items-center py-4">
             <button type="submit" className="p-2 focus:outline-none focus:ring">
               <svg
@@ -47,22 +60,38 @@ function DepartmentDoctors() {
             </button>
           </span>
           <input
-            type="search"
             name="Search"
-            placeholder="Search..."
+            type="text"
+            //  value={query} onChange={(event) => setQuery(event.target.value)}
+            onChange={(e)=>handleSearch(e.target.value)}
+            placeholder="Search Location..."
             className="w-full py-2 pl-10 text-sm rounded-full focus:outline-none"
           />
+          
         </div>
       </dir>
 
       <div className="  flex justify-center content-center">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-9 sm:gap-20 p-6  mt-10 ">
           {/*  */}
-          {Doctors.map((doctor) => (
+
+
+          {
+            results.length === 0 ? 
+          
+          Doctors.map((doctor) => (
             <Link to={`/doctorDetails/${doctor._id}`}>
            <SingleDoctor doctor={doctor}  />
            </Link>
-          ))}
+          ))
+        :
+        results.map((doctor) => (
+          <Link to={`/doctorDetails/${doctor._id}`}>
+         <SingleDoctor doctor={doctor}  />
+         </Link>
+        ))
+        
+        }
 
           {/*  */}
         </div>

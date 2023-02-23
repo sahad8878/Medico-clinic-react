@@ -18,7 +18,7 @@ function SingleDoctor({doctor}) {
       <div class="flex mt-4 space-x-3 md:mt-6">
         
       <span class="text-sm text-gray-500 dark:text-gray-400">
-        {doctor.specialization}
+        {doctor.location}
       </span>
 
        {/* <a

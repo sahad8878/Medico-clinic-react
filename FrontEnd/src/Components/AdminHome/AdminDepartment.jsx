@@ -9,41 +9,7 @@ import img from "../../Assets/doctor-img2.png";
 
 function AdminDepartment() {
   const navigate = useNavigate();
-  // const departments = [
-  //   {
-
-  //     id:1,
-  //     name: "dentists",
-  //     img: img,
-  //   },
-  //   {
-  //     id:2,
-  //     name: "dentists",
-  //     img: img,
-  //   },
-  //   {
-  //     id:3,
-  //     name: "dentists",
-  //     img: img,
-  //   },
-  //   {
-  //     id:4,
-  //     name: "dentists",
-  //     img: img,
-  //   },
-  //   ,
-  //   {
-  //     id:5,
-  //     name: "dentists",
-  //     img: img,
-  //   },
-  //   ,
-  //   {
-  //     id:6,
-  //     name: "dentists",
-  //     img: img,
-  //   },
-  // ];
+ 
   const [error, setError] = useState(null);
 
   const [isOpen, setIsOpen] = useState(false);

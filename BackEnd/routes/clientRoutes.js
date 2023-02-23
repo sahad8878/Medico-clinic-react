@@ -4,7 +4,7 @@ const {
   signupController,
 } = require("../controller/authController");
 
-const {getdepartments,getDepartmentDoctors,getDoctorDetails} = require('../controller/clientController')
+const {getdepartments,getDepartmentDoctors,getDoctorDetails,getSearchDoctor,getExperiencedDoctors,postAppointment} = require('../controller/clientController')
 
 const requireAuth = require("../middlewares/authMiddlewares");
 // router object
@@ -19,6 +19,10 @@ router.post("/clientLogin", loginController);
 // SIGNUP || POST
 router.post("/clientSignup", signupController);
 
+// Appointments || POST
+
+router.post("/postAppointment",postAppointment)
+
 // Get Departments || GET
 router.get('/getdepartments',getdepartments)
 
@@ -29,5 +33,13 @@ router.get('/getDepartmentDoctors/:departmentId',getDepartmentDoctors)
 // Get  Doctor Details || GET
 
 router.get('/getDoctorDetails/:doctorId',getDoctorDetails)
+
+// Search Doctors || GET
+
+router.get('/getSearchDoctor',getSearchDoctor)
+
+// get Experienced Doctors || GET
+
+router.get('/getExperiencedDoctors',getExperiencedDoctors)
 
 module.exports = router;
