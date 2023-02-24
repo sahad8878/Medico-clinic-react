@@ -90,6 +90,13 @@ const loginController = async (req, res) => {
           .status(200)
           .send({ message: 'User not found', success: false });
       }
+      if (client.block === true) {
+        return res
+          .status(200)
+          .send({ message: 'You have been blocked', success: false });
+      }
+
+
       const isMatch = await bcrypt.compare(password, client.password);
       if (!isMatch) {
         return res
@@ -97,7 +104,6 @@ const loginController = async (req, res) => {
           .send({ message: 'Invalid Email or Password', success: false });
       }
       const clientToken = jwt.sign(
-        // eslint-disable-next-line no-underscore-dangle
         { id: client._id },
         process.env.JWT_SECRET,
         {
@@ -105,12 +111,14 @@ const loginController = async (req, res) => {
         },
       );
       const clientName = client.fName;
+      const clientId= client._id
       res
         .status(200)
         .send({
           message: 'Login success',
           success: true,
           clientName,
+          clientId,
           clientToken,
         });
     } else {
@@ -272,6 +280,14 @@ const doctorLogin = async(req, res) => {
           .status(200)
           .send({ message:'Doctor not found', success: false });
       }else{
+         if(doctor.block === true){
+
+          return res
+          .status(200)
+          .send({ message:'Your have been blocked', success: false });
+
+         }else{
+
         const isMatch = await bcrypt.compare(password, doctor.password);
         if (!isMatch) {
           console.log("invalid email or password");
@@ -299,8 +315,9 @@ const doctorLogin = async(req, res) => {
             doctorToken,
           });
 
-        
         }
+        }
+
       }
       
     } else {

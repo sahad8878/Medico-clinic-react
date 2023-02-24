@@ -20,8 +20,6 @@ function DepartmentDoctors() {
 
 
   const handleSearch = (location) => {
- 
-
   axios.get(`/getSearchDoctor?departmentId=${departmentId}&location=${location}`).then((response) => {
 
     if(response.data.success){

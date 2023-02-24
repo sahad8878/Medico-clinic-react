@@ -16,7 +16,7 @@ const appointmentSchema = new mongoose.Schema(
         type: String,
         default:"pending",
       },
-    day: {
+    date: {
       type: String,
     },
     time: {

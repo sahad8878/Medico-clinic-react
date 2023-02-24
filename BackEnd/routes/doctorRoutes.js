@@ -3,6 +3,9 @@ const { doctorSignup, doctorLogin } = require("../controller/authController");
 const {
   doctorDetails,
   doctorStatusChecking,
+  getAppointments,
+  acceptAppointment,
+  rejecrAppointment
 } = require("../controller/doctorController");
 
 // route object
@@ -24,5 +27,18 @@ router.post("/doctorDetails", doctorDetails);
 // Doctor Status Checking || Get
 
 router.get("/statusChecking", doctorStatusChecking);
+
+// Get appointment informations || GET
+
+router.get('/getAppointments',getAppointments)
+
+// accept appointment || PATCH
+
+router.patch('/acceptAppointment',acceptAppointment)
+
+// reject appointment || PATCH
+
+
+router.patch('/rejecrAppointment',rejecrAppointment)
 
 module.exports = router;

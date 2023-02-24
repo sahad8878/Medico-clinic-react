@@ -1,15 +1,18 @@
 import React,{useEffect,useState} from 'react';
 import { useNavigate } from 'react-router-dom';
+import { message } from 'antd';
 import Footer from '../../Components/Footer/Footer';
 import DoctorNavbar from '../../Components/Navbar/DoctorNavbar';
 import Navbar from '../../Components/Navbar/Navbar';
 import DoctorDetail from '../../Components/Signup/DoctorDetailForm';
 import TopNav from '../../Components/TopNav/TopNav';
 import axios from '../../Axios/Axios'
+import {useDoctorAuthContext} from '../../Hooks/useDoctorAuthContext'
 
 function DetailsFormPage() {
-  const navigate = useNavigate()
   const [ refresh , setRefresh ] = useState(false)
+  const navigate = useNavigate()
+  const {dispatch } = useDoctorAuthContext();
 
   useEffect(()=>{
     const doctor = JSON.parse(localStorage.getItem('doctorToken'));
@@ -17,6 +20,12 @@ function DetailsFormPage() {
     axios.get(`/doctor/statusChecking?id=${doctor.doctorId}`).then((response) => {
     const result = response.data
     console.log(result.doctorStatus,"aaa");
+    if(result.doctorStatus === "blocked"){
+      message.error("Youn have been blocked")
+      localStorage.removeItem("doctorToken");
+      dispatch({ type: "LOGOUT" })
+      navigate('/')
+    }
     if(result.doctorStatus === "pending"){
      navigate('/doctor/doctorPendingPage')
      setRefresh(!refresh)

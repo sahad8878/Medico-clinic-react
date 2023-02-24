@@ -26,6 +26,7 @@ import DoctorLogin from './pages/Doctor/LoginPage';
 import DoctorSignup from './pages/Doctor/SignupPage';
 import DoctorPendingPage from './pages/Doctor/DoctorPendingPage';
 import DoctorDetailsForm from './pages/Doctor/DetailsFormPage'
+import DoctorAppointmentsPage from './pages/Doctor/DoctorAppointmentsPage';
 
 // admin pages
 import AdminLoginPage from './pages/Admin/AdminLoginPage';
@@ -48,8 +49,8 @@ function App() {
         <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/" />} />
         <Route path="/signup" element={!user ? <SignupPage /> : <Navigate to="/" />} />
         <Route path="/service" element={ user ? <ServicePage /> : <Navigate to="/" />} />
-        <Route path="/departmentDoctors/:departmentId" element={<DepartmentDoctorsPage />} />
-        <Route path="/doctorDetails/:doctorId" element={<DoctorDetailsPage />} />
+        <Route path="/departmentDoctors/:departmentId" element={user ?  <DepartmentDoctorsPage />  : <Navigate to="/" />} />
+        <Route path="/doctorDetails/:doctorId" element={ user ? <DoctorDetailsPage /> : <Navigate to="/" />} />
 
          
 
@@ -59,6 +60,8 @@ function App() {
         <Route path="/doctor/doctorSignup" element={ !doctor ? <DoctorSignup /> : <Navigate to="/doctor"/>} />
         <Route path="/doctor/doctorPendingPage" element={<DoctorPendingPage />} />
         <Route path="/doctor/doctorDetailsForm" element={<DoctorDetailsForm />} />
+        <Route path="/doctor/DoctorAppointmentsPage" element={<DoctorAppointmentsPage />} />
+
 
          
 

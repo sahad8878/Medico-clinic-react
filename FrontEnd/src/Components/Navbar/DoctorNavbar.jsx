@@ -75,14 +75,18 @@ className="w-full z-10 bg-[#97CADB] fixed top-7"
     >
       <ul className="items-center justify-center space-y-8 md:flex md:space-x-6 md:space-y-0">
         <li className="hover:text-[#194569]">
+        <Link to="/doctor">
           <span className="text-white font-semibold text-lg px-5 hover:text-[#194569] rounded">
-            <Link to="/doctor">Home</Link>
+            Home
           </span>
+            </Link>
         </li>
         <li className="">
+          <Link to='/doctor/DoctorAppointmentsPage'>
         <span className="text-white font-semibold text-lg px-5 cursor-pointer hover:text-[#194569] rounded">
       Appointments
     </span>
+    </Link>
         </li>
         {/* {doctor&&(
         

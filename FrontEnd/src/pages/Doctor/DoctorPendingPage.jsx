@@ -1,4 +1,5 @@
 import React, { useEffect,useState } from "react";
+import { message } from 'antd';
 import DoctorNavbar from '../../Components/Navbar/DoctorNavbar'
 import Footer from '../../Components/Footer/Footer'
 import TopNav from '../../Components/TopNav/TopNav'
@@ -8,7 +9,8 @@ import axios from '../../Axios/Axios'
 
 
 function DoctorPendingPage() {
-  const { doctor } = useDoctorAuthContext()
+  const { doctor,dispatch } = useDoctorAuthContext()
+
 const navigate = useNavigate()
 const [ refresh , setRefresh ] = useState(false)
 
@@ -18,6 +20,13 @@ const [ refresh , setRefresh ] = useState(false)
     axios.get(`/doctor/statusChecking?id=${doctor.doctorId}`).then((response) => {
     const result = response.data
     console.log(result.doctorStatus,"aaa");
+    if(result.doctorStatus === "blocked"){
+      message.error("Youn have been blocked")
+      localStorage.removeItem("doctorToken");
+      dispatch({ type: "LOGOUT" })
+      navigate('/')
+      setRefresh(!refresh)
+    }
     if(result.doctorStatus === "approved"){
       setRefresh(!refresh)
       navigate('/doctor/doctorDetailsForm')

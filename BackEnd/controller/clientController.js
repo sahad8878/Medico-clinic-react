@@ -1,7 +1,18 @@
-const DepartmentModel = require('../model/departmentModel')
 const mongoose = require('mongoose');
+const DepartmentModel = require('../model/departmentModel')
 const DoctorModel = require('../model/doctorModel');
+const AppointmentModel = require('../model/appointmentModel')
 
+
+const availableSlots =
+ [
+  { date: '2023-02-23', time: '10:00am' },
+  { date: '2023-02-24', time: '11:00am' },
+  { date: '2023-02-25', time: '2:00pm' },
+  { date: '2023-02-26', time: '3:00pm' },
+  { date: '2023-02-27', time: '9:00am' },
+  { date: '2023-02-28', time: '10:00am' },
+];
 
 const getdepartments = async(req, res) => {
 
@@ -70,6 +81,8 @@ const getDoctorDetails = async(req, res) => {
     
     console.log(doctor,"deeeeeeeeeeee");
     if (doctor) {
+     
+      
       res.status(201).send({ doctor, success: true });
     } else {
       return res
@@ -94,9 +107,10 @@ const getSearchDoctor = async(req, res) => {
     const did = mongoose.Types.ObjectId(req.query.departmentId.trim())
     const location = req.query.location
     const department = await DepartmentModel.findById(did)
-    const allDoctors = await DoctorModel.find({
-      location: {$regex: new RegExp(`^${location}.*`, "i")}
-    })
+    const allDoctors = await DoctorModel.find({$or:[
+      {location: {$regex: new RegExp(`^${location}.*`, "i")}},
+      {fName: {$regex: new RegExp(`^${location}.*`, "i")}},
+    ]})
     const searchResults = allDoctors.filter((obj)=> obj.specialization == department.department)
   
     if(searchResults.length > 0){
@@ -141,9 +155,24 @@ if (doctors) {
   }
 }
 
-const postAppointment = (req, res) => {
+const postAppointment = async(req, res) => {
 try {
+  const {date,time,doctor,client} = req.body
+console.log(date,time,doctor,client);
+const selectedSlot = availableSlots.find(slot => slot.date === date && slot.time === time);
+if (!selectedSlot) {
+  res.status(201).send({ message: 'The selected slot is no longer available.',success:false });
+  return;
+}
+  const newAppointment = new AppointmentModel({
+    date,
+    time,
+    doctor, 
+    client
+  });
+  await newAppointment.save();
 
+  res.send({ message: 'Appointment booked successfully.',success:true });
   
 } catch (error) {
     console.log(error);
@@ -154,4 +183,10 @@ try {
 }
 }
 
-module.exports = { getdepartments,getDepartmentDoctors,getDoctorDetails,getSearchDoctor,getExperiencedDoctors,postAppointment};
+const availableSlot = async(req, res) => {
+
+  
+  res.json(availableSlots);
+}
+
+module.exports = { getdepartments,getDepartmentDoctors,getDoctorDetails,getSearchDoctor,getExperiencedDoctors,postAppointment,availableSlot};

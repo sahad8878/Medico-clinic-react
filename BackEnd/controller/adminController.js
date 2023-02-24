@@ -6,7 +6,7 @@ const ClientModel = require("../model/clientModel");
 
 const getPendingDoctors = async (req, res) => {
   try {
-    const pendingDoctors = await DoctorModel.find({ status: "pending" });
+    const pendingDoctors = await DoctorModel.find({ status: "pending" }).sort({ updatedAt: -1 });
     console.log(pendingDoctors);
     if (pendingDoctors) {
       res.status(201).send({ pendingDoctors, success: true });
@@ -87,7 +87,7 @@ const rejectDoctorAppointment = async (req, res) => {
 
 const getDoctorsDetails = async (req, res) => {
   try {
-    const doctors = await DoctorModel.find({ status: { $ne: "pending" } });
+    const doctors = await DoctorModel.find({ status: { $ne: "pending" } }).sort({ updatedAt: -1 });
     console.log(doctors);
     console.log("--------------------------------------------------------");
 
@@ -166,7 +166,7 @@ const unBlockDoctor = async (req, res) => {
 
 const getClientDetails = async (req, res) => {
   try {
-    const clients = await ClientModel.find();
+    const clients = await ClientModel.find().sort({ updatedAt: -1 });
     console.log(clients);
     if (clients) {
       res.status(201).send({ clients, success: true });
@@ -281,7 +281,7 @@ const postDepartments = async (req, res) => {
 
 const getDepartments = async (req, res) => {
   try {
-    const departments = await DepartmentModel.find();
+    const departments = await DepartmentModel.find().sort({ updatedAt: -1 });
     console.log(departments);
     if (departments) {
       res.status(201).send({ departments, success: true });
