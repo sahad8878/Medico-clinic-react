@@ -15,8 +15,8 @@ function DoctorAppointmentsPage() {
     const [ refresh , setRefresh ] = useState(false)
     useEffect(()=>{
       const doctor = JSON.parse(localStorage.getItem('doctorToken'));
-      console.log(doctor.doctorId);
-      axios.get(`/doctor/statusChecking?id=${doctor.doctorId}`).then((response) => {
+      const doctorToken = doctor.doctorToken
+      axios.get(`/doctor/statusChecking?id=${doctor.doctorId}`,{headers:{'doctortoken':doctorToken}}).then((response) => {
       const result = response.data
       console.log(result.doctorStatus,"aaa");
       if(result.doctorStatus === "blocked"){

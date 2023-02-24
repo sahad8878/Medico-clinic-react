@@ -7,10 +7,12 @@ import SingleAppointment from './SingleAppointment';
 function AdminAppointments() {
   const [ penDoctors , setpenDoctors ] = useState([])
   const [ refresh , setRefresh ] = useState(false)
-
+  const admin = JSON.parse(localStorage.getItem('adminToken'));
+  const adminToken = admin.adminToken
   useEffect(()=>{
     axios
     .get('/admin/getPendingDoctors'
+    ,{headers:{'admintoken':adminToken}}
     ).then((response)=>{
       if(response.data.success){
         setpenDoctors(response.data.pendingDoctors)

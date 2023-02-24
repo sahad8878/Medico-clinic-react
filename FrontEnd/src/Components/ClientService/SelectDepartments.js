@@ -13,8 +13,12 @@ function SelectDepartments() {
 
   useEffect(() => {
     async function getDepartment() {
+      const client = JSON.parse(localStorage.getItem('clientToken'));
+      const clientToken = client.clientToken
+      console.log(clientToken,"token");
       const response = await axios.get(
-        `/getdepartments?page=${page}&limit=${limit}`
+        `/getdepartments?page=${page}&limit=${limit}`,
+         {headers:{'accesstoken':clientToken}}
       );
 
       console.log(response.data, "sadfasdfsadf");

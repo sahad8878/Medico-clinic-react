@@ -46,13 +46,13 @@ const doctorSchema = new mongoose.Schema(
     },
 
     startingTime: {
-      type: Date,
+      type: String,
     },
     endingTime: {
-      type: Date,
+      type: String,
     },
     availableDate: {
-      type: Date,
+      type: Array,
     },
 
     doctorImg: {

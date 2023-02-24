@@ -7,7 +7,8 @@ import axios from '../../Axios/Axios'
 
 function SingleAppointment({penDoctor,refresh,setRefresh}) {
     const [isOpen, setIsOpen] = useState(false);
-
+    const admin = JSON.parse(localStorage.getItem('adminToken'));
+    const adminToken = admin.adminToken
     const handleOpenModal = () => {
         setIsOpen(true);
       };
@@ -19,7 +20,7 @@ function SingleAppointment({penDoctor,refresh,setRefresh}) {
     // accept appointment
       const acceptAppointment = (id) =>{
     
-        axios.patch('/admin/acceptAppointment',{id}).then((response) => {
+        axios.patch('/admin/acceptAppointment',{id} ,{headers:{'admintoken':adminToken}}).then((response) => {
           if(response.data.success){
             message.success(response.data.message)
             setRefresh(!refresh) 
@@ -32,7 +33,7 @@ function SingleAppointment({penDoctor,refresh,setRefresh}) {
         // reject appointment requests
 
   const rejectAppointment = (id) =>{
-    axios.patch('/admin/rejectAppointment',{id}).then((response) => {
+    axios.patch('/admin/rejectAppointment',{id} ,{headers:{'admintoken':adminToken}}).then((response) => {
       if(response.data.success){
         message.success(response.data.message)
         setRefresh(!refresh)

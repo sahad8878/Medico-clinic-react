@@ -1,14 +1,14 @@
 const mongoose = require("mongoose");
-const mongoosePaginate = require('mongoose-paginate-v2');
+const mongoosePaginate = require("mongoose-paginate-v2");
 
 const departmentSchema = new mongoose.Schema(
   {
     department: {
       type: String,
     },
-    doctors:[
-      { 
-         type: mongoose.Schema.Types.ObjectId,
+    doctors: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
         ref: "doctors",
       },
     ],

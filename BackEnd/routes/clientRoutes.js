@@ -14,12 +14,10 @@ const {
   availableSlot,
 } = require("../controller/clientController");
 
-const requireAuth = require("../middlewares/authMiddlewares");
+const clientAuthMiddlewares = require("../middlewares/clientAuthMiddlewares");
 
 // router object
 const router = express.Router();
-
-// router.use(requireAuth)
 
 // routes
 
@@ -29,31 +27,32 @@ router.post("/clientLogin", loginController);
 // SIGNUP || POST
 router.post("/clientSignup", signupController);
 
+
 // Appointments || POST
 
-router.post("/postAppointment", postAppointment);
+router.post("/postAppointment",clientAuthMiddlewares, postAppointment);
 
 // Get Departments || GET
-router.get("/getdepartments", getdepartments);
+router.get("/getdepartments",clientAuthMiddlewares, getdepartments);
 
 // Get Department Doctors || GET
 
-router.get("/getDepartmentDoctors/:departmentId", getDepartmentDoctors);
+router.get("/getDepartmentDoctors/:departmentId",clientAuthMiddlewares, getDepartmentDoctors);
 
 // Get  Doctor Details || GET
 
-router.get("/getDoctorDetails/:doctorId", getDoctorDetails);
+router.get("/getDoctorDetails/:doctorId",clientAuthMiddlewares, getDoctorDetails);
 
 // Search Doctors || GET
 
-router.get("/getSearchDoctor", getSearchDoctor);
+router.get("/getSearchDoctor",clientAuthMiddlewares, getSearchDoctor);
 
 // get Experienced Doctors || GET
 
-router.get("/getExperiencedDoctors", getExperiencedDoctors);
+router.get("/getExperiencedDoctors",clientAuthMiddlewares, getExperiencedDoctors);
 
 // Check available Slotes || GET
 
-router.get("/availableSlot", availableSlot);
+router.get("/availableSlot",clientAuthMiddlewares, availableSlot);
 
 module.exports = router;

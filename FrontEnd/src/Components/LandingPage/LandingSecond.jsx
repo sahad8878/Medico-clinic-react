@@ -22,7 +22,7 @@ function LandingSecond() {
 
       <div className="  w-full    md:w-[50%] flex justify-center content-center">
         <div className='lg:p-28 p-10 '>
-        <h1 className=" font-mono font-bold text-3xl">MEDICO FOR PRIVATE PRACTICES</h1>
+        <h1 className=" font-serif font-bold text-3xl">MEDICO FOR PRIVATE PRACTICES</h1>
         <h2 className="mt-4 font-serif  text-3xl">
           Are you a provider interested in
           <br />

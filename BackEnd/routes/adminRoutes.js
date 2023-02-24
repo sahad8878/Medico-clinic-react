@@ -15,59 +15,63 @@ const {
   deleteDepartment,
 } = require("../controller/adminController");
 
+const adminAuthMiddlewares = require("../middlewares/adminAuthMiddlewares");
+
 // route object
 const router = express.Router();
 
 // routes
 
 // Admin Login || post
+
 router.post("/admin", adminLogin);
 
 // Pending Doctor Details || GET
 
-router.get("/getPendingDoctors", getPendingDoctors);
+router.get("/getPendingDoctors",adminAuthMiddlewares, getPendingDoctors);
 
 // Accept Doctor Appointment || Patch
 
-router.patch("/acceptAppointment", acceptDoctorAppointment);
+router.patch("/acceptAppointment",adminAuthMiddlewares, acceptDoctorAppointment);
 
 // Reject Doctor Appointment || Patch
 
-router.patch("/rejectAppointment", rejectDoctorAppointment);
+router.patch("/rejectAppointment",adminAuthMiddlewares, rejectDoctorAppointment);
 
 // Doctor Details || Get
 
-router.get("/getDoctorsDetails", getDoctorsDetails);
+router.get("/getDoctorsDetails",adminAuthMiddlewares, getDoctorsDetails);
 
 // Block Doctor || PATCH
 
-router.patch("/blockDoctor", blockDoctor);
+router.patch("/blockDoctor",adminAuthMiddlewares, blockDoctor);
 
 // UnBlock Doctor || Patch
 
-router.patch("/unBlockDoctor", unBlockDoctor);
+router.patch("/unBlockDoctor",adminAuthMiddlewares, unBlockDoctor);
 
 // Get Client Details || GEt
 
-router.get("/getClientDetails", getClientDetails);
+router.get("/getClientDetails",adminAuthMiddlewares, getClientDetails);
 
 // Block Client || PATCH
 
-router.patch("/blockClient", blockClient);
+router.patch("/blockClient",adminAuthMiddlewares, blockClient);
 
 // UnBlock Client || Patch
 
-router.patch("/unBlockClient", unBlockClient);
+router.patch("/unBlockClient",adminAuthMiddlewares, unBlockClient);
 
 // Adding Departments || Post
 
-router.post("/postDepartments", postDepartments);
+router.post("/postDepartments",adminAuthMiddlewares, postDepartments);
 
 // Get Departments || GET
 
-router.get("/getdepartments", getDepartments);
+router.get("/getdepartments",adminAuthMiddlewares, getDepartments);
 
 // Delete Department || DELETE
-router.delete("/deleteDepartment", deleteDepartment);
+
+router.delete("/deleteDepartment",adminAuthMiddlewares, deleteDepartment);
 
 module.exports = router;

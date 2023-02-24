@@ -50,6 +50,7 @@ const [error, setError] = useState(null);
       event.preventDefault();
       setError(null)
       const doctor = JSON.parse(localStorage.getItem('doctorToken'));
+      const doctorToken = doctor.doctorToken
     
     let data = new FormData(event.currentTarget);
     data = {
@@ -88,7 +89,7 @@ const [error, setError] = useState(null);
  
     axios
     .post('/doctor/doctorDetails', 
-    data
+    data,{headers:{'doctortoken':doctorToken}}
     )
     .then((response) => {
       const result = response.data;

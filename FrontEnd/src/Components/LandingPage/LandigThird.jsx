@@ -8,7 +8,7 @@ function LandigThird() {
       className="  bg-[#F5F0E2] flex w-screen  items-center justify-center "
      >
       <div className=" text-center py-10 lg:py-24  w-[1000px] ">
-        <h1 className="font-mono text-4xl font-bold ">
+        <h1 className="font-serif text-2xl sm:text-4xl font-bold ">
           WE'RE BUILDING A HOME FOR
           <br />
           HEALTHCARE

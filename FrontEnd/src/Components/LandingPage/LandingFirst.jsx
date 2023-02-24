@@ -18,7 +18,7 @@ function LandingFirst() {
  <div className="flex flex-col md:flex-row mt-[110px]  md:mt-[129px]">
       <div className="  w-full   bg-[#D6E8EE] md:w-[40%] flex justify-center content-center">
         <div className='p-20 lg:p-44'>
-        <h1 className=' text-4xl font-mono font-bold '>
+        <h1 className=' text-4xl font-serif font-bold '>
         LET'S FIND YOUR
           DOCTOR
         </h1>

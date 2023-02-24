@@ -7,7 +7,8 @@ import axios from '../../Axios/Axios'
 function SingleDoctor({doctor,refresh,setRefresh}) {
 
     const [isOpen, setIsOpen] = useState(false);
-
+    const admin = JSON.parse(localStorage.getItem('adminToken'));
+    const adminToken = admin.adminToken
     const handleOpenModal = () => {
         setIsOpen(true);
       };
@@ -19,7 +20,7 @@ function SingleDoctor({doctor,refresh,setRefresh}) {
       // Block doctor
       const blockDoctor = (id) =>{
         console.log(id,"unblock");
-      axios.patch('/admin/blockDoctor',{id}).then((response) => {
+      axios.patch('/admin/blockDoctor',{id},{headers:{'admintoken':adminToken}}).then((response) => {
         if(response.data.success){
           console.log(response.data);
           message.success(response.data.message)
@@ -33,7 +34,7 @@ function SingleDoctor({doctor,refresh,setRefresh}) {
     // UnBlock Doctor
     const unBlockDoctor = (id) =>{
       console.log(id,"unblock");
-      axios.patch('/admin/unBlockDoctor',{id}).then((response) => {
+      axios.patch('/admin/unBlockDoctor',{id},{headers:{'admintoken':adminToken}}).then((response) => {
         if(response.data.success){
           console.log(response.data);
           message.success(response.data.message)

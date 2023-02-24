@@ -12,8 +12,6 @@ function DoctorDetailspage() {
     <TopNav/>
     <Navbar/>
     <div className=' mt-[112px]  md:mt-[127px]'>
-
-    {/* <DoctorDetails/> */}
     <DoctorDetails/>
      <Footer/>
     </div>

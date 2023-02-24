@@ -16,8 +16,10 @@ function AdminDepartment() {
 
   const [departments, setDepartments] = useState([]);
   const [refresh, setRefresh] = useState(false);
+  const admin = JSON.parse(localStorage.getItem('adminToken'));
+  const adminToken = admin.adminToken
   useEffect(() => {
-    axios.get("/admin/getdepartments").then((response) => {
+    axios.get("/admin/getdepartments" ,{headers:{'admintoken':adminToken}}).then((response) => {
       console.log(response.data);
       setDepartments(response.data.departments);
     });
@@ -68,7 +70,7 @@ function AdminDepartment() {
       } else {
         data.departmentImg = "";
       }
-      axios.post("/admin/postDepartments", data).then((response) => {
+      axios.post("/admin/postDepartments", data,{headers:{'admintoken':adminToken}}).then((response) => {
         console.log(response, "responseeee");
         const result = response.data;
         if (result.success) {

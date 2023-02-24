@@ -5,10 +5,12 @@ function AdminDoctors() {
 
   const [ doctors , setdoctors ] = useState([])
   const [ refresh , setRefresh ] = useState(false)
-  
+  const admin = JSON.parse(localStorage.getItem('adminToken'));
+  const adminToken = admin.adminToken
   useEffect(()=>{
     axios
     .get('/admin/getDoctorsDetails'
+    ,{headers:{'admintoken':adminToken}}
     ).then((response)=>{
       setdoctors(response.data.doctors)
     })

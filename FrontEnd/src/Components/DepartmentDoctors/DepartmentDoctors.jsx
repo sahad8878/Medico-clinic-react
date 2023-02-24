@@ -10,8 +10,12 @@ function DepartmentDoctors() {
   const [results, setResults] = useState([]);
     const [Doctors,setDoctors ] = useState([])
   const { departmentId } = useParams();
+  const client = JSON.parse(localStorage.getItem('clientToken'));
+  const clientToken = client.clientToken
+  
     useEffect(()=> {
-      axios.get(`/getDepartmentDoctors/${departmentId}`).then((response) => {
+     
+      axios.get(`/getDepartmentDoctors/${departmentId}`, {headers:{'accesstoken':clientToken}}).then((response) => {
         if(response.data.success){
             setDoctors(response.data.doctors)
         }
@@ -20,7 +24,7 @@ function DepartmentDoctors() {
 
 
   const handleSearch = (location) => {
-  axios.get(`/getSearchDoctor?departmentId=${departmentId}&location=${location}`).then((response) => {
+  axios.get(`/getSearchDoctor?departmentId=${departmentId}&location=${location}`, {headers:{'accesstoken':clientToken}}).then((response) => {
 
     if(response.data.success){
       setResults(response.data.searchResults);

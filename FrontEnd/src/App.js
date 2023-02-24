@@ -13,28 +13,28 @@ import { useDoctorAuthContext } from './Hooks/useDoctorAuthContext';
 import './App.css';
 
 // client pages
-import LandingPage from './pages/Client/LandingPage';
-import LoginPage from './pages/Client/LoginPage';
-import SignupPage from './pages/Client/SignupPage';
-import ServicePage from './pages/Client/ServicePage';
-import DepartmentDoctorsPage from './pages/Client/DepartmentDoctorsPage';
-import DoctorDetailsPage from './pages/Client/DoctorDetailsPage'
+import LandingPage from './Pages/Client/LandingPage';
+import LoginPage from './Pages/Client/LoginPage';
+import SignupPage from './Pages/Client/SignupPage';
+import ServicePage from './Pages/Client/ServicePage';
+import DepartmentDoctorsPage from './Pages/Client/DepartmentDoctorsPage';
+import DoctorDetailsPage from './Pages/Client/DoctorDetailsPage'
 
 // doctor pages
-import DoctorHome from './pages/Doctor/DoctorHomePage';
-import DoctorLogin from './pages/Doctor/LoginPage';
-import DoctorSignup from './pages/Doctor/SignupPage';
-import DoctorPendingPage from './pages/Doctor/DoctorPendingPage';
-import DoctorDetailsForm from './pages/Doctor/DetailsFormPage'
-import DoctorAppointmentsPage from './pages/Doctor/DoctorAppointmentsPage';
+import DoctorHome from './Pages/Doctor/DoctorHomePage';
+import DoctorLogin from './Pages/Doctor/LoginPage';
+import DoctorSignup from './Pages/Doctor/SignupPage';
+import DoctorPendingPage from './Pages/Doctor/DoctorPendingPage';
+import DoctorDetailsForm from './Pages/Doctor/DetailsFormPage'
+import DoctorAppointmentsPage from './Pages/Doctor/DoctorAppointmentsPage';
 
 // admin pages
-import AdminLoginPage from './pages/Admin/AdminLoginPage';
-import AdminHomePage from './pages/Admin/AdminHomePage';
-import AdminClientPage from './pages/Admin/AdminClientPage';
-import AdminDoctorsPage from './pages/Admin/AdminDoctorsPage';
-import AdminAppointmentspage from './pages/Admin/AdminAppointmentsPage';
-import AdminDepartmentPage from './pages/Admin/AdminDepartmentPage';
+import AdminLoginPage from './Pages/Admin/AdminLoginPage';
+import AdminHomePage from './Pages/Admin/AdminHomePage';
+import AdminClientPage from './Pages/Admin/AdminClientPage';
+import AdminDoctorsPage from './Pages/Admin/AdminDoctorsPage';
+import AdminAppointmentspage from './Pages/Admin/AdminAppointmentsPage';
+import AdminDepartmentPage from './Pages/Admin/AdminDepartmentPage';
 
 function App() {
   const { user } = useAuthContext();

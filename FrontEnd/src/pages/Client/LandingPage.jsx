@@ -5,6 +5,8 @@ import LandingFirst from '../../Components/LandingPage/LandingFirst';
 import LandingSecond from '../../Components/LandingPage/LandingSecond';
 import LandigThird from '../../Components/LandingPage/LandigThird';
 import Footer from '../../Components/Footer/Footer';
+import axios from '../../Axios/Axios'
+import { useEffect } from 'react';
 
 function LandingPage() {
   // useEffect(()=>{
@@ -15,8 +17,8 @@ function LandingPage() {
   //     // Navigate('/singin')
   //   }
   // })
+  
   return (
-    // eslint-disable-next-line react/jsx-filename-extension
     <>
       <TopNav />
       <Navbar />

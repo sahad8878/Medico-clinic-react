@@ -1,11 +1,11 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState,useEffect } from "react";
-import { Link,useNavigate } from "react-router-dom";
-import { message } from 'antd';
-import {useDoctorAuthContext} from '../../Hooks/useDoctorAuthContext'
-import { ref, uploadString, getDownloadURL } from 'firebase/storage';
-import { storage } from '../../Firebase/confic';
-import axios from '../../Axios/Axios';
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { message } from "antd";
+import { useDoctorAuthContext } from "../../Hooks/useDoctorAuthContext";
+import { ref, uploadString, getDownloadURL } from "firebase/storage";
+import { storage } from "../../Firebase/confic";
+import axios from "../../Axios/Axios";
 
 function DoctorSignup() {
   const navigate = useNavigate();
@@ -17,79 +17,77 @@ function DoctorSignup() {
   const [departments, setDepartments] = useState([]);
   const [refresh, setRefresh] = useState(false);
   useEffect(() => {
-    axios.get("/admin/getdepartments").then((response) => {
+    axios.get("/doctor/getdepartments").then((response) => {
       console.log(response.data);
       setDepartments(response.data.departments);
     });
   }, [refresh]);
 
-  
-  const handleSignup = async(event) => {
+  const handleSignup = async (event) => {
     try {
-    event.preventDefault();
-    setIsLoading(true);
-    setError(null);
-    let data = new FormData(event.currentTarget);
-    data = {
-      fName: data.get('fName'),
-      lName: data.get('lName'),
-      specialization: data.get('specialization'),
-      experience: data.get('experience'),
-      location: data.get('location'),
-      number: data.get('number'),
-      email: data.get('email'),
-      password: data.get('password'),
-      confirmPassword: data.get('confirmPassword'),
-      licenceImg:data.get('licenceImg')
-    }
-    console.log(data);
-    if (data.licenceImg.name) {
-      const date = Date.now();
-      const rand = Math.random();
-      const image = data.licenceImg;
-      const imageRef = ref(storage, `/licenceImages/${date}${rand}_${image?.name}`);
-      const toBase64 = (image) =>
-        new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(image);
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = (error) => reject(error);
-        }).catch((err) => {
-          console.log(err);
+      event.preventDefault();
+      setIsLoading(true);
+      setError(null);
+      let data = new FormData(event.currentTarget);
+      data = {
+        fName: data.get("fName"),
+        lName: data.get("lName"),
+        specialization: data.get("specialization"),
+        experience: data.get("experience"),
+        location: data.get("location"),
+        number: data.get("number"),
+        email: data.get("email"),
+        password: data.get("password"),
+        confirmPassword: data.get("confirmPassword"),
+        licenceImg: data.get("licenceImg"),
+      };
+      console.log(data);
+      if (data.licenceImg.name) {
+        const date = Date.now();
+        const rand = Math.random();
+        const image = data.licenceImg;
+        const imageRef = ref(
+          storage,
+          `/licenceImages/${date}${rand}_${image?.name}`
+        );
+        const toBase64 = (image) =>
+          new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(image);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+          }).catch((err) => {
+            console.log(err);
+          });
+        const imgBase = await toBase64(image);
+        await uploadString(imageRef, imgBase, "data_url").then(async () => {
+          const downloadURL = await getDownloadURL(imageRef);
+          data.licenceImg = downloadURL;
         });
-      const imgBase = await toBase64(image);
-      await uploadString(imageRef, imgBase, 'data_url').then(async () => {
-        const downloadURL = await getDownloadURL(imageRef);
-        data.licenceImg = downloadURL;
-      });
-    } else {
-      data.licenceImg = '';
-    }
- 
-    axios
-    .post('/doctor/doctorSignup', 
-      data
-    )
-    .then((response) => {
-      const result = response.data;
-      if (result.success) {
-        localStorage.setItem('doctorToken', JSON.stringify(result));
-          dispatch({ type: 'LOGIN', payload: result });
-          setIsLoading(false);
-        message.success('Signup successfully!');
-        navigate('/doctor/doctorPendingPage');
       } else {
-        setIsLoading(false);
-        setError(result.message);
-        message.error(result.message).then(()=>{
-          setError(null)
-        })
+        data.licenceImg = "";
       }
-    });
-  } catch (error) {
-    console.log(error);
-    message.error('Somthing went wrong!');
-  }
+
+      axios.post("/doctor/doctorSignup", data).then((response) => {
+        const result = response.data;
+        if (result.success) {
+          localStorage.setItem("doctorToken", JSON.stringify(result));
+          dispatch({ type: "LOGIN", payload: result });
+          setIsLoading(false);
+          message.success("Signup successfully!");
+          navigate("/doctor/doctorPendingPage");
+        } else {
+          setIsLoading(false);
+          setError(result.message);
+          message.error(result.message).then(() => {
+            setError(null);
+          });
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      message.error("Somthing went wrong!");
+    }
   };
 
   return (
@@ -99,7 +97,7 @@ function DoctorSignup() {
         <p className="mb-10 text-[#1F6CD6] cursor-pointer">
           <Link to="/doctor/doctorLogin">Already have one? Log in</Link>
         </p>
-        <form  component="form" noValidate onSubmit={handleSignup}>
+        <form component="form" noValidate onSubmit={handleSignup}>
           <label
             className="block text-gray-700 font-medium mb-2 "
             htmlFor="name"
@@ -135,27 +133,12 @@ function DoctorSignup() {
             >
               Specialization
             </label>
-            {/* <input
-              className="bg-white p-2  w-full"
-              type="text"
-              id="specialization"
-              name="specialization"
-              placeholder="Specialization"
-              // value={email}
-              // onChange={(event) => setEmail(event.target.value)}
-              required
-            /> */}
-               <select
-              class="bg-white p-2  w-full"
-              name="specialization"
-            >
-           { departments.map((department) => (
-             <option key={department._id}>{department.department}</option>
-            ))
-                 }
 
+            <select class="bg-white p-2  w-full" name="specialization">
+              {departments.map((department) => (
+                <option key={department._id}>{department.department}</option>
+              ))}
             </select>
-
           </div>
           <div className="mb-4   flex flex-row">
             <div className>
@@ -163,7 +146,7 @@ function DoctorSignup() {
                 className=" text-gray-700 font-medium mb-2 "
                 htmlFor="experience"
               >
-               Experience
+                Experience
               </label>
               <input
                 className="bg-white p-2  w-full"
@@ -176,7 +159,7 @@ function DoctorSignup() {
                 required
               />
             </div>
-            <div className="sm:ml-20 ml-5 w-full sm:w-72 mt-1"  >
+            <div className="sm:ml-20 ml-5 w-full sm:w-72 mt-1">
               <label
                 className=" text-gray-700 font-medium mb-2 "
                 htmlFor="location"
@@ -211,7 +194,7 @@ function DoctorSignup() {
             />
           </div>
           {/*  */}
-        
+
           {/*  */}
           <div className="mb-4">
             <label
@@ -272,7 +255,7 @@ function DoctorSignup() {
               className="block text-black font-medium mb-2"
               htmlFor="confirmPassword"
             >
-             Confirm Password
+              Confirm Password
             </label>
             <input
               className="bg-white p-2 w-full"
@@ -286,9 +269,9 @@ function DoctorSignup() {
             />
           </div>
           {error && (
-          <div className="error text-center w-full p-2 bg-red-600 bg-opacity-30 text-red-500">
-            {error}
-          </div>
+            <div className="error text-center w-full p-2 bg-red-600 bg-opacity-30 text-red-500">
+              {error}
+            </div>
           )}
           <div className="mb-4 mt-10 flex justify-center">
             <input

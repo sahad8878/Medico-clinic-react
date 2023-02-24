@@ -5,6 +5,8 @@ import axios from "../../Axios/Axios";
 
 function SingleDepartment({ department, setRefresh, refresh }) {
   const [dropdown, setDropdown] = useState(false);
+  const admin = JSON.parse(localStorage.getItem('adminToken'));
+  const adminToken = admin.adminToken
   function handleDelete(id) {
     console.log(id);
     Swal.fire({
@@ -18,7 +20,7 @@ function SingleDepartment({ department, setRefresh, refresh }) {
     }).then((result) => {
       if (result.isConfirmed) {
         // TODO: Implement delete logic
-        axios.delete(`/admin/deleteDepartment?id=${id}`).then((response) => {
+        axios.delete(`/admin/deleteDepartment?id=${id}`,{headers:{'admintoken':adminToken}}).then((response) => {
           if (response.data.success) {
             console.log(response.data, "response");
             message.success(response.data.message);

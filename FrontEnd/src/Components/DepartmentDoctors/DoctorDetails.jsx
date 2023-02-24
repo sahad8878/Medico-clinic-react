@@ -17,9 +17,10 @@ function ExDocDetails() {
   const [selectedTime, setSelectedTime] = useState("");
 
   const { doctorId } = useParams();
-
+  const client = JSON.parse(localStorage.getItem('clientToken'));
+  const clientToken = client.clientToken
   useEffect(() => {
-    axios.get(`/getDoctorDetails/${doctorId}/`).then((response) => {
+    axios.get(`/getDoctorDetails/${doctorId}`, {headers:{'accesstoken':clientToken}}).then((response) => {
       if (response.data.success) {
         setDoctor(response.data.doctor);
       }
@@ -28,7 +29,7 @@ function ExDocDetails() {
 
   useEffect(() => {
     axios
-      .get(`/availableSlot`)
+      .get('/availableSlot', {headers:{'accesstoken':clientToken}})
 
       .then((response) => {
         if(response.data){

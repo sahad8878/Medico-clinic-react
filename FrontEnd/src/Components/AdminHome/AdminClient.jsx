@@ -6,9 +6,12 @@ import { message } from 'antd';
 function AdminClient() {
   const [ clients , setClients ] = useState([])
 const [ refresh, setRefresh] = useState(false)
+const admin = JSON.parse(localStorage.getItem('adminToken'));
+const adminToken = admin.adminToken
   useEffect(()=>{
     axios
     .get('/admin/getClientDetails'
+    ,{headers:{'admintoken':adminToken}}
     ).then((response)=>{
       setClients(response.data.clients)
     })
@@ -16,8 +19,8 @@ const [ refresh, setRefresh] = useState(false)
 
   // Block Client
   const blockClient = (id) =>{
-    console.log(id,"block");
-  axios.patch('/admin/blockClient',{id}).then((response) => {
+   
+  axios.patch('/admin/blockClient',{id} ,{headers:{'admintoken':adminToken}}).then((response) => {
     if(response.data.success){
       console.log(response.data);
       message.success(response.data.message)
@@ -30,8 +33,8 @@ const [ refresh, setRefresh] = useState(false)
 
  // UnBlock Client
  const unBlockClient = (id) =>{
-  console.log(id,"unblock");
-  axios.patch('/admin/unBlockClient',{id}).then((response) => {
+ 
+  axios.patch('/admin/unBlockClient',{id} ,{headers:{'admintoken':adminToken}}).then((response) => {
     if(response.data.success){
       console.log(response.data);
       message.success(response.data.message)

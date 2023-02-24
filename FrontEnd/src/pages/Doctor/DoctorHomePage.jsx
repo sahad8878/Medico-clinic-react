@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import Footer from '../../Components/Footer/Footer';
 import { message } from 'antd';
 import {useDoctorAuthContext} from '../../Hooks/useDoctorAuthContext'
+import DoctorProfile from '../../Components/DoctorHome/DoctorProfile';
 
 
 function DoctorHomePage() {
@@ -16,10 +17,9 @@ function DoctorHomePage() {
   const [ refresh , setRefresh ] = useState(false)
   useEffect(()=>{
     const doctor = JSON.parse(localStorage.getItem('doctorToken'));
-    console.log(doctor.doctorId);
-    axios.get(`/doctor/statusChecking?id=${doctor.doctorId}`).then((response) => {
+    const doctorToken = doctor.doctorToken
+    axios.get(`/doctor/statusChecking?id=${doctor.doctorId}`,{headers:{'doctortoken':doctorToken}}).then((response) => {
     const result = response.data
-    console.log(result.doctorStatus,"aaa");
     if(result.doctorStatus === "blocked"){
       message.error("Youn have been blocked")
       localStorage.removeItem("doctorToken");
@@ -44,6 +44,7 @@ function DoctorHomePage() {
     <DoctorNavbar />
         <div className=' mt-[112px]  md:mt-[127px]'>
         <DoctorHome />
+        <DoctorProfile />
          <Footer/>
         </div>
     </div>

@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const DoctorModel = require("../model/doctorModel");
 const DepartmentModel = require("../model/departmentModel");
-const AppointmentModel = require('../model/appointmentModel')
+const AppointmentModel = require("../model/appointmentModel");
 const { exists } = require("../model/clientModel");
 
 // post doctor details
@@ -25,7 +25,6 @@ const doctorDetails = async (req, res) => {
       doctorImg &&
       availableDate
     ) {
-      console.log(req.body, "gpppppppppppppp");
       const doctor = await DoctorModel.findByIdAndUpdate(
         doctorId,
         {
@@ -52,7 +51,6 @@ const doctorDetails = async (req, res) => {
           console.log(department.doctors.includes(doctor._id));
           if (!department.doctors.includes(doctor._id)) {
             department.doctors.push(doctor._id);
-            console.log("doctor added");
           } else {
             console.log("doctor allready exist");
           }
@@ -84,24 +82,23 @@ const doctorDetails = async (req, res) => {
 
 const doctorStatusChecking = async (req, res) => {
   try {
-    console.log(req.query);
     doctor = await DoctorModel.findById(req.query.id);
     let doctorStatus;
 
-    if(doctor.block === false){
-    if (doctor.status === "pending") {
-      doctorStatus = doctor.status;
+    if (doctor.block === false) {
+      if (doctor.status === "pending") {
+        doctorStatus = doctor.status;
+      }
+      if (doctor.status === "approved") {
+        doctorStatus = doctor.status;
+      }
+      if (doctor.status === "active") {
+        doctorStatus = doctor.status;
+      }
+    } else {
+      doctorStatus = "blocked";
     }
-    if (doctor.status === "approved") {
-      doctorStatus = doctor.status;
-    }
-    if (doctor.status === "active") {
-      doctorStatus = doctor.status;
-    }
-  }else{
-    doctorStatus = "blocked";
-  }
-    
+
     res.status(201).send({ doctorStatus, success: true });
   } catch (error) {
     console.log(error);
@@ -112,14 +109,41 @@ const doctorStatusChecking = async (req, res) => {
   }
 };
 
-// find doctor appointment 
+// 
 
-const getAppointments = async(req, res) => {
-try {
-  console.log(req.query.doctorId,"idddddddddddddddd");
-  
-  const pendingAppointments = await AppointmentModel.find({doctor:req.query.doctorId,status:"pending"}).populate("client").sort({ updatedAt: -1 })
-    console.log(pendingAppointments,"appointments");
+const getDoctorDetails = async(req, res) => {
+
+  try {
+    const did = mongoose.Types.ObjectId(req.params.doctorId.trim());
+    const doctor = await DoctorModel.findById(did);
+
+    if (doctor) {
+      res.status(201).send({ doctor, success: true });
+    } else {
+      return res
+        .status(200)
+        .send({ message: `couldnt find Doctor `, success: false });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: `client getDepartmentDoctors  controller ${error.message}`,
+    });
+  }
+
+}
+
+// find doctor appointment
+
+const getAppointments = async (req, res) => {
+  try {
+    const pendingAppointments = await AppointmentModel.find({
+      doctor: req.query.doctorId,
+      status: "pending",
+    })
+      .populate("client")
+      .sort({ updatedAt: -1 });
     if (pendingAppointments) {
       res.status(201).send({ pendingAppointments, success: true });
     } else {
@@ -127,28 +151,24 @@ try {
         .status(200)
         .send({ message: "No pendingDoctors", success: false });
     }
-
-} catch (error) {
+  } catch (error) {
     console.log(error);
     res.status(500).send({
       success: false,
       message: `getAppointment controller ${error.message}`,
     });
-}
-
-}
+  }
+};
 
 // Accept  Appoiontments
 
 const acceptAppointment = async (req, res) => {
   try {
-    console.log(req.body);
     const appointmen = await AppointmentModel.findByIdAndUpdate(
       req.body.id,
       { status: "approved" },
       { new: true }
     );
-    console.log(appointmen);
     if (appointmen) {
       res.status(201).send({
         message: ` Patient  Booking accepted`,
@@ -173,13 +193,11 @@ const acceptAppointment = async (req, res) => {
 
 const rejecrAppointment = async (req, res) => {
   try {
-    console.log(req.body);
     const appointmen = await AppointmentModel.findByIdAndUpdate(
       req.body.id,
       { status: "rejected" },
       { new: true }
     );
-    console.log(appointmen);
     if (appointmen) {
       res.status(201).send({
         message: ` Patient Booking rejected`,
@@ -200,12 +218,33 @@ const rejecrAppointment = async (req, res) => {
   }
 };
 
+// Get Departments
 
+const getDepartments = async (req, res) => {
+  try {
+    const departments = await DepartmentModel.find().sort({ updatedAt: -1 });
+    if (departments) {
+      res.status(201).send({ departments, success: true });
+    } else {
+      return res
+        .status(200)
+        .send({ message: "No Departments ", success: false });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: `getDepartments controller ${error.message}`,
+    });
+  }
+};
 
 module.exports = {
+  getDepartments,
   doctorDetails,
   doctorStatusChecking,
+  getDoctorDetails,
   getAppointments,
   acceptAppointment,
-  rejecrAppointment
+  rejecrAppointment,
 };

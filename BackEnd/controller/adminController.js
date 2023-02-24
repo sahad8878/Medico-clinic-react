@@ -6,8 +6,9 @@ const ClientModel = require("../model/clientModel");
 
 const getPendingDoctors = async (req, res) => {
   try {
-    const pendingDoctors = await DoctorModel.find({ status: "pending" }).sort({ updatedAt: -1 });
-    console.log(pendingDoctors);
+    const pendingDoctors = await DoctorModel.find({ status: "pending" }).sort({
+      updatedAt: -1,
+    });
     if (pendingDoctors) {
       res.status(201).send({ pendingDoctors, success: true });
     } else {
@@ -28,7 +29,6 @@ const getPendingDoctors = async (req, res) => {
 
 const acceptDoctorAppointment = async (req, res) => {
   try {
-    console.log(req.body);
     const doctor = await DoctorModel.findByIdAndUpdate(
       req.body.id,
       { status: "approved" },
@@ -59,9 +59,7 @@ const acceptDoctorAppointment = async (req, res) => {
 
 const rejectDoctorAppointment = async (req, res) => {
   try {
-    console.log(req.body);
     await DoctorModel.findByIdAndRemove(req.body.id).then((doctor) => {
-      console.log(doctor);
       if (doctor) {
         res.status(201).send({
           message: `Doctor ${doctor.fName} request rejected`,
@@ -87,10 +85,10 @@ const rejectDoctorAppointment = async (req, res) => {
 
 const getDoctorsDetails = async (req, res) => {
   try {
-    const doctors = await DoctorModel.find({ status: { $ne: "pending" } }).sort({ updatedAt: -1 });
+    const doctors = await DoctorModel.find({ status: { $ne: "pending" } }).sort(
+      { updatedAt: -1 }
+    );
     console.log(doctors);
-    console.log("--------------------------------------------------------");
-
     if (doctors) {
       res.status(201).send({ doctors, success: true });
     } else {
@@ -109,11 +107,9 @@ const getDoctorsDetails = async (req, res) => {
 
 const blockDoctor = async (req, res) => {
   try {
-    console.log(req.body);
     const doctor = await DoctorModel.findByIdAndUpdate(req.body.id, {
       block: true,
     });
-    console.log(doctor.block);
     if (doctor) {
       res
         .status(201)
@@ -137,11 +133,9 @@ const blockDoctor = async (req, res) => {
 
 const unBlockDoctor = async (req, res) => {
   try {
-    console.log(req.body);
     const doctor = await DoctorModel.findByIdAndUpdate(req.body.id, {
       block: false,
     });
-    console.log(doctor.block);
     if (doctor) {
       res.status(201).send({
         message: `Doctor ${doctor.fName} is unblocked`,
@@ -167,7 +161,6 @@ const unBlockDoctor = async (req, res) => {
 const getClientDetails = async (req, res) => {
   try {
     const clients = await ClientModel.find().sort({ updatedAt: -1 });
-    console.log(clients);
     if (clients) {
       res.status(201).send({ clients, success: true });
     } else {
@@ -186,11 +179,9 @@ const getClientDetails = async (req, res) => {
 
 const blockClient = async (req, res) => {
   try {
-    console.log(req.body);
     const client = await ClientModel.findByIdAndUpdate(req.body.id, {
       block: true,
     });
-    console.log(client.block);
     if (client) {
       res
         .status(201)
@@ -213,11 +204,9 @@ const blockClient = async (req, res) => {
 
 const unBlockClient = async (req, res) => {
   try {
-    console.log(req.body);
     const client = await ClientModel.findByIdAndUpdate(req.body.id, {
       block: false,
     });
-    console.log(client.block);
     if (client) {
       res
         .status(201)
@@ -282,7 +271,6 @@ const postDepartments = async (req, res) => {
 const getDepartments = async (req, res) => {
   try {
     const departments = await DepartmentModel.find().sort({ updatedAt: -1 });
-    console.log(departments);
     if (departments) {
       res.status(201).send({ departments, success: true });
     } else {
@@ -303,9 +291,7 @@ const getDepartments = async (req, res) => {
 
 const deleteDepartment = async (req, res) => {
   try {
-    console.log(req.query, "bpppppppd");
     await DepartmentModel.findByIdAndRemove(req.query.id).then((department) => {
-      console.log(department, "deeeee");
       if (department) {
         res.status(201).send({
           message: `${department.department} Department deleted`,
