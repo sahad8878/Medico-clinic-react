@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { InfinitySpin } from "react-loader-spinner";
+import { FiChevronRight, FiChevronLeft } from "react-icons/fi";
+
 import axios from '../../Axios/Axios'
 import SingleDoctor from "./SingleDoctor";
 
@@ -8,20 +11,45 @@ import SingleDoctor from "./SingleDoctor";
 function DepartmentDoctors() {
   
   const [results, setResults] = useState([]);
-    const [Doctors,setDoctors ] = useState([])
+    const [doctors,setDoctors ] = useState([])
+    const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(4);
+  const [pages, setPages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const { departmentId } = useParams();
   const client = JSON.parse(localStorage.getItem('clientToken'));
   const clientToken = client.clientToken
   
     useEffect(()=> {
-     
-      axios.get(`/getDepartmentDoctors/${departmentId}`, {headers:{'accesstoken':clientToken}}).then((response) => {
-        if(response.data.success){
-            setDoctors(response.data.doctors)
-        }
-      })
-    },[])
-
+     async function getDoctors() {
+      setIsLoading(true);
+      
+     await  axios.get(`/getDepartmentDoctors/${departmentId}?page=${page}&limit=${limit}`, {headers:{'accesstoken':clientToken}}).then((response) => {
+      const data = response.data.docs;
+             setDoctors(data)
+             console.log(response.data.docs);
+             setIsLoading(false)
+             const newPages = [];
+             for (let i = 1; i <= response.data.totalPages; i++) {
+               newPages.push(i);
+             }
+             setPages(newPages);
+         
+       })
+     }
+     getDoctors()
+    },[page,limit])
+       
+    function handlePrevClick() {
+      setPage((prevPage) => prevPage - 1);
+    }
+  
+    function handleNextClick() {
+      setPage((prevPage) => prevPage + 1);
+    }
+    function handlePageClick(selectedPage) {
+      setPage(selectedPage);
+    }
 
   const handleSearch = (location) => {
   axios.get(`/getSearchDoctor?departmentId=${departmentId}&location=${location}`, {headers:{'accesstoken':clientToken}}).then((response) => {
@@ -36,7 +64,7 @@ function DepartmentDoctors() {
     <div className=" p-5 sm:p-20 pb-10">
       <div className="flex justify-center content-center mb-8">
         <h1 className="text-2xl font-serif font-semibold">
-          Available Doctors{" "}
+          Available Doctors
         </h1>
       </div>
       <div className="bg-[#D6E8EE] mb-11">
@@ -74,6 +102,16 @@ function DepartmentDoctors() {
       </dir>
 
       <div className="  flex justify-center content-center">
+
+        {
+          isLoading ? 
+
+     <div className=" flex justify-center">
+            <InfinitySpin width="200" color="#194569" />
+          </div>
+          :
+
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-9 sm:gap-20 p-6  mt-10 ">
           {/*  */}
 
@@ -81,9 +119,9 @@ function DepartmentDoctors() {
           {
             results.length === 0 ? 
           
-          Doctors.map((doctor) => (
+          doctors.doctors.map((doctor) => (
             <Link to={`/doctorDetails/${doctor._id}`}>
-           <SingleDoctor doctor={doctor}  />
+           <SingleDoctor doctors={doctors}  />
            </Link>
           ))
         :
@@ -97,7 +135,33 @@ function DepartmentDoctors() {
 
           {/*  */}
         </div>
+        }
       </div>
+      <div className=" flex justify-center pt-5 ">
+          <button
+            onClick={handlePrevClick}
+            disabled={page === 1}
+            className="p-2 m-2 rounded-full bg-white"
+          >
+            <FiChevronLeft />
+          </button>
+          {pages.map((pageNum) => (
+            <button
+              key={pageNum}
+              onClick={() => handlePageClick(pageNum)}
+              className="p-3 m-2 rounded-full bg-white"
+            >
+              {pageNum}
+            </button>
+          ))}
+          <button
+            onClick={handleNextClick}
+            disabled={page === pages.length}
+            className="p-2 m-2 rounded-full bg-white"
+          >
+            <FiChevronRight />
+          </button>
+        </div>
       </div>
     </div>
   );

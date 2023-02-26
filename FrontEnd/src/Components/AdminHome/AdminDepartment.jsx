@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import { storage } from "../../Firebase/confic";
 import SingleDepartment from "./SingleDepartment";
-import img from "../../Assets/doctor-img2.png";
 
 function AdminDepartment() {
   const navigate = useNavigate();
@@ -15,6 +14,7 @@ function AdminDepartment() {
   const [isOpen, setIsOpen] = useState(false);
 
   const [departments, setDepartments] = useState([]);
+  const [depImg,setDepImg] = useState(null)
   const [refresh, setRefresh] = useState(false);
   const admin = JSON.parse(localStorage.getItem('adminToken'));
   const adminToken = admin.adminToken
@@ -41,8 +41,8 @@ function AdminDepartment() {
       let data = new FormData(event.currentTarget);
       data = {
         department: data.get("department"),
-        departmentImg: data.get("departmentImg"),
         description: data.get("description"),
+        departmentImg:depImg ,
       };
       console.log(data);
       if (data.departmentImg.name) {
@@ -65,10 +65,10 @@ function AdminDepartment() {
         const imgBase = await toBase64(departmentImg);
         await uploadString(imageRef, imgBase, "data_url").then(async () => {
           const downloadURL = await getDownloadURL(imageRef);
-          data.departmentImg = downloadURL;
+         data.departmentImg = downloadURL
         });
       } else {
-        data.departmentImg = "";
+        data.departmentImg = null
       }
       axios.post("/admin/postDepartments", data,{headers:{'admintoken':adminToken}}).then((response) => {
         console.log(response, "responseeee");
@@ -160,12 +160,18 @@ function AdminDepartment() {
                     >
                       Image
                     </label>
+                    <div>
+                      <img src={depImg ? window.URL.createObjectURL(depImg) : null} alt="" />
+                    </div>
                     <input
                       className="bg-white p-2 rounded-lg w-full"
                       type="file"
                       id="departmentImg"
                       name="departmentImg"
                       placeholder="Department Image"
+                      onChange={(e) => {
+                        setDepImg(e.target.files[0]);
+                      }}
                       // value={email}
                       // onChange={(event) => setEmail(event.target.value)}
                     />

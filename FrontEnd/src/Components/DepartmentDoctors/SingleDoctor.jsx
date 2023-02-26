@@ -2,22 +2,24 @@ import React from 'react'
 
 function SingleDoctor({doctor}) {
   return (
-    <div class="  rounded-t-3xl cursor-pointer   bg-gray-50  hover:bg-gray-200 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 ">
-    <div class="flex flex-col items-center pb-3">
+
+    
+    <div className="  rounded-t-3xl cursor-pointer   bg-gray-50  hover:bg-gray-200 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 ">
+    <div className="flex flex-col items-center pb-3">
       <img
-        class="w-44 h-44 mb-3  rounded-t-3xl  shadow-lg"
+        className="w-44 h-44 mb-3  rounded-t-3xl  shadow-lg"
         src={doctor.doctorImg}
         alt="Bonnie image"
       />
-      <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
+      <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
         {doctor.fName}
       </h5>
-      <span class="text-sm text-gray-500 dark:text-gray-400">
+      <span className="text-sm text-gray-500 dark:text-gray-400">
         {doctor.specialization}
       </span>
-      <div class="flex mt-4 space-x-3 md:mt-6">
+      <div className="flex mt-4 space-x-3 md:mt-6">
         
-      <span class="text-sm text-gray-500 dark:text-gray-400">
+      <span className="text-sm text-gray-500 dark:text-gray-400">
         {doctor.location}
       </span>
 

@@ -13,6 +13,7 @@ const {
   postDepartments,
   getDepartments,
   deleteDepartment,
+  putEditDepartment
 } = require("../controller/adminController");
 
 const adminAuthMiddlewares = require("../middlewares/adminAuthMiddlewares");
@@ -73,5 +74,9 @@ router.get("/getdepartments",adminAuthMiddlewares, getDepartments);
 // Delete Department || DELETE
 
 router.delete("/deleteDepartment",adminAuthMiddlewares, deleteDepartment);
+
+// Edit Department || PUT
+
+router.put("/putEditDepartment",adminAuthMiddlewares,putEditDepartment)
 
 module.exports = router;

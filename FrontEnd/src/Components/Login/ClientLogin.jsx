@@ -1,48 +1,48 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-shadow */
-import React, { useState } from 'react';
-import './Login.css';
-import { message } from 'antd';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuthContext } from '../../Hooks/useAuthContext';
-import axios from '../../Axios/Axios';
+import React, { useState } from "react";
+import "./Login.css";
+import { message } from "antd";
+import { useNavigate, Link } from "react-router-dom";
+import { InfinitySpin } from "react-loader-spinner";
+import { useAuthContext } from "../../Hooks/useAuthContext";
+import axios from "../../Axios/Axios";
 
 function ClientLogin() {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  
   const { dispatch } = useAuthContext();
 
   const handleLogin = async (event) => {
     try {
       event.preventDefault();
-      console.log(password);
-      console.log(email);
       setIsLoading(true);
       setError(null);
-      axios.post('/clientLogin', { email, password }).then((response) => {
+      axios.post("/clientLogin", { email, password }).then((response) => {
         const result = response.data;
         if (result.success) {
-          localStorage.setItem('clientToken', JSON.stringify(result));
-          dispatch({ type: 'LOGIN', payload: result });
+          localStorage.setItem("clientToken", JSON.stringify(result));
+          dispatch({ type: "LOGIN", payload: result });
           setIsLoading(false);
-          message.success('Login  successfully!');
-          navigate('/');
+          message.success("Login  successfully!");
+          navigate("/");
         } else {
           setIsLoading(false);
           setError(result.message);
-          message.error(result.message).then(()=>{
-            setError(null)
-          })
+          message.error(result.message).then(() => {
+            setError(null);
+          });
         }
       });
     } catch (error) {
       console.log(error);
-      message.error('Somthing went wrong!');
+      message.error("Somthing went wrong!");
     }
   };
   return (
@@ -90,18 +90,26 @@ function ClientLogin() {
             />
           </div>
           {error && (
-          <div className="error text-center w-full p-2 bg-red-600 bg-opacity-30 text-red-500">
-            {error}
-          </div>
+            <div className="error text-center w-full p-2 bg-red-600 bg-opacity-30 text-red-500">
+              {error}
+            </div>
           )}
-          <div className="mb-4 mt-10 flex justify-center">
-            <input
-              disabled={isLoading}
-              className="bg-white  hover:bg-[#194569] text-black font-medium py-2 px-32 rounded-lg"
-              type="submit"
-              value="Continue"
-            />
-          </div>
+
+          {isLoading ? (
+            <div className="mb-4 mt-10 flex justify-center " >
+              
+              <InfinitySpin width="200" color="#194569" />
+            </div>
+
+          ) : (
+            <div className="mb-4 mt-10 flex justify-center">
+              <input
+                className="bg-white  hover:bg-[#194569] text-black font-medium py-2 px-32 rounded-lg"
+                type="submit"
+                value="Continue"
+              />
+            </div>
+          )}
         </form>
       </div>
     </div>

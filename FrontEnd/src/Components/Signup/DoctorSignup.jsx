@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { message } from "antd";
+import { InfinitySpin } from "react-loader-spinner";
 import { useDoctorAuthContext } from "../../Hooks/useDoctorAuthContext";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import { storage } from "../../Firebase/confic";
@@ -9,9 +10,8 @@ import axios from "../../Axios/Axios";
 
 function DoctorSignup() {
   const navigate = useNavigate();
-
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { dispatch } = useDoctorAuthContext();
 
   const [departments, setDepartments] = useState([]);
@@ -111,8 +111,6 @@ function DoctorSignup() {
               id="fName"
               name="fName"
               placeholder="First Name"
-              // value={name}
-              // onChange={(event) => setName(event.target.value)}
               required
             />
             <input
@@ -121,8 +119,6 @@ function DoctorSignup() {
               id="lName"
               name="lName"
               placeholder="Last Name"
-              // value={name}
-              // onChange={(event) => setName(event.target.value)}
               required
             />
           </div>
@@ -154,8 +150,6 @@ function DoctorSignup() {
                 id="experience"
                 name="experience"
                 placeholder="Experience"
-                // value={number}
-                // onChange={(event) => setNumber(event.target.value)}
                 required
               />
             </div>
@@ -172,8 +166,6 @@ function DoctorSignup() {
                 id="location"
                 name="location"
                 placeholder="Location"
-                // value={number}
-                // onChange={(event) => setNumber(event.target.value)}
                 required
               />
             </div>
@@ -193,9 +185,6 @@ function DoctorSignup() {
               placeholder="Add your licence Image"
             />
           </div>
-          {/*  */}
-
-          {/*  */}
           <div className="mb-4">
             <label
               className="block text-gray-700 font-medium mb-2 "
@@ -209,8 +198,6 @@ function DoctorSignup() {
               id="number"
               name="number"
               placeholder="Phone Number"
-              // value={number}
-              // onChange={(event) => setNumber(event.target.value)}
               required
             />
           </div>
@@ -227,8 +214,6 @@ function DoctorSignup() {
               id="email"
               name="email"
               placeholder="Enter Your Email"
-              // value={email}
-              // onChange={(event) => setEmail(event.target.value)}
               required
             />
           </div>
@@ -245,8 +230,6 @@ function DoctorSignup() {
               id="password"
               name="password"
               placeholder="Enter Your Password"
-              // value={password}
-              // onChange={(event) => setPassword(event.target.value)}
               required
             />
           </div>
@@ -263,8 +246,6 @@ function DoctorSignup() {
               id="confirmPassword"
               name="confirmPassword"
               placeholder="Confirm Your Password"
-              // value={conPassword}
-              // onChange={(event) => setConPassword(event.target.value)}
               required
             />
           </div>
@@ -273,15 +254,19 @@ function DoctorSignup() {
               {error}
             </div>
           )}
-          <div className="mb-4 mt-10 flex justify-center">
-            <input
-              // disabled={isLoading}
-
-              className="bg-white  hover:bg-[#194569] text-black font-medium py-2 px-20 sm:px-32 mb-20 rounded-lg"
-              type="submit"
-              value="Save and Continue"
-            />
-          </div>
+          {isLoading ? (
+            <div className="mb-4 mt-10 flex justify-center ">
+              <InfinitySpin width="200" color="#194569" />
+            </div>
+          ) : (
+            <div className="mb-4 mt-10 flex justify-center">
+              <input
+                className="bg-white  hover:bg-[#194569] text-black font-medium py-2 px-20 sm:px-32 mb-20 rounded-lg"
+                type="submit"
+                value="Save and Continue"
+              />
+            </div>
+          )}
         </form>
       </div>
     </div>

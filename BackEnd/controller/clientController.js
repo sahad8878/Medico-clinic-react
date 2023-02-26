@@ -42,11 +42,26 @@ const getdepartments = async (req, res) => {
 
 const getDepartmentDoctors = async (req, res) => {
   try {
-    const did = mongoose.Types.ObjectId(req.params.departmentId.trim());
-    const departments = await DepartmentModel.findById(did).populate("doctors");
-    const doctors = departments.doctors;
-    if (doctors) {
-      res.status(201).send({ doctors, success: true });
+    const departmentId = req.params.departmentId
+    const { page, limit } = req.query;
+    console.log(departmentId,page, limit,'get depa');
+    const options = {
+      page: parseInt(page, 10) || 1,
+      limit: parseInt(limit, 4) || 4,
+      // sort: { createdAt: 1 },
+      populate: "doctors" 
+    };
+    const did = mongoose.Types.ObjectId(departmentId.trim());
+    // const departments = await DepartmentModel.findById(did).populate("doctors")
+    // const departments = await DepartmentModel.paginate({_id:did}, options)
+    // const doctors = departments.docs.doctors;
+    const department = await DepartmentModel.findById(did).exec();
+    console.log(department,"deppppppppp");
+const doctors = await DepartmentModel.paginate({ _id: department._id }, options);
+console.log(doctors);
+    if (doctors) { 
+      // res.status(201).send({ doctors, success: true });
+      res.status(201).json(doctors);
     } else {
       return res
         .status(200)

@@ -1,10 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { message } from "antd";
 import axios from "../../Axios/Axios";
+import { ref, uploadString, getDownloadURL } from "firebase/storage";
+import { storage } from "../../Firebase/confic";
 
 function SingleDepartment({ department, setRefresh, refresh }) {
   const [dropdown, setDropdown] = useState(false);
+  const [modal, setModal] = useState(false);
+  const [error, setError] = useState(null);
+  const [depName,setDepName] = useState(department.department)
+  const [description,setDescription] = useState(department.description)
+  const [depImg,setDepImg] = useState(null)
+const [previewUrl, setPreviewUrl] = useState(department.departmentImg);
+
+  const handleFileInputChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setDepImg(selectedFile);
+
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result);
+      };
+      reader.readAsDataURL(selectedFile);
+    } else {
+      setPreviewUrl(null);
+    }
+  };
+
+  const handleOpenModal = () => {
+    setModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setModal(false);
+  };
+
   const admin = JSON.parse(localStorage.getItem('adminToken'));
   const adminToken = admin.adminToken
   function handleDelete(id) {
@@ -37,7 +69,73 @@ function SingleDepartment({ department, setRefresh, refresh }) {
       }
     });
   }
+
+  const editDepartment = async (event) => {
+    try {
+      event.preventDefault();
+      setError(null);
+
+      let data = new FormData(event.currentTarget);
+      data = {
+        department: data.get("department"),
+        description: data.get("description"),
+        departmentImg:depImg ,
+        departmentId:department._id
+      };
+      console.log(data ,);
+    console.log(previewUrl,"prevvvvvvv")
+    console.log(depImg,"eeeeeeeeeeeee");
+
+      if (data.departmentImg !== null) {
+        const date = Date.now();
+        const rand = Math.random();
+        const departmentImg = data.departmentImg;
+        const imageRef = ref(
+          storage,
+          `/departmentImages/${date}${rand}_${departmentImg?.name}`
+        );
+        const toBase64 = (departmentImg) =>
+          new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(departmentImg);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+          }).catch((err) => {
+            console.log(err);
+          });
+        const imgBase = await toBase64(departmentImg);
+        await uploadString(imageRef, imgBase, "data_url").then(async () => {
+          const downloadURL = await getDownloadURL(imageRef);
+         data.departmentImg = downloadURL
+         console.log(data.departmentImg,"not null");
+        });
+      } else {
+        data.departmentImg = department.departmentImg
+        console.log(data.departmentImg,"null");
+      }
+      console.log(data,'last data');
+      axios.put("/admin/putEditDepartment", data,{headers:{'admintoken':adminToken}}).then((response) => {
+        console.log(response, "responseeee");
+        const result = response.data;
+        if (result.success) {
+          message.success("Department successfully Updated");
+          // navigate('/admin/AdminDepartmentPage');
+          handleCloseModal();
+          setRefresh(!refresh);
+        } else {
+          setError(result.message);
+          message.error(result.message).then(() => {
+            setError(null);
+          });
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      message.error("Somthing went wrong!");
+    }
+  };
   return (
+    <>
     <div
       key={department._id}
       className="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 cursor-pointer"
@@ -93,7 +191,7 @@ function SingleDepartment({ department, setRefresh, refresh }) {
             <div
               className={`   ${
                 dropdown ? "block" : "hidden"
-              } absolute right-0 z-10 w-48 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`}
+              } absolute right-0  w-28 sm:w-36  origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`}
             >
               <div
                 onClick={() => handleDelete(department._id)}
@@ -106,12 +204,133 @@ function SingleDepartment({ department, setRefresh, refresh }) {
                   Delete
                 </span>
               </div>
+              <div
+                onClick={handleOpenModal}
+                className="py-1 border-t"
+                role="menu"
+                aria-orientation="vertical"
+                aria-labelledby="options-menu"
+              >
+                <span className="block px-4 py-2 font-bold text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                  Edit
+                </span>
+              </div>
             </div>
           )}
         </div>
-        {/* <button className=" md:pb-40">del</button> */}
       </div>
     </div>
+    {modal && (
+        <div className="fixed z-50 inset-0 overflow-y-auto">
+          <div className="flex items-center justify-center min-h-screen px-4">
+            <div
+              className="fixed inset-0 transition-opacity"
+              onClick={handleCloseModal}
+            >
+              <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+
+            {/* Modal */}
+            <div className="rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full sm:max-w-md">
+              <div className="bg-[#EDF4FE] bg-opacity-70 px-4 py-3">
+                <h2 className="text-lg text-center font-medium text-gray-900">
+                  Add Department
+                </h2>
+              </div>
+              <div className=" bg-[#EDF4FE]    px-4 pt-5 pb-4">
+                <form component="form" onSubmit={editDepartment}>
+                  <div className="mb-4">
+                    <label
+                      className="block text-gray-700 font-medium mb-2 "
+                      htmlFor="department"
+                    >
+                      Department Name
+                    </label>
+                    <input
+                      className="bg-white p-2 rounded-lg w-full"
+                      type="text"
+                      id="department"
+                      name="department"
+                      placeholder="Department Name"
+                      value={depName}
+                      onChange={(event) => setDepName(event.target.value)}
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label
+                      className="block text-gray-700 font-medium mb-2 "
+                      htmlFor="departmentImg"
+                    >
+                      Image
+                    </label>
+                    <div>
+                      <img 
+                      src={previewUrl}
+                      // src={depImg ? window.URL.createObjectURL(depImg) : department.departmentImg } 
+                      alt="" />
+                    </div>
+
+                    <input
+                      className="bg-white p-2 rounded-lg w-full"
+                      type="file"
+                      id="departmentImg"
+                      name="departmentImg"
+                      placeholder="Department Image"
+                      // onChange={(e) => {
+                      //   setDepImg(e.target.files[0]);
+                      // }}
+                      accept="image/*"
+                      onChange={handleFileInputChange}
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label
+                      className="block text-black font-medium mb-2"
+                      htmlFor="description"
+                    >
+                      Description
+                    </label>
+                    <textarea
+                      className="bg-white p-2 rounded-lg w-full"
+                      id="description"
+                      name="description"
+                      placeholder="Add Discription"
+                      value={description}
+                      onChange={(event) => setDescription(event.target.value)}
+                    />
+                   
+                  </div>
+                  {error && (
+                    <div className="error text-center w-full p-2 bg-red-600 bg-opacity-30 text-red-500">
+                      {error}
+                    </div>
+                  )}
+                  <div className="mb-4 mt-10 flex justify-center">
+                    <input
+                      className="bg-white  hover:bg-[#194569] text-black font-bold py-2 px-20 rounded-lg"
+                      type="submit"
+                      value="Continue"
+                    />
+                  </div>
+                </form>
+              </div>
+
+              <div className="bg-[#EDF4FE] bg-opacity-70 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button
+                  type="button"
+                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[#194569] text-base font-medium text-white hover:bg-opacity-70 hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  onClick={handleCloseModal}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        // Cardiologists, audiologists, dentists, ENT specialists, gynecologists, orthopedic surgeons, pediatricians, psychiatrists, veterinarians, radiologists, pulmonologists, endocrinologists, oncologists, neurologists, cardiothoracic surgeons,
+      )}
+
+    </>
   );
 }
 

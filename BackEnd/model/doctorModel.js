@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const mongoosePaginate = require("mongoose-paginate-v2");
 
 const doctorSchema = new mongoose.Schema(
   {
@@ -71,6 +72,6 @@ const doctorSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
+doctorSchema.plugin(mongoosePaginate);
 const doctorModel = mongoose.model("doctors", doctorSchema);
 module.exports = doctorModel;

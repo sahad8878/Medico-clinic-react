@@ -6,21 +6,35 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import axios from "../../Axios/Axios";
+import DatePicker from "react-datepicker";
+import Select from "react-select";
+import "react-datepicker/dist/react-datepicker.css";
 
+const options = [
+  { value: "morning", label: "Morning" },
+  { value: "afternoon", label: "Afternoon" },
+  { value: "evening", label: "Evening" },
+];
 const localizer = momentLocalizer(moment);
 function ExDocDetails() {
   const [Doctor, setDoctor] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
 
   const [slots, setSlots] = useState([]);
-  const [selectedDate, setSelectedDate] = useState("");
-  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedTime, setSelectedTime] = useState(null);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(selectedDate,selectedTime);
+    // handle form submission
+  };
 
   const { doctorId } = useParams();
   const client = JSON.parse(localStorage.getItem('clientToken'));
   const clientToken = client.clientToken
   useEffect(() => {
-    axios.get(`/getDoctorDetails/${doctorId}`, {headers:{'accesstoken':clientToken}}).then((response) => {
+    axios.get(`/getDoctorDetails/${doctorId}`,{headers:{'accesstoken':clientToken}}).then((response) => {
       if (response.data.success) {
         setDoctor(response.data.doctor);
       }
@@ -171,7 +185,27 @@ function ExDocDetails() {
                   </h2>
                 </div>
                 <div className=" bg-[#EDF4FE]    px-4 pt-5 pb-4">
-                  <form
+
+
+                <form onSubmit={handleSubmit}>
+      <div>
+        <label>Date:</label>
+        <DatePicker
+          selected={selectedDate}
+          onChange={(date) => setSelectedDate(date)}
+        />
+      </div>
+      <div>
+        <label>Available Time:</label>
+        <Select
+          options={options}
+          value={selectedTime}
+          onChange={(time) => setSelectedTime(time)}
+        />
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+                  {/* <form
                     component="form "
                     className="flex-col items-center justify-center"
                     onSubmit={handleAppointment}
@@ -219,7 +253,7 @@ function ExDocDetails() {
                         Continue{" "}
                       </button>
                     </div>
-                  </form>
+                  </form> */}
                 </div>
 
                 <div className="bg-[#EDF4FE] bg-opacity-70 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">

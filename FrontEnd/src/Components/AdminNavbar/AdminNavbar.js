@@ -21,7 +21,7 @@ function AdminNavbar() {
 
   return (
     <>
-      <div className=" fixed ">
+      <div className=" fixed z-10">
         <div className="h-20 sm:h-24 w-screen flex  justify-between  bg-[#194569]">
           <div className=" px-4">
             <span className=" items-center px-4 ">

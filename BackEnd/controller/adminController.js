@@ -308,7 +308,39 @@ const deleteDepartment = async (req, res) => {
     console.log(error);
     res.status(500).send({
       success: false,
-      message: `deleteDepartments controller ${error.message}`,
+      message: `deleteDepartment controller ${error.message}`,
+    });
+  }
+};
+
+const putEditDepartment = async (req, res) => {
+  try {
+    console.log(req.body);
+    const { department, description, departmentImg, departmentId } = req.body;
+    console.log(department, description, departmentImg, departmentId);
+    if (department && description && departmentImg) {
+      const dep = await DepartmentModel.findById(departmentId)
+      console.log(dep);
+    await DepartmentModel.updateOne({_id: departmentId }, { $set: {department: department,description: description,departmentImg: departmentImg}}).then((department)=>{
+
+      console.log(department);
+      if (department) {
+        res
+          .status(201)
+          .send({ message: " department have been Updated", success: true });
+      }
+    }
+    )
+    } else {
+      return res
+        .status(200)
+        .send({ message: "All fields must be filled", success: false });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: `editDepartment controller ${error.message}`,
     });
   }
 };
@@ -325,4 +357,5 @@ module.exports = {
   postDepartments,
   getDepartments,
   deleteDepartment,
+  putEditDepartment,
 };

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { message } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { InfinitySpin } from "react-loader-spinner";
 import { useAdminAuthContext } from '../../Hooks/useAdminAuthContext';
 import axios from '../../Axios/Axios';
 
@@ -11,7 +12,7 @@ function AdminLogin() {
   const [password, setPassword] = useState('');
 
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { dispatch } = useAdminAuthContext();
 
   const handleLogin = (e) => {
@@ -75,14 +76,21 @@ function AdminLogin() {
             {error}
           </div>
           )}
+          {
+            isLoading ?
+            <div className='flex justify-center'>
+              <InfinitySpin width="200" color="#194569" />
 
-          <button
-            disabled={isLoading}
+            </div>
+            :
+<button
             type="submit"
             className="block w-full bg-[#194569] hover:text-black text-white rounded-md py-3 px-2 mb-5"
           >
             Login
           </button>
+          }
+          
         </form>
       </div>
     </div>

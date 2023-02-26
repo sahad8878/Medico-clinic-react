@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
 import { message } from "antd";
+import { InfinitySpin } from "react-loader-spinner";
 import { useNavigate, Link } from "react-router-dom";
 import { useDoctorAuthContext } from '../../Hooks/useDoctorAuthContext';
 import axios from "../../Axios/Axios";
@@ -12,7 +13,7 @@ function DoctorLogin() {
   const [password, setPassword] = useState("");
 
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { dispatch } = useDoctorAuthContext();
 
   const handleLogin = async (event) => {
@@ -92,16 +93,23 @@ function DoctorLogin() {
             {error}
           </div>
           )}
-             <div className="mb-4 mt-10 flex content-center justify-center">
+          {
+            isLoading ? 
+              <div className="mb-4 mt-10 flex justify-center " >
+              
+              <InfinitySpin width="200" color="#194569" />
+            </div>
+            :
+                   <div className="mb-4 mt-10 flex content-center justify-center">
             <input
-              disabled={isLoading}
-
               className="bg-white  hover:bg-[#194569] text-black font-medium py-2
                  w-72  rounded-lg"
               type="submit"
               value="Continue"
             />
            </div>
+          }
+           
 
         </form>
       </div>
