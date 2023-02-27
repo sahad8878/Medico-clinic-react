@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link,useLocation } from "react-router-dom";
 import CircleNotificationsRoundedIcon from "@mui/icons-material/CircleNotificationsRounded";
 import { message } from 'antd';
 
@@ -9,18 +9,18 @@ import log from "../../Assets/main-logo.png";
 import { useAuthContext } from "../../Hooks/useAuthContext";
 
 export default function Nav() {
-  const { user, dispatch } = useAuthContext();
+
+  const { user} = useAuthContext();
 
   const [navbar, setNavbar] = useState(false);
-  const handleLogout = () => {
-    localStorage.removeItem("clientToken");
-    dispatch({ type: "LOGOUT" });
-  };
+ const location = useLocation()
+ const path = location.pathname
 
   const notLogin = () => {
     message.error("Your must be logged in to continue");
 
   }
+
   return (
     <nav className="w-full z-10 bg-[#97CADB] fixed top-7">
       <div className="justify-between px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-5">
@@ -76,14 +76,16 @@ export default function Nav() {
           >
             <ul className="items-center justify-center space-y-8 md:flex md:space-x-6 md:space-y-0">
               <li className="hover:text-[#194569]">
-                <span className="text-white font-semibold text-lg px-5 hover:text-[#194569] rounded">
-                  <Link to="/">Home</Link>
+                  <Link to="/">
+                <span className={` ${path == "/" ? "text-[#194569]"  :"text-white" } font-bold text-base px-5 uppercase hover:text-[#194569] rounded`}>
+                    Home
                 </span>
+                    </Link>
               </li>
               <li className="">
                 {user ? (
                   <Link to="/service">
-                    <span className="text-white font-semibold text-lg px-5 cursor-pointer hover:text-[#194569] rounded">
+                    <span className={` ${path == '/service' ? "text-[#194569]"  :"text-white" } font-bold uppercase text-base px-5 hover:text-[#194569] rounded`}>
                       Service
                     </span>
                   </Link>
@@ -93,30 +95,13 @@ export default function Nav() {
                   </span>
                 )}
               </li>
-              {user && (
-                <li>
-                  <span className=" font-semibold text-lg px-5 cursor-pointer hover:text-[#194569] rounded">
-                    {user.clientName}
-                  </span>
-                </li>
-              )}
-              {user && (
-                <li className="">
-                  <button
-                    onClick={handleLogout}
-                    className="text-white font-semibold text-lg px-5 cursor-pointer hover:text-[#194569] rounded"
-                  >
-                    Logout
-                  </button>
-                </li>
-              )}
-              {!user && (
+              
                 <li className="">
                   <span className="">
                     <Dropdown />
                   </span>
                 </li>
-              )}
+            
               <li className="text-gray-600 ">
                 <span className="text-white font-semibold text-lg px-5 hover:text-[#194569] rounded">
                   <CircleNotificationsRoundedIcon

@@ -26,33 +26,37 @@ function ExDocDetails() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(selectedDate,selectedTime);
+    console.log(selectedDate, selectedTime);
     // handle form submission
   };
 
   const { doctorId } = useParams();
-  const client = JSON.parse(localStorage.getItem('clientToken'));
-  const clientToken = client.clientToken
+  const client = JSON.parse(localStorage.getItem("clientToken"));
+  const clientToken = client.clientToken;
   useEffect(() => {
-    axios.get(`/getDoctorDetails/${doctorId}`,{headers:{'accesstoken':clientToken}}).then((response) => {
-      if (response.data.success) {
-        setDoctor(response.data.doctor);
-      }
-    });
+    axios
+      .get(`/getDoctorDetails/${doctorId}`, {
+        headers: { accesstoken: clientToken },
+      })
+      .then((response) => {
+        if (response.data.success) {
+          setDoctor(response.data.doctor);
+        }
+      });
   }, []);
 
   useEffect(() => {
     axios
-      .get('/availableSlot', {headers:{'accesstoken':clientToken}})
+      .get("/availableSlot", { headers: { accesstoken: clientToken } })
 
       .then((response) => {
-        if(response.data){
+        if (response.data) {
           console.log(response.data);
-          setSlots(response.data)
+          setSlots(response.data);
         }
-      })
-      // .then((response) => setSlots(response.data))
-      // .catch((error) => console.log(error));
+      });
+    // .then((response) => setSlots(response.data))
+    // .catch((error) => console.log(error));
   }, []);
 
   const handleDateChange = (event) => {
@@ -100,112 +104,115 @@ function ExDocDetails() {
     setIsOpen(false);
   };
   return (
-    <div className="bg-[#EDF4FE]  w-screen ">
-      <div className=" flex justify-center">
-        <div className="   px-4 pb-10 sm: sm:flex sm:flex-row p-8">
-          <div className="bg-slate-300   mt-[80px] sm:mt-[100px] mx-40 sm:mx-4   ">
-            <div className="flex justify-center">
-              <img className="h-72 w-72" src={Doctor.doctorImg} alt="" />
-            </div>
+    <>
+      <div className="container mx-auto px-4 pt-7">
+        <div className="flex flex-wrap ">
+          {/*  */}
+          <div className="w-full md:w-5/12 px-3 flex justify-center lg:justify-end">
+            <div className="bg-[#E3E8EE]   mt-[80px] sm:mt-[100px]   sm:mx-4   ">
+              <div className="flex justify-center flex-col text-center  ">
+                <img
+                  className="h-60 sm:h-72 sm:w-80 "
+                  src={Doctor.doctorImg}
+                  alt=""
+                />
 
-            <div className="bg-[#E3E8EE] ">
-              <h1 className="text-center p-8">
-                {" "}
-                {Doctor.fName} {Doctor.lName}
-              </h1>
+                <h1 className="text-center p-5 ">
+                  {Doctor.fName} {Doctor.lName}
+                </h1>
+              </div>
             </div>
           </div>
-
-          <div className="w-[600px] mt-7 sm:mt-[100px] bg-[#E3E8EE] pb-10 p-10 ">
-            <div className="mb-4 sm:flex  ">
-              <span className="block sm:pr-6 text-gray-700 font-medium mb-2  text-center">
-                Specialization
-              </span>
-              <div className="bg-white bg-opacity-60 p-2  text-center sm:text-start w-full">
-                {Doctor.specialization}
+          {/*  */}
+          <div className="w-full md:w-6/12  px-3">
+            <div className="lg:w-[600px] mdw-[400px] mt-7 md:mt-[100px] bg-[#E3E8EE] pb-10 p-5 sm:p-10 ">
+              <div className="mb-4 sm:flex   ">
+                <span className="block sm:pr-6 text-gray-700 font-medium mb-2  text-center">
+                  Specialization
+                </span>
+                <div className="bg-white bg-opacity-60 p-2  text-center sm:text-start w-full">
+                  {Doctor.specialization}
+                </div>
               </div>
-            </div>
-            <div className="mb-4 sm:flex ">
-              <span className="block text-gray-700 text-center sm:text-start font-medium mb-2 sm:pr-[50px]">
-                Education
-              </span>
-              <div className="bg-white bg-opacity-60 text-center sm:text-start p-2 w-full">
-                {Doctor.education}
+              <div className="mb-4 sm:flex ">
+                <span className="block text-gray-700 text-center sm:text-start font-medium mb-2 sm:pr-[50px]">
+                  Education
+                </span>
+                <div className="bg-white bg-opacity-60 text-center sm:text-start p-2 w-full">
+                  {Doctor.education}
+                </div>
               </div>
-            </div>
-            <div className="mb-4 sm:flex ">
-              <span className="block text-gray-700  text-center sm:text-start font-medium mb-2 sm:pr-[44px]">
-                Experiance
-              </span>
-              <div className="bg-white text-center sm:text-start bg-opacity-60 p-2 w-full">
-                {Doctor.experience}
+              <div className="mb-4 sm:flex ">
+                <span className="block text-gray-700  text-center sm:text-start font-medium mb-2 sm:pr-[44px]">
+                  Experiance
+                </span>
+                <div className="bg-white text-center sm:text-start bg-opacity-60 p-2 w-full">
+                  {Doctor.experience}
+                </div>
               </div>
-            </div>
-            <div className="mb-4 sm:flex bg-opacity-60  ">
-              <span className="block text-center sm:text-start text-gray-700  font-medium mb-2 sm:pr-[60px]">
-                Location
-              </span>
-              <div className="bg-white text-center sm:text-start bg-opacity-60 p-2 w-full">
-                {Doctor.location}
+              <div className="mb-4 sm:flex bg-opacity-60  ">
+                <span className="block text-center sm:text-start text-gray-700  font-medium mb-2 sm:pr-[60px]">
+                  Location
+                </span>
+                <div className="bg-white text-center sm:text-start bg-opacity-60 p-2 w-full">
+                  {Doctor.location}
+                </div>
               </div>
-            </div>
-            <div className="mb-4 sm:flex ">
-              <span className="block text-center sm:text-start text-gray-700  font-medium mb-2 sm:pr-[61px]">
-                Address
-              </span>
-              <div className="bg-white text-center sm:text-start bg-opacity-60 p-2 w-full">
-                {Doctor.address}
+              <div className="mb-4 sm:flex ">
+                <span className="block text-center sm:text-start text-gray-700  font-medium mb-2 sm:pr-[61px]">
+                  Address
+                </span>
+                <div className="bg-white text-center sm:text-start bg-opacity-60 p-2 w-full">
+                  {Doctor.address}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div className=" flex justify-center  pb-14">
-        <button
-          onClick={handleOpenModal}
-          className="py-2 px-20 text-white font-bold text-base bg-[#194569]"
-        >
-          BOOK
-        </button>
-        {isOpen && (
-          <div className="fixed z-50 inset-0 overflow-y-auto">
-            <div className="flex items-center justify-center min-h-screen px-4">
-              <div
-                className="fixed inset-0 transition-opacity"
-                onClick={handleCloseModal}
-              >
-                <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
-              </div>
-
-              {/* Modal */}
-              <div className="rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full sm:max-w-md">
-                <div className="bg-[#EDF4FE] bg-opacity-70 px-4 py-3">
-                  <h2 className="text-lg text-center font-medium text-gray-900">
-                    Make Your Appointment
-                  </h2>
+        <div className="text-center text-gray-500 py-14 text-sm">
+          <button
+            onClick={handleOpenModal}
+            className="py-2 px-20 text-white font-bold text-base bg-[#194569]"
+          >
+            BOOK
+          </button>
+          {isOpen && (
+            <div className="fixed z-50 inset-0 overflow-y-auto">
+              <div className="flex items-center justify-center min-h-screen px-4">
+                <div
+                  className="fixed inset-0 transition-opacity"
+                  onClick={handleCloseModal}
+                >
+                  <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
                 </div>
-                <div className=" bg-[#EDF4FE]    px-4 pt-5 pb-4">
 
-
-                <form onSubmit={handleSubmit}>
-      <div>
-        <label>Date:</label>
-        <DatePicker
-          selected={selectedDate}
-          onChange={(date) => setSelectedDate(date)}
-        />
-      </div>
-      <div>
-        <label>Available Time:</label>
-        <Select
-          options={options}
-          value={selectedTime}
-          onChange={(time) => setSelectedTime(time)}
-        />
-      </div>
-      <button type="submit">Submit</button>
-    </form>
-                  {/* <form
+                {/* Modal */}
+                <div className="rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full sm:max-w-md">
+                  <div className="bg-[#EDF4FE] bg-opacity-70 px-4 py-3">
+                    <h2 className="text-lg text-center font-medium text-gray-900">
+                      Make Your Appointment
+                    </h2>
+                  </div>
+                  <div className=" bg-[#EDF4FE]    px-4 pt-5 pb-4">
+                    <form onSubmit={handleSubmit}>
+                      <div>
+                        <label>Date:</label>
+                        <DatePicker
+                          selected={selectedDate}
+                          onChange={(date) => setSelectedDate(date)}
+                        />
+                      </div>
+                      <div>
+                        <label>Available Time:</label>
+                        <Select
+                          options={options}
+                          value={selectedTime}
+                          onChange={(time) => setSelectedTime(time)}
+                        />
+                      </div>
+                      <button type="submit">Submit</button>
+                    </form>
+                    {/* <form
                     component="form "
                     className="flex-col items-center justify-center"
                     onSubmit={handleAppointment}
@@ -254,23 +261,24 @@ function ExDocDetails() {
                       </button>
                     </div>
                   </form> */}
-                </div>
+                  </div>
 
-                <div className="bg-[#EDF4FE] bg-opacity-70 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                  <button
-                    type="button"
-                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[#194569] text-base font-medium text-white hover:bg-opacity-70 hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
-                    onClick={handleCloseModal}
-                  >
-                    Close
-                  </button>
+                  <div className="bg-[#EDF4FE] bg-opacity-70 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button
+                      type="button"
+                      className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[#194569] text-base font-medium text-white hover:bg-opacity-70 hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                      onClick={handleCloseModal}
+                    >
+                      Close
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

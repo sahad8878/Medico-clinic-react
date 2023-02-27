@@ -2,18 +2,39 @@
 import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
-import { Link } from 'react-router-dom';
+import { Link,useLocation } from 'react-router-dom';
+import { useAuthContext } from "../../Hooks/useAuthContext";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 function Dropdown() {
+  const { user, dispatch } = useAuthContext();
+  const location = useLocation()
+  const path = location.pathname
+  const handleLogout = () => {
+    localStorage.removeItem("clientToken");
+    dispatch({ type: "LOGOUT" });
+  };
+ 
+  if(path== '/userProfile'|| path == '/login' || path == '/doctor/doctorLogin' || path == '/signup' || path == '/doctor/doctorSignup'){
+    
+    var pathName = path
+  }
+
   return (
-    // eslint-disable-next-line react/jsx-no-comment-textnodes
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="inline-flex font-semibold text-lg w-full justify-center rounded-md  px-4 py-2  text-white shadow-sm  hover:text-[#194569] focus:outline-none ">
-          <span>Login</span>
+        <Menu.Button className={`${path == pathName ? "text-[#194569]" :  'text-white'   }  inline-flex font-bold text-base uppercase w-full justify-center rounded-md  px-4 py-2  hover:text-[#194569] focus:outline-none`} >
+
+          {
+            user ?
+            <span>Account</span>
+            :
+            <span>Login</span>
+
+
+          }
           <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
         </Menu.Button>
       </div>
@@ -28,7 +49,41 @@ function Dropdown() {
         leaveTo="transform opacity-0 scale-95"
       >
         <Menu.Items className="absolute right-0 z-10 mt-2 md:w-56 w-28  origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+         {
+          user ?
           <div className="py-1">
+          <Menu.Item>
+            {({ active }) => (
+              <Link to="/userProfile">
+                <span
+                  className={classNames(
+                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    'block px-4 py-2 text-sm',
+                  )}
+                >
+                  Profile
+                </span>
+              </Link>
+            )}
+          </Menu.Item>
+          <Menu.Item>
+            {({ active }) => (
+            
+                <span
+                onClick={handleLogout}
+                  className={classNames(
+                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    'block px-4 py-2 text-sm',
+                  )}
+                >
+                  Logout
+                </span>
+            )}
+          </Menu.Item>
+        </div>
+        :
+
+<div className="py-1">
             <Menu.Item>
               {({ active }) => (
                 <Link to="/login">
@@ -58,6 +113,12 @@ function Dropdown() {
               )}
             </Menu.Item>
           </div>
+
+         }
+         
+          
+
+
         </Menu.Items>
       </Transition>
     </Menu>

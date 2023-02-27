@@ -45,6 +45,9 @@ const doctorSchema = new mongoose.Schema(
     address: {
       type: String,
     },
+    consultationFees:{
+      type:Number
+    },
 
     startingTime: {
       type: String,

@@ -37,7 +37,7 @@ router.get("/getdepartments",clientAuthMiddlewares, getdepartments);
 
 // Get Department Doctors || GET
 
-router.get("/getDepartmentDoctors/:departmentId",clientAuthMiddlewares, getDepartmentDoctors);
+router.get("/getDepartmentDoctors/:id/doctors",clientAuthMiddlewares, getDepartmentDoctors);
 
 // Get  Doctor Details || GET
 

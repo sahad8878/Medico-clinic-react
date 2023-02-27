@@ -60,6 +60,7 @@ function DoctorDetailForm() {
         startingTime: data.get("startingTime"),
         endingTime: data.get("endingTime"),
         doctorImg: data.get("profileImg"),
+        consultationFees: data.get("fees"),
         availableDate: selectedValue,
         doctorId: doctor.doctorId,
       };
@@ -153,21 +154,43 @@ function DoctorDetailForm() {
               required
             />
           </div>
-          <div className="mb-4 ">
+
+
+          <div className="   sm:flex sm:flex-row">
+            <div className="mb-4">
+              <label
+                className=" text-gray-700 font-medium mb-2  "
+                htmlFor="practiceTiming"
+              >
+                Consultation Fees
+              </label>
+              <input
+                className="bg-white p-2  w-full"
+                type="number"
+                id="fees"
+                name="fees"
+                placeholder="Consultation Fees"
+                required
+              />
+            </div>
+        
+            <div className="sm:ml-10 mb-4 w-full sm:w-72  sm:mt-1">
             <label
-              className="block text-gray-700 font-medium mb-2 "
-              htmlFor="profileImg"
-            >
-              Profile image
-            </label>
-            <input
-              className="bg-white p-2  w-full"
+                className=" text-gray-700 font-medium mb-2  "
+                htmlFor="profileImg"
+              >
+                Profile image
+              </label>
+              <input
+              className="bg-white p-1  w-full"
               type="file"
               id="profileImg"
               name="profileImg"
               placeholder="Add your Profile Image"
             />
+            </div>
           </div>
+          
           <div className="mb-4">
             <label
               className="block text-gray-700 font-medium mb-2 "

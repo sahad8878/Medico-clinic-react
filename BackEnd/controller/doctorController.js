@@ -15,6 +15,7 @@ const doctorDetails = async (req, res) => {
       doctorImg,
       availableDate,
       doctorId,
+      consultationFees
     } = req.body;
 
     if (
@@ -23,7 +24,8 @@ const doctorDetails = async (req, res) => {
       startingTime &&
       endingTime &&
       doctorImg &&
-      availableDate
+      availableDate && 
+      consultationFees
     ) {
       const doctor = await DoctorModel.findByIdAndUpdate(
         doctorId,
@@ -35,6 +37,7 @@ const doctorDetails = async (req, res) => {
             endingTime,
             doctorImg,
             availableDate,
+            consultationFees,
             status: "active",
           },
         },

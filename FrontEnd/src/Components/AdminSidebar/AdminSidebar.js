@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link} from 'react-router-dom';
+import { Link,useLocation} from 'react-router-dom';
 import docIcon from "../../Assets/doctor.ico";
 import clientIcon from "../../Assets/group.ico";
 import homeIcon from "../../Assets/home.ico";
@@ -11,6 +11,8 @@ import { useAdminAuthContext } from '../../Hooks/useAdminAuthContext';
 function AdminSidebar() {
   const { admin, dispatch } = useAdminAuthContext();
 
+  const location = useLocation()
+const path = location.pathname
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
     dispatch({ type: 'LOGOUT' });
@@ -56,23 +58,22 @@ function AdminSidebar() {
                 <li className="rounded-sm">
                   <Link to="/admin/adminHome" >
                   <span
-                    className="flex items-center p-2 space-x-3 rounded-md"
+                    className={`flex items-center p-2 space-x-3 rounded-md uppercase `}
                   >
                     <img className=" h-7" src={homeIcon} alt="logo" />
 
-                    <span className="text-gray-100">Home</span>
+                    <span className={ `  hover:text-[#D6E8EE] ${path == "/admin/adminHome" ? "text-white font-semibold " : "text-[#97CADB] "} `}>Home</span>
                   </span>
                   </Link>
                 </li>
                 <li className="rounded-sm">
                   <Link to="/admin/AdminAppointmentspage" >
                   <span
-                    href="#"
-                    className="flex items-center p-2 space-x-3 rounded-md"
+                    className="flex items-center uppercase p-2 space-x-3 rounded-md"
                   >
                     <img className=" h-7" src={inboxIcon} alt="logo" />
 
-                    <span className="text-gray-100 ">Appointments</span>
+                    <span className={ `  hover:text-[#D6E8EE] ${path == "/admin/AdminAppointmentspage" ? "text-white font-semibold " : "text-[#97CADB] "} `}>Inbox</span>
                   </span>
                   </Link>
                 </li>
@@ -81,38 +82,38 @@ function AdminSidebar() {
 
                  
                   <span
-                    className="flex items-center p-2 space-x-3 rounded-md"
+                    className="flex items-center p-2 space-x-3 rounded-md uppercase"
                   >
                     <img className=" h-7" src={clientIcon} alt="logo" />
 
-                    <span className="text-gray-100">Clients</span>
+                    <span className={ `  hover:text-[#D6E8EE] ${path == "/admin/adminClientPage" ? "text-white font-semibold " : "text-[#97CADB] "} `}>Clients</span>
                   </span>
                   </Link>
                 </li>
                 <li className="rounded-sm">
                 <Link to="/admin/adminDoctorsPage" >
                   <span
-                    className="flex items-center p-2 space-x-3 rounded-md"
+                    className="flex items-center p-2 space-x-3 rounded-md uppercase"
                   >
                     <img className=" h-7" src={docIcon} alt="logo" />
-                    <span className="text-gray-100">Doctors</span>
+                    <span className={ `  hover:text-[#D6E8EE] ${path == "/admin/adminDoctorsPage" ? "text-white font-semibold " : "text-[#97CADB] "} `}>Doctors</span>
                   </span>
                   </Link>
                 </li>
                 <li className="rounded-sm">
                 <Link to="/admin/AdminDepartmentPage" >
                   <span
-                    className="flex items-center p-2 space-x-3 rounded-md"
+                    className="flex items-center p-2 space-x-3 rounded-md uppercase"
                   >
                     <img className=" h-7" src={departmentIcon} alt="logo" />
-                    <span className="text-gray-100">Departments</span>
+                    <span className={ `  hover:text-[#D6E8EE] ${path == "/admin/AdminDepartmentPage" ? "text-white font-semibold " : "text-[#97CADB] "} `}>Departments</span>
                   </span>
                   </Link>
                 </li>
                 {admin && (
                 <li className="rounded-sm cursor-pointer">
                   <span onClick={handleLogout}
-                    className="flex items-center p-2 space-x-3 rounded-md"
+                    className="flex items-center p-2 space-x-3 rounded-md uppercase"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -128,7 +129,7 @@ function AdminSidebar() {
                         d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
                       />
                     </svg>
-                    <span  className="text-gray-100">Logout</span>
+                    <span  className="text-[#97CADB] hover:text-white">Logout</span>
                   </span>
                 </li>
                 )}

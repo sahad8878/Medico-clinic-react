@@ -94,21 +94,7 @@ function SelectDepartments() {
             <FiChevronRight />
           </button>
         </div>
-
-        {/* <div className="flex justify-center">
-        <button onClick={handlePrevClick} disabled={page === 1}>
-          Previous
-        </button>
-              {
-                pages.map((page)=>{
-
-                })
-              }
-
-        <button className="p-4" onClick={handleNextClick} disabled={departments.length < limit}>
-          Next
-        </button>
-      </div> */}
+        
       </div>
     </div>
   );
