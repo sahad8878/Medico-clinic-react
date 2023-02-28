@@ -5,6 +5,8 @@ const {
 } = require("../controller/authController");
 
 const {
+  getClietProfile,
+  patchUpdateClientDetails,
   getdepartments,
   getDepartmentDoctors,
   getDoctorDetails,
@@ -32,8 +34,16 @@ router.post("/clientSignup", signupController);
 
 router.post("/postAppointment",clientAuthMiddlewares, postAppointment);
 
+// get user information || GET
+
+router.get("/getClietProfile",clientAuthMiddlewares,getClietProfile)
+
 // Get Departments || GET
 router.get("/getdepartments",clientAuthMiddlewares, getdepartments);
+
+// update client Details || POST
+
+router.post("/updateClientDetails",clientAuthMiddlewares,patchUpdateClientDetails)
 
 // Get Department Doctors || GET
 
@@ -54,5 +64,6 @@ router.get("/getExperiencedDoctors",clientAuthMiddlewares, getExperiencedDoctors
 // Check available Slotes || GET
 
 router.get("/availableSlot",clientAuthMiddlewares, availableSlot);
+
 
 module.exports = router;

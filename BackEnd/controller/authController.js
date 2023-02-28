@@ -22,6 +22,7 @@ const signupController = async (req, res) => {
       email,
       password,
       number,
+      address,
       confirmPassword,
     } = req.body;
     if (
@@ -33,6 +34,7 @@ const signupController = async (req, res) => {
       email &&
       password &&
       number &&
+      address&&
       confirmPassword
     ) {
       // validation
@@ -78,6 +80,7 @@ const signupController = async (req, res) => {
         sex,
         email,
         number,
+        address, 
         password: hashedPassword,
       });
       await newClient.save();

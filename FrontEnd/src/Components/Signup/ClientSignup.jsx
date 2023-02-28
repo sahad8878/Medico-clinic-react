@@ -32,6 +32,8 @@ function ClientSignup() {
         email: data.get("email"),
         password: data.get("password"),
         confirmPassword: data.get("confirmPassword"),
+        address: data.get("address"),
+
       };
       axios.post("/clientSignup", data).then((response) => {
         const result = response.data;
@@ -179,6 +181,24 @@ function ClientSignup() {
             </div>
           </div>
           {/*  */}
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 font-medium mb-2 "
+              htmlFor="address"
+            >
+              Address
+            </label>
+            <input
+              className="bg-white p-2  w-full"
+              type="text"
+              id="address"
+              name="address"
+              placeholder="Enter Your Address"
+              // value={email}
+              // onChange={(event) => setEmail(event.target.value)}
+              required
+            />
+          </div>
           <div className="mb-4">
             <label
               className="block text-gray-700 font-medium mb-2 "

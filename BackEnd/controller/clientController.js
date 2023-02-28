@@ -14,8 +14,78 @@ const availableSlots = [
   { date: "2023-02-28", time: "10:00am" },
 ];
 
+//get client details 
 
+const getClietProfile = async(req, res) => {
+  try {
+     const client = await ClientModel.findById(req.body.userId)
+     if (client) {
+        res.status(201)
+        .send({ client, success: true });
+    } else {
+      return res
+        .status(200)
+        .send({ message: "No Departments ", success: false });
+    }
+     
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: `client getDepartments  controller ${error.message}`,
+    });
+  }
+}
 
+// update client details 
+
+const patchUpdateClientDetails = async(req, res) => {
+try {
+  console.log(req.body.userId);
+console.log(req.body,"update client address");
+  const {address,clientImage,age} = req.body
+
+  if(address,clientImage,age){
+
+  
+  const client = await ClientModel.findByIdAndUpdate(
+    req.body.userId,
+    {
+      $set: {
+        address,
+        clientImage,
+        age,
+      },
+    },
+    { new: true }
+  )
+  if (!client) {
+    return res
+    .status(200)
+    .send({ message: "No Client exist ", success: false });
+  }else{
+    res
+    .status(201)
+    .send({ message: "your details have been saved", success: true });
+  }
+}else{
+  return res
+  .status(200)
+  .send({ message: "All fields must be filled", success: false });
+
+}
+  
+} catch (error) {
+  console.log(error);
+  res.status(500).send({
+    success: false,
+    message: `client getDepartments  controller ${error.message}`,
+  });
+}
+
+}
+
+// get departments
 const getdepartments = async (req, res) => {
   try {
     const { page, limit } = req.query;
@@ -195,6 +265,8 @@ const availableSlot = async (req, res) => {
 };
 
 module.exports = {
+  getClietProfile,
+  patchUpdateClientDetails,
   getdepartments,
   getDepartmentDoctors,
   getDoctorDetails,

@@ -17,7 +17,7 @@ function Dropdown() {
     dispatch({ type: "LOGOUT" });
   };
  
-  if(path== '/userProfile'|| path == '/login' || path == '/doctor/doctorLogin' || path == '/signup' || path == '/doctor/doctorSignup'){
+  if(path === '/clientProfile'|| path === '/login' || path === '/doctor/doctorLogin' || path === '/signup' || path === '/doctor/doctorSignup'){
     
     var pathName = path
   }
@@ -25,7 +25,7 @@ function Dropdown() {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className={`${path == pathName ? "text-[#194569]" :  'text-white'   }  inline-flex font-bold text-base uppercase w-full justify-center rounded-md  px-4 py-2  hover:text-[#194569] focus:outline-none`} >
+        <Menu.Button className={`${path === pathName ? "text-[#194569]" :  'text-white'   }  inline-flex font-bold text-base uppercase w-full justify-center rounded-md  px-4 py-2  hover:text-[#194569] focus:outline-none`} >
 
           {
             user ?
@@ -54,7 +54,7 @@ function Dropdown() {
           <div className="py-1">
           <Menu.Item>
             {({ active }) => (
-              <Link to="/userProfile">
+              <Link to="/clientProfile">
                 <span
                   className={classNames(
                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',

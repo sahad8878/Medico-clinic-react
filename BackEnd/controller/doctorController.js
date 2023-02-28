@@ -14,7 +14,6 @@ const doctorDetails = async (req, res) => {
       endingTime,
       doctorImg,
       availableDate,
-      doctorId,
       consultationFees
     } = req.body;
 
@@ -28,7 +27,7 @@ const doctorDetails = async (req, res) => {
       consultationFees
     ) {
       const doctor = await DoctorModel.findByIdAndUpdate(
-        doctorId,
+        req.body.doctorId,
         {
           $set: {
             education,

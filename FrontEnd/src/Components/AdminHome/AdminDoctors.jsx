@@ -8,10 +8,12 @@ function AdminDoctors() {
   const admin = JSON.parse(localStorage.getItem('adminToken'));
   const adminToken = admin.adminToken
   useEffect(()=>{
+    
     axios
     .get('/admin/getDoctorsDetails'
     ,{headers:{'admintoken':adminToken}}
     ).then((response)=>{
+      console.log(response.data);
       setdoctors(response.data.doctors)
     })
   },[refresh])

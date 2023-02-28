@@ -33,6 +33,10 @@ const clientSchema = new mongoose.Schema({
     type: String,
     required: [true, 'password is required'],
   },
+  address: {
+    type: String,
+    required: [true, 'address is required'],
+  },
   clientImage: {
     type: String,
   },

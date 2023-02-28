@@ -19,6 +19,8 @@ import SignupPage from './Pages/Client/SignupPage';
 import ServicePage from './Pages/Client/ServicePage';
 import DepartmentDoctorsPage from './Pages/Client/DepartmentDoctorsPage';
 import DoctorDetailsPage from './Pages/Client/DoctorDetailsPage'
+import ClientProfilePage from './Pages/Client/ClientProfilePage';
+import AppointmentHistory from './Pages/Client/AppointmentHistory';
 
 // doctor pages
 import DoctorHome from './Pages/Doctor/DoctorHomePage';
@@ -51,6 +53,8 @@ function App() {
         <Route path="/service" element={ user ? <ServicePage /> : <Navigate to="/" />} />
         <Route path="/departmentDoctors/:departmentId" element={user ?  <DepartmentDoctorsPage />  : <Navigate to="/" />} />
         <Route path="/doctorDetails/:doctorId" element={ user ? <DoctorDetailsPage /> : <Navigate to="/" />} />
+        <Route path="/clientProfile" element={user ? <ClientProfilePage/> : <Navigate to="/" />}/>
+        <Route path="/clientAppHistory" element={user ? <AppointmentHistory/> : <Navigate to="/" />}/>
 
          
 
@@ -58,9 +62,10 @@ function App() {
         <Route path="/doctor" element={<DoctorHome /> } />
         <Route path="/doctor/doctorLogin" element={!doctor ? <DoctorLogin /> : <Navigate to="/doctor"/>} />
         <Route path="/doctor/doctorSignup" element={ !doctor ? <DoctorSignup /> : <Navigate to="/doctor"/>} />
-        <Route path="/doctor/doctorPendingPage" element={<DoctorPendingPage />} />
-        <Route path="/doctor/doctorDetailsForm" element={<DoctorDetailsForm />} />
-        <Route path="/doctor/DoctorAppointmentsPage" element={<DoctorAppointmentsPage />} />
+        <Route path="/doctor/doctorPendingPage" element={ doctor ? <DoctorPendingPage /> : <Navigate to="/"/> } />
+        <Route path="/doctor/doctorDetailsForm" element={doctor ?<DoctorDetailsForm /> : <Navigate to="/"/> } />
+        <Route path="/doctor/DoctorAppointmentsPage" element={doctor ?<DoctorAppointmentsPage />: <Navigate to="/"/>} />
+        
 
 
          
