@@ -23,12 +23,15 @@ import ClientProfilePage from './Pages/Client/ClientProfilePage';
 import AppointmentHistory from './Pages/Client/AppointmentHistory';
 
 // doctor pages
-import DoctorHome from './Pages/Doctor/DoctorHomePage';
+import DoctorDashboardPage from './Pages/Doctor/DoctorDashboardPage';
 import DoctorLogin from './Pages/Doctor/LoginPage';
 import DoctorSignup from './Pages/Doctor/SignupPage';
 import DoctorPendingPage from './Pages/Doctor/DoctorPendingPage';
 import DoctorDetailsForm from './Pages/Doctor/DetailsFormPage'
 import DoctorAppointmentsPage from './Pages/Doctor/DoctorAppointmentsPage';
+import DoctorProfilePage from './Pages/Doctor/DoctorDetailsPage'
+import DoctorSchedulePage from './Pages/Doctor/DoctorSchedulePage'
+
 
 // admin pages
 import AdminLoginPage from './Pages/Admin/AdminLoginPage';
@@ -55,16 +58,19 @@ function App() {
         <Route path="/doctorDetails/:doctorId" element={ user ? <DoctorDetailsPage /> : <Navigate to="/" />} />
         <Route path="/clientProfile" element={user ? <ClientProfilePage/> : <Navigate to="/" />}/>
         <Route path="/clientAppHistory" element={user ? <AppointmentHistory/> : <Navigate to="/" />}/>
-
+         
          
 
         {/* Doctor routes */}
-        <Route path="/doctor" element={<DoctorHome /> } />
+        <Route path="/doctor" element={<DoctorDashboardPage /> } />
+        <Route path="/doctor/DoctorProfilePage" element={<DoctorProfilePage /> } />
         <Route path="/doctor/doctorLogin" element={!doctor ? <DoctorLogin /> : <Navigate to="/doctor"/>} />
         <Route path="/doctor/doctorSignup" element={ !doctor ? <DoctorSignup /> : <Navigate to="/doctor"/>} />
         <Route path="/doctor/doctorPendingPage" element={ doctor ? <DoctorPendingPage /> : <Navigate to="/"/> } />
         <Route path="/doctor/doctorDetailsForm" element={doctor ?<DoctorDetailsForm /> : <Navigate to="/"/> } />
-        <Route path="/doctor/DoctorAppointmentsPage" element={doctor ?<DoctorAppointmentsPage />: <Navigate to="/"/>} />
+        <Route path="/doctor/DoctorAppointmentsPage" element={doctor ? <DoctorAppointmentsPage />: <Navigate to="/"/>} />
+        <Route path="/doctor/DoctorSchedulePage" element={doctor ?<DoctorSchedulePage />: <Navigate to="/"/>} />
+
         
 
 

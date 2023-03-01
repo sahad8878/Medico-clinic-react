@@ -2,7 +2,7 @@ import React from 'react'
 import TopNav from '../../Components/TopNav/TopNav'
 import Navbar from '../../Components/Navbar/Navbar'
 import Footer from '../../Components/Footer/Footer'
-import ClientProfile from '../../Components/ClientPrifile/ClientProfile'
+import ClientProfile from '../../Components/ClientProfile/ClientProfile'
 function ClientProfilePage() {
 
   

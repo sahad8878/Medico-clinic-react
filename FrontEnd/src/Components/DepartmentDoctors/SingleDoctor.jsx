@@ -4,14 +4,15 @@ function SingleDoctor({doctor}) {
   return (
 
     
-    <div className="  rounded-t-3xl cursor-pointer   bg-gray-50  hover:bg-gray-200 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 ">
+    <div className="  rounded-t-3xl cursor-pointer   bg-gray-50 hover:shadow-2xl   hover:bg-gray-200 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 ">
     <div className="flex flex-col items-center pb-3">
-      <img
+      {/* <img
         className="w-44 h-44 mb-3  rounded-t-3xl  shadow-lg"
         src={doctor.doctorImg
         }
         alt="Bonnie image"
-      />
+      /> */}
+      <input className='w-44 h-44 mb-3  rounded-t-3xl  shadow-lg' type="image" img src = {doctor.doctorImg} alt="photo" />
       <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
         {doctor.fName}
       </h5>

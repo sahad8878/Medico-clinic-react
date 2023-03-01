@@ -119,7 +119,7 @@ function ClientProfile() {
               <div className="flex flex-col md:flex-row">
                 {/*  */}
                 <div className="w-full  flex justify-center md:justify-end">
-                  <div className="bg-[#EDF4FE]  shadow-sm  shadow-black ">
+                  <div className="bg-[#EDF4FE]  ">
                     <div class="flex flex-col items-center p-5 pb-5">
                       {client.clientImage ? (
                         <img
@@ -144,7 +144,7 @@ function ClientProfile() {
                     <div className=" flex my-5 ">
                       <button
                         onClick={handleOpenModal}
-                        className="px-3 ml-8 bg-[#194569] text-white hover:bg-opacity-60"
+                        className="px-3 ml-8 bg-[#194569] text-white  hover:bg-opacity-60"
                       >
                         {" "}
                         Wallet
@@ -205,7 +205,7 @@ function ClientProfile() {
                     <div className=" flex justify-center mt-5">
                       <button
                         onClick={handleOpenAddressModal}
-                        className=" bg-[#194569] text-white px-3 py-1 text-center"
+                        className=" bg-[#194569] text-white px-3 py-1 text-center hover:bg-opacity-75"
                       >
                         Update
                       </button>

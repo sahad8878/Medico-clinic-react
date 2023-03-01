@@ -16,14 +16,15 @@ function DoctorProfile() {
       }, []);
     
   return (
-    <div className="bg-[#D6E8EE]  w-screen border-b-2 border-black ">
-        <div className=" pt-10">
-            <h1 className="text-center font-serif text-2xl font-semibold">Your Profile</h1>
+    // <div className="bg-[#D6E8EE]  w-screen border-b-2 border-black ">
+    <div>
+              <div className=" ">
+            <h1 className="text-center font-serif text-2xl font-semibold my-5 ">Details</h1>
         </div>
-     <div className="container mx-auto my-9 sm:my-20 ">
-        <div className="flex flex-wrap ">
+     <div className="container mx-auto   ">
+        <div className="flex justify-center content-center ">
           {/*  */}
-          <div className="w-full md:w-5/12 px-3 flex justify-center lg:justify-end">
+          {/* <div className="w-full md:w-5/12 px-3 flex justify-center lg:justify-end">
             <div className="bg-[#EDF4FE]     sm:mx-4   ">
               <div className="flex justify-center flex-col text-center  ">
                 <img
@@ -37,10 +38,10 @@ function DoctorProfile() {
                 </h1>
               </div>
             </div>
-          </div>
+          </div> */}
           {/*  */}
-          <div className="w-full md:w-6/12 py-8 md:py-0 px-3">
-            <div className="lg:w-[600px]  bg-[#EDF4FE] pb-10 p-5 sm:p-10 ">
+          <div className="w-full  py-8 md:py-0 px-3">
+            <div className="lg:w-[600px]  bg-[#EDF4FE] shadow-2xl pb-10 p-5 sm:p-10 ">
               <div className="mb-4 flex   ">
                 <span className="block pr-6 text-gray-700 font-medium mb-2  text-center">
                   Specialization

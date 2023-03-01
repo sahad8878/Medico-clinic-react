@@ -1,7 +1,7 @@
 import React from 'react'
 import TopNav from '../../Components/TopNav/TopNav'
 import NavBar from '../../Components/Navbar/Navbar'
-import ClientAppHistory from '../../Components/ClientPrifile/ClientAppHistory'
+import ClientAppHistory from '../../Components/ClientProfile/ClientAppHistory'
 import Footer from '../../Components/Footer/Footer'
 
 function AppointmentHistory() {

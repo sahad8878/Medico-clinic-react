@@ -63,16 +63,16 @@ function DoctorAppointments() {
   };
 
   return (
-    <div className=" p-5 sm:p-20 pb-10">
-      <div className="bg-[#D6E8EE] mb-11">
+    <div className=" ">
+     
         <div className="flex justify-center content-center py-8">
           <h1 className="text-2xl font-serif  font-semibold">Appointments</h1>
         </div>
 
         {/*  */}
-        <div className="overflow-auto rounded-lg shadow pb-14 px-10">
+        <div className="overflow-auto rounded-lg shadow pb-14 ">
           <table className="w-full">
-            <thead className=" border-b-2  border-black">
+            <thead className=" bg-gray-50 border-b-2 border-gray-200">
               <tr>
                 <th className="p-3 text-sm font-semibold tracking-wide text-left">
                   Name
@@ -95,7 +95,7 @@ function DoctorAppointments() {
                 <th className="p-3 text-sm font-semibold tracking-wide text-left"></th>
               </tr>
             </thead>
-            <tbody className="  divide-y divide-gray-500 ">
+            <tbody className="  bg-white divide-y divide-gray-200 ">
               {Appointments.map((appointment) => (
                 <tr className="">
                   <td className=" p-3 text-base text-gray-700 whitespace-nowrap">
@@ -142,7 +142,7 @@ function DoctorAppointments() {
 
         {/*  */}
       </div>
-    </div>
+    
   );
 }
 

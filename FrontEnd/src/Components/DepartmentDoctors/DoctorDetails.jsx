@@ -10,11 +10,13 @@ import DatePicker from "react-datepicker";
 import Select from "react-select";
 import "react-datepicker/dist/react-datepicker.css";
 
-const options = [
-  { value: "morning", label: "Morning" },
-  { value: "afternoon", label: "Afternoon" },
-  { value: "evening", label: "Evening" },
-];
+// const options = [
+//   { value: "morning", label: "Morning" },
+//   { value: "afternoon", label: "Afternoon" },
+//   { value: "evening", label: "Evening" },
+// ];
+
+const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const localizer = momentLocalizer(moment);
 function ExDocDetails() {
   const [Doctor, setDoctor] = useState([]);
@@ -24,11 +26,11 @@ function ExDocDetails() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(null);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(selectedDate, selectedTime);
-    // handle form submission
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log(selectedDate, selectedTime);
+  //   // handle form submission
+  // };
 
   const { doctorId } = useParams();
   const client = JSON.parse(localStorage.getItem("clientToken"));
@@ -103,6 +105,31 @@ function ExDocDetails() {
   const handleCloseModal = () => {
     setIsOpen(false);
   };
+  const [selectedDay, setSelectedDay] = useState('');
+  const [timings, setTimings] = useState([]);
+
+  const handleDayChange = (e) => {
+    setSelectedDay(e.target.value);
+  };
+
+  const handleTimingAdd = () => {
+    setTimings([...timings, { startTime: '', endTime: '' }]);
+  };
+  const handleTimingRemove = (indexToRemove) => {
+    setTimings((prevTimings) => prevTimings.filter((timing, index) => index !== indexToRemove));
+  };
+
+  const handleTimingChange = (e, index, key) => {
+    const updatedTimings = [...timings];
+    updatedTimings[index][key] = e.target.value;
+    setTimings(updatedTimings);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Selected day:', selectedDay);
+    console.log('Timings:', timings);
+  };
   return (
     <>
       <div className="container mx-auto px-4 pt-7">
@@ -172,7 +199,7 @@ function ExDocDetails() {
         <div className="text-center text-gray-500 py-14 text-sm">
           <button
             onClick={handleOpenModal}
-            className="py-2 px-20 text-white font-bold text-base bg-[#194569]"
+            className="py-2 px-20 text-white font-bold text-base hover:bg-opacity-75 bg-[#194569]"
           >
             BOOK
           </button>
@@ -194,7 +221,54 @@ function ExDocDetails() {
                     </h2>
                   </div>
                   <div className=" bg-[#EDF4FE]    px-4 pt-5 pb-4">
-                    <form onSubmit={handleSubmit}>
+
+                  <form onSubmit={handleSubmit}>
+      <label>
+        Day of week:
+        <select value={selectedDay} onChange={handleDayChange}>
+          <option value="">Select a day</option>
+          {daysOfWeek.map((day) => (
+            <option key={day} value={day}>
+              {day}
+            </option>
+          ))}
+        </select>
+      </label>
+      {selectedDay && (
+        <div>
+          <h2>{selectedDay}</h2>
+          <button type="button" onClick={handleTimingAdd}>
+            Add timing
+          </button>
+          {timings.map((timing, index) => (
+            <div key={index}>
+              <label>
+                Start time:
+                <input
+                  type="time"
+                  value={timing.startTime}
+                  onChange={(e) => handleTimingChange(e, index, 'startTime')}
+                />
+              </label>
+              <label>
+                End time:
+                <input
+                  type="time"
+                  value={timing.endTime}
+                  onChange={(e) => handleTimingChange(e, index, 'endTime')}
+                />
+              </label>
+              <button type="button" onClick={() => handleTimingRemove(index)}>
+                    Remove timing
+                  </button>
+            </div>
+          ))}
+        </div>
+      )}
+      <button type="submit">Save</button>
+    </form>
+
+                    {/* <form onSubmit={handleSubmit}>
                       <div>
                         <label>Date:</label>
                         <DatePicker
@@ -211,7 +285,7 @@ function ExDocDetails() {
                         />
                       </div>
                       <button type="submit">Submit</button>
-                    </form>
+                    </form> */}
                     {/* <form
                     component="form "
                     className="flex-col items-center justify-center"
