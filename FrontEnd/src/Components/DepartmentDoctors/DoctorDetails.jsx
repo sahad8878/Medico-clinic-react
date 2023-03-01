@@ -16,7 +16,15 @@ import "react-datepicker/dist/react-datepicker.css";
 //   { value: "evening", label: "Evening" },
 // ];
 
-const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const daysOfWeek = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
 const localizer = momentLocalizer(moment);
 function ExDocDetails() {
   const [Doctor, setDoctor] = useState([]);
@@ -105,7 +113,7 @@ function ExDocDetails() {
   const handleCloseModal = () => {
     setIsOpen(false);
   };
-  const [selectedDay, setSelectedDay] = useState('');
+  const [selectedDay, setSelectedDay] = useState("");
   const [timings, setTimings] = useState([]);
 
   const handleDayChange = (e) => {
@@ -113,22 +121,24 @@ function ExDocDetails() {
   };
 
   const handleTimingAdd = () => {
-    setTimings([...timings, { startTime: '', endTime: '' }]);
+    setTimings([...timings, { startTime: "", endTime: "" }]);
   };
   const handleTimingRemove = (indexToRemove) => {
-    setTimings((prevTimings) => prevTimings.filter((timing, index) => index !== indexToRemove));
+    setTimings((prevTimings) =>
+      prevTimings.filter((timing, index) => index !== indexToRemove)
+    );
   };
 
-  const handleTimingChange = (e, index, key) => {
-    const updatedTimings = [...timings];
+  const handleTimingChange = (e, day, index, key) => {
+    const updatedTimings = [day, ...timings];
     updatedTimings[index][key] = e.target.value;
     setTimings(updatedTimings);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Selected day:', selectedDay);
-    console.log('Timings:', timings);
+    console.log("Selected day:", selectedDay);
+    console.log("Timings:", timings);
   };
   return (
     <>
@@ -221,52 +231,63 @@ function ExDocDetails() {
                     </h2>
                   </div>
                   <div className=" bg-[#EDF4FE]    px-4 pt-5 pb-4">
-
-                  <form onSubmit={handleSubmit}>
-      <label>
-        Day of week:
-        <select value={selectedDay} onChange={handleDayChange}>
-          <option value="">Select a day</option>
-          {daysOfWeek.map((day) => (
-            <option key={day} value={day}>
-              {day}
-            </option>
-          ))}
-        </select>
-      </label>
-      {selectedDay && (
-        <div>
-          <h2>{selectedDay}</h2>
-          <button type="button" onClick={handleTimingAdd}>
-            Add timing
-          </button>
-          {timings.map((timing, index) => (
-            <div key={index}>
-              <label>
-                Start time:
-                <input
-                  type="time"
-                  value={timing.startTime}
-                  onChange={(e) => handleTimingChange(e, index, 'startTime')}
-                />
-              </label>
-              <label>
-                End time:
-                <input
-                  type="time"
-                  value={timing.endTime}
-                  onChange={(e) => handleTimingChange(e, index, 'endTime')}
-                />
-              </label>
-              <button type="button" onClick={() => handleTimingRemove(index)}>
-                    Remove timing
-                  </button>
-            </div>
-          ))}
-        </div>
-      )}
-      <button type="submit">Save</button>
-    </form>
+                    <form onSubmit={handleSubmit}>
+                      <label>
+                        Day of week:
+                        <select value={selectedDay} onChange={handleDayChange}>
+                          <option value="">Select a day</option>
+                          {daysOfWeek.map((day) => (
+                            <option key={day} value={day}>
+                              {day}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      {selectedDay && (
+                        <div>
+                          <h2>{selectedDay}</h2>
+                          <button type="button" onClick={handleTimingAdd}>
+                            Add timing
+                          </button>
+                          {timings.map((timing, index) => (
+                            <div key={index}>
+                              <label>
+                                Start time:
+                                <input
+                                  type="time"
+                                  value={timing.startTime}
+                                  onChange={(e) =>
+                                    handleTimingChange(
+                                      e,
+                                      selectedDay,
+                                      index,
+                                      "startTime"
+                                    )
+                                  }
+                                />
+                              </label>
+                              <label>
+                                End time:
+                                <input
+                                  type="time"
+                                  value={timing.endTime}
+                                  onChange={(e) =>
+                                    handleTimingChange(e, index, "endTime")
+                                  }
+                                />
+                              </label>
+                              <button
+                                type="button"
+                                onClick={() => handleTimingRemove(index)}
+                              >
+                                Remove timing
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      <button type="submit">Save</button>
+                    </form>
 
                     {/* <form onSubmit={handleSubmit}>
                       <div>

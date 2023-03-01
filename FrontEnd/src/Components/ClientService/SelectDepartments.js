@@ -17,7 +17,7 @@ function SelectDepartments() {
       setIsLoading(true);
       const client = JSON.parse(localStorage.getItem("clientToken"));
       const clientToken = client.clientToken;
-      console.log(clientToken, "token");
+ 
       await axios
         .get(`/getdepartments?page=${page}&limit=${limit}`, {
           headers: { accesstoken: clientToken },

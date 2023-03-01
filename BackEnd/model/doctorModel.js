@@ -1,6 +1,27 @@
 const mongoose = require("mongoose");
 const mongoosePaginate = require("mongoose-paginate-v2");
 
+const daySchema = new mongoose.Schema({
+    day:{
+      type:String,
+    },
+    status:{
+      type:String,
+      default:"active"
+    },
+    time:[{
+        end:{
+          type:Date,
+        },
+
+        start:{
+          type:Date,
+        }
+    }]
+})
+
+
+
 const doctorSchema = new mongoose.Schema(
   {
     fName: {
@@ -37,7 +58,7 @@ const doctorSchema = new mongoose.Schema(
     },
     licenceImg: {
       type: String,
-      required: [true, "licence is required"],
+  
     },
     education: {
       type: String,
@@ -48,17 +69,7 @@ const doctorSchema = new mongoose.Schema(
     consultationFees:{
       type:Number
     },
-
-    startingTime: {
-      type: String,
-    },
-    endingTime: {
-      type: String,
-    },
-    availableDate: {
-      type: Array,
-    },
-
+    availablity:[daySchema],
     doctorImg: {
       type: String,
     },

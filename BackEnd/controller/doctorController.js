@@ -241,6 +241,177 @@ const getDepartments = async (req, res) => {
   }
 };
 
+// post doctor schedule 
+
+const postDoctorAvailability = async(req, res) => {
+  try {
+  console.log(req.body);
+  console.log(req.body.doctorId);
+const doctorId =req.body.doctorId
+  const {selectedDay,timings} = req.body
+  console.log(selectedDay,timings);
+
+
+  const doctorData = await DoctorModel.findOne({_id:doctorId})
+  const existingDay = doctorData.availablity.find((day) => day.day === selectedDay);
+
+  if (existingDay) {
+    // If the day exists, push the new time slots to its time array
+    existingDay.time.push(
+      ...timings.map((timing) => ({
+        start: new Date(`2023-03-01T${timing.startTime}:00Z`),
+        end: new Date(`2023-03-01T${timing.endTime}:00Z`),
+      }))
+    );
+  } else {
+    // If the day does not exist, create a new day object and push it to the availability array
+    doctorData.availablity.push({
+      day: selectedDay,
+      time: timings.map((timing) => ({
+        start: new Date(`2023-03-01T${timing.startTime}:00Z`),
+        end: new Date(`2023-03-01T${timing.endTime}:00Z`),
+      })),
+    });
+  }
+  
+  const doctor = new DoctorModel(doctorData);
+  await doctor.save();
+  console.log(doctor);
+  if(doctor){
+
+    res.status(201).send({message:"Your Time schedule added ", success: true });
+  }else{
+    return res
+    .status(200)
+    .send({ message: "No doctor Exist  ", success: false });
+
+  }
+ 
+  // const newDay = {
+  //   day: selectedDay,
+  //   time: timings.map(timing => {
+  //     return {
+  //       start: new Date(`2000-01-01T${timing.startTime}:00.000Z`),
+  //       end: new Date(`2000-01-01T${timing.endTime}:00.000Z`)
+  //     };
+  //   })
+  // };
+  // const doctor = await DoctorModel.findOne({_id:doctorId})
+  // console.log(doctor)
+  // const dayExists = doctor?.availablity?.findIndex((element)=>element.day === selectedDay)
+  // console.log(`dayExists: ${dayExists}`)
+  // if(dayExists != -1){
+  //   console.log(newDay?.time?.length,'[[[[[[[[[[[[[[[[[[[[[[[[[')
+  //   for(let i=0; i<= newDay?.time?.length -1; i++){
+  //     doctor?.availablity[dayExists]?.time?.push(newDay?.time[i])
+  //     doctor?.save();
+  //     console.log('pushed to time')
+  //   }
+  // }else{
+  //   doctor?.availablity?.push(newDay);
+  //   doctor?.save();
+  //   console.log('pushed to array')
+  // }
+ 
+  // });
+  
+
+} catch (error) {
+  console.log(error);
+  res.status(500).send({
+    success: false,
+    message: `postDoctorAvailability controller ${error.message}`,
+  });
+}
+}
+
+
+const getScheduleDetails = async (req, res) => {
+try {
+  
+const doctor = await DoctorModel.findOne({_id:req.body.doctorId})
+console.log(doctor);
+
+const schedule = doctor.availablity
+console.log(schedule);
+if(schedule){
+
+  res.status(201).send({schedule, success: true });
+}else{
+  return res
+  .status(200)
+  .send({ message: "No doctor Exist  ", success: false });
+
+}
+
+
+} catch (error) {
+    console.log(error);
+  res.status(500).send({
+    success: false,
+    message: `postDoctorAvailability controller ${error.message}`,
+  });
+}
+
+}
+
+
+const  deleteScheduleTime = async(req, res) => {
+try {
+  console.log(req.query.timingId);
+  const doctorId = req.body.doctorId
+const timingId = req.query.timingId
+ const doctor = await DoctorModel.findOne({ _id: doctorId })
+  
+ if(!doctor){
+
+  return res
+  .status(200)
+  .send({ message: " doctor not Exist  ", success: false });
+
+ }else{
+  doctor.availablity.forEach((day) => {
+    day.time.pull({ _id: timingId }); // remove the timing with the given ID
+  });
+
+  doctor.save().then(()=>{
+
+    res.status(201).send({message:"Your Timing is removed", success: true });
+  })
+
+ }
+ 
+//  (err, doctor) => {
+//     if (err) {
+//       // handle error
+//     } else if (!doctor) {
+//       // handle doctor not found
+//     } else {
+//       // remove the timing object from the availablity array
+//       doctor.availablity.forEach((day) => {
+//         day.time.pull({ _id: timingId }); // remove the timing with the given ID
+//       });
+  
+//       // save the updated doctor document
+//       doctor.save((err) => {
+//         if (err) {
+//           // handle error
+//         } else {
+//           // handle success
+//         }
+//       });
+//     }
+//   });
+  
+} catch (error) {
+  console.log(error);
+  res.status(500).send({
+    success: false,
+    message: `postDoctorAvailability controller ${error.message}`,
+  });
+}
+
+}
 module.exports = {
   getDepartments,
   doctorDetails,
@@ -249,4 +420,7 @@ module.exports = {
   getAppointments,
   acceptAppointment,
   rejecrAppointment,
+  postDoctorAvailability,
+  getScheduleDetails,
+  deleteScheduleTime
 };

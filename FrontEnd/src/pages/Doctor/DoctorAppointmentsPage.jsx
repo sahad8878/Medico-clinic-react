@@ -40,13 +40,14 @@ function DoctorAppointmentsPage() {
     },[refresh])
 
   return (
-    <div>
+    <>
+    {/* <div>
     <TopNav/>
     <DoctorNavbar/>
     <div className=" mt-[112px]  md:mt-[127px]">
       <div className="bg-[#EDF4FE]   w-screen  ">
         <div className="container mx-auto pt-16 my-11">
-          <div className="flex pl-32 ">
+          <div className="flex pl-32 sm ">
            <DoctorSidebar/>
             <div className="w-full  py-8 md:py-0 pr-20">
               <div className="  bg-[#EDF4FE] bg-opacity-50 shadow-2xl   h-full p-5 ">
@@ -58,7 +59,25 @@ function DoctorAppointmentsPage() {
       </div>
       <Footer/>
     </div>
-  </div>
+  </div> */}
+   <div>
+   <TopNav />
+   <DoctorNavbar />
+   <div className="bg-[#EDF4FE] mt-[112px]  md:mt-[127px]  w-screen  ">
+     <div className="container flex mx-auto pt-16 my-11">
+       <div className=" md:pl-10 lg:pl-32  md:block hidden ">
+         <DoctorSidebar />
+       </div>
+       <div className="w-full  py-8 md:py-0  sm:pr-0">
+       <div className="  bg-[#EDF4FE] bg-opacity-50 shadow-2xl   h-full p-5 ">
+              <DoctorAppointments/>
+              </div>
+       </div>
+     </div>
+   </div>
+   <Footer />
+ </div>
+ </>
   )
 }
 

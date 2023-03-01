@@ -1,44 +1,44 @@
 import React, { useState, useEffect } from "react";
-import axios from '../../Axios/Axios'
+import axios from "../../Axios/Axios";
 
 function DoctorProfile() {
-    const [Doctor, setDoctor] = useState([]);
+  const [Doctor, setDoctor] = useState([]);
 
-    useEffect(() => {
-        const doctor = JSON.parse(localStorage.getItem('doctorToken'));
-        const doctorToken = doctor.doctorToken
-        const doctorId = doctor.doctorId
-        axios.get(`/doctor/getDoctorDetails/${doctorId}`,{headers:{'doctortoken':doctorToken}}).then((response) => {
-          if (response.data.success) {
-            setDoctor(response.data.doctor);
-          }
-        });
-      }, []);
-    
+  useEffect(() => {
+    const doctor = JSON.parse(localStorage.getItem("doctorToken"));
+    const doctorToken = doctor.doctorToken;
+    const doctorId = doctor.doctorId;
+    axios
+      .get(`/doctor/getDoctorDetails/${doctorId}`, {
+        headers: { doctortoken: doctorToken },
+      })
+      .then((response) => {
+        if (response.data.success) {
+          setDoctor(response.data.doctor);
+        }
+      });
+  }, []);
+
   return (
     // <div className="bg-[#D6E8EE]  w-screen border-b-2 border-black ">
-    <div>
-              <div className=" ">
-            <h1 className="text-center font-serif text-2xl font-semibold my-5 ">Details</h1>
-        </div>
-     <div className="container mx-auto   ">
-        <div className="flex justify-center content-center ">
-          {/*  */}
-          {/* <div className="w-full md:w-5/12 px-3 flex justify-center lg:justify-end">
-            <div className="bg-[#EDF4FE]     sm:mx-4   ">
-              <div className="flex justify-center flex-col text-center  ">
-                <img
-                  className="h-60 sm:h-72 sm:w-80 "
-                  src={Doctor.doctorImg}
-                  alt=""
-                />
-
-                <h1 className="text-center p-5 ">
-                  {Doctor.fName} {Doctor.lName}
-                </h1>
-              </div>
-            </div>
-          </div> */}
+    <div className="">
+      <div className=" flex justify-center ">
+        <h1 className="text-center font-serif text-2xl font-semibold my-5 ">
+          Details
+        </h1>
+      </div>
+      <div className=" ">
+        <div className="flex-col ">
+          <div className="p-7 mt-2 block md:hidden ml-12 sm:ml-24  rounded-lg mx-2 h-72 w-64 shadow-xl">
+            <img
+              class="w-52 h-52 mb-3 rounded-full shadow-lg"
+              src={Doctor.doctorImg}
+              alt="Bonnie image"
+            />
+            <h1 className="text-center">
+              {Doctor.fName} {Doctor.lName}
+            </h1>
+          </div>
           {/*  */}
           <div className="w-full  py-8 md:py-0 px-3">
             <div className="lg:w-[600px]  bg-[#EDF4FE] shadow-2xl pb-10 p-5 sm:p-10 ">
@@ -85,11 +85,9 @@ function DoctorProfile() {
             </div>
           </div>
         </div>
-       
       </div>
-   
-  </div>
-  )
+    </div>
+  );
 }
 
-export default DoctorProfile
+export default DoctorProfile;

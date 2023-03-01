@@ -53,7 +53,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/" />} />
         <Route path="/signup" element={!user ? <SignupPage /> : <Navigate to="/" />} />
-        <Route path="/service" element={ user ? <ServicePage /> : <Navigate to="/" />} />
+        <Route path="/service" element={ user ? <ServicePage/> :<Navigate to="/" />} />
         <Route path="/departmentDoctors/:departmentId" element={user ?  <DepartmentDoctorsPage />  : <Navigate to="/" />} />
         <Route path="/doctorDetails/:doctorId" element={ user ? <DoctorDetailsPage /> : <Navigate to="/" />} />
         <Route path="/clientProfile" element={user ? <ClientProfilePage/> : <Navigate to="/" />}/>
@@ -69,7 +69,7 @@ function App() {
         <Route path="/doctor/doctorPendingPage" element={ doctor ? <DoctorPendingPage /> : <Navigate to="/"/> } />
         <Route path="/doctor/doctorDetailsForm" element={doctor ?<DoctorDetailsForm /> : <Navigate to="/"/> } />
         <Route path="/doctor/DoctorAppointmentsPage" element={doctor ? <DoctorAppointmentsPage />: <Navigate to="/"/>} />
-        <Route path="/doctor/DoctorSchedulePage" element={doctor ?<DoctorSchedulePage />: <Navigate to="/"/>} />
+        <Route path="/doctor/DoctorSchedulePage" element={<DoctorSchedulePage />} />
 
         
 

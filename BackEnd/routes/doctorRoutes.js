@@ -7,7 +7,10 @@ const {
   getDoctorDetails,
   getAppointments,
   acceptAppointment,
-  rejecrAppointment
+  rejecrAppointment,
+  postDoctorAvailability,
+  getScheduleDetails,
+  deleteScheduleTime
 } = require("../controller/doctorController");
 
 const doctorAuthmiddlwares = require("../middlewares/doctorAuthmiddlwares");
@@ -24,9 +27,14 @@ router.post("/doctorSignup", doctorSignup);
 
 router.post("/doctorLogin", doctorLogin);
 
+
 // Get Departments || GET
 
 router.get("/getdepartments", getDepartments);
+
+// Doctor schedul || post 
+
+router.post("/postDoctorAvailability",doctorAuthmiddlwares,postDoctorAvailability)
 
 // Doctor Details || post
 
@@ -54,5 +62,12 @@ router.patch('/acceptAppointment',doctorAuthmiddlwares,acceptAppointment)
 router.patch('/rejecrAppointment',doctorAuthmiddlwares,rejecrAppointment)
 
 
+// get doctor time schedul  || GET
+
+router.get('/getScheduleDetails',doctorAuthmiddlwares,getScheduleDetails)
+
+// delete doctor time schedul || DELETE 
+
+router.delete('/deleteScheduleTime',doctorAuthmiddlwares,deleteScheduleTime)
 
 module.exports = router;
