@@ -1,20 +1,25 @@
 /* eslint-disable react/react-in-jsx-scope */
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
+import { useSelector,useDispatch } from "react-redux";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import { Link, useLocation } from "react-router-dom";
-import { useAuthContext } from "../../Hooks/useAuthContext";
+import { Link, useLocation,useNavigate } from "react-router-dom";
+import { setLogout } from "../../Store/Slice/ClientSlice";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 function Dropdown() {
-  const { user, dispatch } = useAuthContext();
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+const {client} = useSelector((state) => state.clientLogin)
+
   const location = useLocation();
   const path = location.pathname;
   const handleLogout = () => {
     localStorage.removeItem("clientToken");
-    dispatch({ type: "LOGOUT" });
+    dispatch(setLogout())
+navigate("/")
   };
 
   if (
@@ -35,7 +40,7 @@ function Dropdown() {
             path === pathName ? "text-[#194569]" : "text-white"
           }  inline-flex font-bold text-base uppercase w-full justify-center rounded-md  px-4 py-2  hover:text-[#194569] focus:outline-none`}
         >
-          {user ? <span>Account</span> : <span>Login</span>}
+          {client ? <span>Account</span> : <span>Login</span>}
           <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
         </Menu.Button>
       </div>
@@ -50,7 +55,7 @@ function Dropdown() {
         leaveTo="transform opacity-0 scale-95"
       >
         <Menu.Items className="absolute right-0 z-10 mt-2 md:w-56 w-28  origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          {user ? (
+          {client ? (
             <div className="py-1">
               <Menu.Item>
                 {({ active }) => (

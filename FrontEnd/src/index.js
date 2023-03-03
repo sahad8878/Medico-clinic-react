@@ -1,21 +1,21 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import { AuthContextProvider } from './Context/AuthContext';
-import { AdminAuthContextProvider } from './Context/AdminAuthContext';
-import { DoctorAuthContextProvider } from './Context/DoctorAuthContext';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistor, store } from "./Store/Store";
+import "./index.css";
+import App from "./App";
 
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <AdminAuthContextProvider>
-      <DoctorAuthContextProvider>
-      <AuthContextProvider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
         <App />
-      </AuthContextProvider>
-      </DoctorAuthContextProvider>
-    </AdminAuthContextProvider>
-  </React.StrictMode>,
+      </PersistGate>
+    </Provider>
+  </React.StrictMode>
 );
+
+

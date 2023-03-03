@@ -1,18 +1,19 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setLogin } from "../../Store/Slice/DoctorSlice";
 import { message } from "antd";
 import { InfinitySpin } from "react-loader-spinner";
-import { useDoctorAuthContext } from "../../Hooks/useDoctorAuthContext";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import { storage } from "../../Firebase/confic";
 import axios from "../../Axios/Axios";
 
 function DoctorSignup() {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { dispatch } = useDoctorAuthContext();
 
   const [departments, setDepartments] = useState([]);
   const [refresh, setRefresh] = useState(false);
@@ -72,7 +73,11 @@ function DoctorSignup() {
         const result = response.data;
         if (result.success) {
           localStorage.setItem("doctorToken", JSON.stringify(result));
-          dispatch({ type: "LOGIN", payload: result });
+          dispatch(setLogin ({
+            doctor:"doctor",
+            name:result.doctorName,
+            token:result.doctorToken
+          }))
           setIsLoading(false);
           message.success("Signup successfully!");
           navigate("/doctor/doctorPendingPage");

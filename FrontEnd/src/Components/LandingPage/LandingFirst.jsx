@@ -2,13 +2,14 @@
 import React from 'react';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import doctorImage from '../../Assets/doctor-image.jpg';
-import { useAuthContext } from "../../Hooks/useAuthContext";
 import { Link } from 'react-router-dom';
 import { message } from 'antd';
+import { useSelector } from "react-redux";
 
 
 function LandingFirst() {
-  const { user } = useAuthContext();
+  const {client} = useSelector((state) => state.clientLogin)
+
 
   const notLogin = () => {
     message.error('You must be logged in to continue')
@@ -23,7 +24,7 @@ function LandingFirst() {
           DOCTOR
         </h1>
         {
-          user ? (
+          client ? (
           <Link to='/service'>
         <span className="cursor-pointer  flex justify-center  mt-10 font-semibold text-xl w-48 bg-[#194569] p-2  text-white hover:text-black">
           Appointment

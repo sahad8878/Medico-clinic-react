@@ -1,5 +1,4 @@
 import React from 'react'
-// import DoctorDetails from '../../Components/DepartmentDoctors/DoctorDetails'
 import DoctorDetails from '../../Components/DepartmentDoctors/DoctorDetails'
 
 import TopNav from '../../Components/TopNav/TopNav'

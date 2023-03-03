@@ -1,19 +1,18 @@
 import React, { useState } from "react";
 import { message } from "antd";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { InfinitySpin } from "react-loader-spinner";
-import { useAdminAuthContext } from "../../Hooks/useAdminAuthContext";
 import axios from "../../Axios/Axios";
-
+import { setLogin } from "../../Store/Slice/AdminSlice";
 function AdminLogin() {
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { dispatch } = useAdminAuthContext();
 
   const handleLogin = (e) => {
     try {
@@ -25,8 +24,14 @@ function AdminLogin() {
         const result = response.data;
         if (result.success) {
           localStorage.setItem("adminToken", JSON.stringify(result));
-          dispatch({ type: "LOGIN", payload: result });
-          setIsLoading(false);
+
+          dispatch(
+            setLogin({
+              admin: "admin",
+              adminEmail: result.AdminEmail,
+              token: result.adminToken,
+            })
+          );
           message.success("Login  successfully!");
           navigate("/admin/adminHome");
         } else {

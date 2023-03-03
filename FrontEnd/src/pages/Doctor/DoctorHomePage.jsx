@@ -6,20 +6,21 @@ import axios from "../../Axios/Axios";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../Components/Footer/Footer";
 import { message } from "antd";
-import { useDoctorAuthContext } from "../../Hooks/useDoctorAuthContext";
 import DoctorProfile from "../../Components/DoctorHome/DoctorProfile";
 import DoctorDashboard from "../../Components/DoctorHome/DoctorDashboard";
-
+import { useDispatch } from "react-redux";
+import { setLogout } from "../../Store/Slice/DoctorSlice";
 function DoctorHomePage() {
   const navigate = useNavigate();
-  const { dispatch } = useDoctorAuthContext();
+  const dispatch = useDispatch()
+
 
   const [refresh, setRefresh] = useState(false);
   useEffect(() => {
     const doctor = JSON.parse(localStorage.getItem("doctorToken"));
     const doctorToken = doctor.doctorToken;
     axios
-      .get(`/doctor/statusChecking?id=${doctor.doctorId}`, {
+      .get(`/doctor/statusChecking`, {
         headers: { doctortoken: doctorToken },
       })
       .then((response) => {
@@ -27,7 +28,7 @@ function DoctorHomePage() {
         if (result.doctorStatus === "blocked") {
           message.error("Youn have been blocked");
           localStorage.removeItem("doctorToken");
-          dispatch({ type: "LOGOUT" });
+          dispatch(setLogout())
           navigate("/");
           setRefresh(!refresh);
         }

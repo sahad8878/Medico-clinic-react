@@ -1,12 +1,12 @@
 import React from 'react';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import doctorImg from '../../Assets/doctor-img2.png';
-import { useDoctorAuthContext } from "../../Hooks/useDoctorAuthContext";
 import { Link } from 'react-router-dom';
+import { useSelector } from "react-redux";
 
 
 function LandingSecond() {
-  const { doctor } = useDoctorAuthContext();
+  const {doctor} = useSelector((state) => state.doctorLogin)
 
   return (
     <>

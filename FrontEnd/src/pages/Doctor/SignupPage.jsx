@@ -6,7 +6,6 @@ import TopNav from '../../Components/TopNav/TopNav';
 
 function SignupPage() {
   return (
-    // eslint-disable-next-line react/jsx-filename-extension
     <>
       <TopNav />
       <Navbar />

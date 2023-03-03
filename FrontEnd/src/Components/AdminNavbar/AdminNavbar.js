@@ -1,22 +1,27 @@
 import React, { useState } from "react";
 import log from "../../Assets/main-logo.png";
-
+import { useSelector,useDispatch } from "react-redux";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { Link,useLocation } from "react-router-dom";
+import { Link,useLocation,useNavigate } from "react-router-dom";
 import docIcon from "../../Assets/doctor.ico";
 import clientIcon from "../../Assets/group.ico";
 import homeIcon from "../../Assets/home.ico";
 import inboxIcon from "../../Assets/book-appointments.ico";
 import departmentIcon from '../../Assets/department.png'
+import { setLogout } from "../../Store/Slice/AdminSlice";
 
-import { useAdminAuthContext } from "../../Hooks/useAdminAuthContext";
+
+
 function AdminNavbar() {
+ const navigate = useNavigate()
   const [navbar, setNavbar] = useState(false);
-  const { admin, dispatch } = useAdminAuthContext();
-
+  const dispatch = useDispatch()
+const {admin} = useSelector((state) => state.adminLogin)
+console.log(admin,"adminnnnnnnnnnnnn");
   const handleLogout = () => {
     localStorage.removeItem("adminToken");
-    dispatch({ type: "LOGOUT" });
+     dispatch(setLogout())
+     navigate("/admin")
   };
  const location = useLocation()
 const path = location.pathname
@@ -136,7 +141,7 @@ const path = location.pathname
                   >
                     <img className=" h-7" src={homeIcon} alt="logo" />
 
-                    <span className={ `  hover:text-[#D6E8EE] ${path == "/admin/adminHome" ? "text-white font-semibold " : "text-[#97CADB] "} `}>Home</span>
+                    <span className={ `  hover:text-[#D6E8EE] ${path === "/admin/adminHome" ? "text-white font-semibold " : "text-[#97CADB] "} `}>Home</span>
                   </span>
                   </Link>
                 </li>
@@ -147,7 +152,7 @@ const path = location.pathname
                   >
                     <img className=" h-7" src={inboxIcon} alt="logo" />
 
-                    <span className={ `  hover:text-[#D6E8EE] ${path == "/admin/AdminAppointmentspage" ? "text-white font-semibold " : "text-[#97CADB] "} `}>Inbox</span>
+                    <span className={ `  hover:text-[#D6E8EE] ${path === "/admin/AdminAppointmentspage" ? "text-white font-semibold " : "text-[#97CADB] "} `}>Inbox</span>
                   </span>
                   </Link>
                 </li>
@@ -160,7 +165,7 @@ const path = location.pathname
                   >
                     <img className=" h-7" src={clientIcon} alt="logo" />
 
-                    <span className={ `  hover:text-[#D6E8EE] ${path == "/admin/adminClientPage" ? "text-white font-semibold " : "text-[#97CADB] "} `}>Clients</span>
+                    <span className={ `  hover:text-[#D6E8EE] ${path === "/admin/adminClientPage" ? "text-white font-semibold " : "text-[#97CADB] "} `}>Clients</span>
                   </span>
                   </Link>
                 </li>
@@ -170,7 +175,7 @@ const path = location.pathname
                     className="flex items-center p-2 space-x-3 rounded-md uppercase"
                   >
                     <img className=" h-7" src={docIcon} alt="logo" />
-                    <span className={ `  hover:text-[#D6E8EE] ${path == "/admin/adminDoctorsPage" ? "text-white font-semibold " : "text-[#97CADB] "} `}>Doctors</span>
+                    <span className={ `  hover:text-[#D6E8EE] ${path === "/admin/adminDoctorsPage" ? "text-white font-semibold " : "text-[#97CADB] "} `}>Doctors</span>
                   </span>
                   </Link>
                 </li>
@@ -180,7 +185,7 @@ const path = location.pathname
                     className="flex items-center p-2 space-x-3 rounded-md uppercase"
                   >
                     <img className=" h-7" src={departmentIcon} alt="logo" />
-                    <span className={ `  hover:text-[#D6E8EE] ${path == "/admin/AdminDepartmentPage" ? "text-white font-semibold " : "text-[#97CADB] "} `}>Departments</span>
+                    <span className={ `  hover:text-[#D6E8EE] ${path === "/admin/AdminDepartmentPage" ? "text-white font-semibold " : "text-[#97CADB] "} `}>Departments</span>
                   </span>
                   </Link>
                 </li>

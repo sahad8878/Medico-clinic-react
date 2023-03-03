@@ -14,8 +14,10 @@ const {
   getExperiencedDoctors,
   postAppointment,
   availableSlot,
+  
 } = require("../controller/clientController");
 
+const {getClientNotifications } = require("../controller/clientAppointmentController")
 const clientAuthMiddlewares = require("../middlewares/clientAuthMiddlewares");
 
 // router object
@@ -63,7 +65,11 @@ router.get("/getExperiencedDoctors",clientAuthMiddlewares, getExperiencedDoctors
 
 // Check available Slotes || GET
 
-router.get("/availableSlot",clientAuthMiddlewares, availableSlot);
+router.get("/availableSlot/:doctorId/:selectedDate",clientAuthMiddlewares, availableSlot);
+
+// get Client Booking notifications
+
+router.get('/getClientNotifications',clientAuthMiddlewares,getClientNotifications)
 
 
 module.exports = router;

@@ -5,18 +5,22 @@ const daySchema = new mongoose.Schema({
     day:{
       type:String,
     },
+    slots:{
+      type:Number
+    },
     status:{
       type:String,
       default:"active"
     },
     time:[{
+      start:{
+        type:Date,
+      },
         end:{
           type:Date,
         },
+        
 
-        start:{
-          type:Date,
-        }
     }]
 })
 

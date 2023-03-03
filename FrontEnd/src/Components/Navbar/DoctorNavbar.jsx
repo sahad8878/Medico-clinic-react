@@ -2,19 +2,21 @@ import React,{useState} from 'react';
 import { Link,useNavigate } from 'react-router-dom';
 import CircleNotificationsRoundedIcon from '@mui/icons-material/CircleNotificationsRounded';
 import log from '../../Assets/main-logo.png';
-import {useDoctorAuthContext} from '../../Hooks/useDoctorAuthContext'
+import { useSelector,useDispatch } from "react-redux";
+import { setLogout } from "../../Store/Slice/DoctorSlice";
 
 
 function DoctorNavbar() {
   const Navigate = useNavigate()
-  const { doctor, dispatch } = useDoctorAuthContext();
+  const dispatch = useDispatch()
+  const {doctor} = useSelector((state) => state.doctorLogin)
+
 
   const [navbar, setNavbar] = useState(false);
   const handleLogout = () => {
     localStorage.removeItem("doctorToken");
-    dispatch({ type: "LOGOUT" })
+    dispatch(setLogout())
     Navigate('/')
-
   };
   return (
     <>

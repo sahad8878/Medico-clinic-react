@@ -1,14 +1,17 @@
 import React from 'react';
-import { useAdminAuthContext } from '../../Hooks/useAdminAuthContext';
+import { useSelector,useDispatch } from "react-redux";
+
 import log from "../../Assets/main-logo.png";
 import ExNavbar from '../AdminNavbar/ExNavbar';
+import { setLogout } from "../../Store/Slice/AdminSlice";
 
 function AdminHome() {
-  const { admin, dispatch } = useAdminAuthContext();
-
+  const dispatch = useDispatch()
+  const {admin,adminEmail} = useSelector((state) => state.adminLogin)
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
-    dispatch({ type: 'LOGOUT' });
+    dispatch(setLogout())
+   
   };
   return (
     <>
@@ -22,7 +25,7 @@ function AdminHome() {
 
         {admin && (
         <div>
-          <h1 className="font-bold py-11 text-cyan-900">{admin.AdminEmail}</h1>
+          <h1 className="font-bold py-11 text-cyan-900">{adminEmail}</h1>
           <button type="button" className="text-white bg-blue-gray-500 px-3" onClick={handleLogout}>
             log out
           </button>

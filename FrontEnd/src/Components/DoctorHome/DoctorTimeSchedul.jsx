@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { message } from "antd";
 import moment from "moment";
 import profile from "../../Assets/user.png";
@@ -17,7 +18,8 @@ function DoctorTimeSchedule() {
   const [selectedDay, setSelectedDay] = useState("");
   const [timings, setTimings] = useState([]);
   const [schedule, setSchedule] = useState([]);
-  const [refresh, setRefresh] = useState(false)
+  const [refresh, setRefresh] = useState(false);
+  const [slots, setSlots] = useState("")
   const doctor = JSON.parse(localStorage.getItem("doctorToken"));
   const doctorToken = doctor.doctorToken;
 
@@ -35,7 +37,6 @@ function DoctorTimeSchedule() {
       });
   }, [refresh]);
 
-
   const handleOpenModal = () => {
     setIsOpen(true);
   };
@@ -48,7 +49,7 @@ function DoctorTimeSchedule() {
   };
 
   const handleTimingAdd = () => {
-    setTimings([...timings, { startTime: "", endTime: "" }]);
+    setTimings([...timings, { startTime: "", endTime: "",}]);
   };
   const handleTimingRemove = (indexToRemove) => {
     setTimings((prevTimings) =>
@@ -61,29 +62,58 @@ function DoctorTimeSchedule() {
     updatedTimings[index][key] = e.target.value;
     setTimings(updatedTimings);
   };
- 
+
   const deleteTimeFromDB = (timeId) => {
-    console.log(timeId);
-      axios.delete(`/doctor/deleteScheduleTime?timingId=${timeId}`,{ headers: { doctortoken: doctorToken }}).then((response) => {
-        if(response.data.success){
-          setRefresh(!refresh) 
-          message.success(response.data.message)
-        }else{
-          message.error(response.data.message)
-
+    axios
+      .delete(`/doctor/deleteScheduleTime?timingId=${timeId}`,
+       {
+        headers: { doctortoken: doctorToken },
+      }
+      )
+      .then((response) => {
+        if (response.data.success) {
+          setRefresh(!refresh);
+          message.success(response.data.message);
+        } else {
+          message.error(response.data.message);
         }
-      })
-
-  }
+      });
+  };
 
   const disableSchedulDay = (dayId) => {
     console.log(dayId);
-
-  }
+    console.log(doctorToken);
+    axios
+      .patch("/doctor/dayScheduleDisable",{dayId} ,
+      { headers: { doctortoken: doctorToken } }
+      )
+      .then((response) => {
+        const result = response.data;
+        if (result.success) {
+          setRefresh(!refresh);
+          message.success(result.message);
+        } else {
+          message.error(result.message);
+        }
+      });
+  };
 
   const activeSchedulDay = (dayId) => {
-    console.log(dayId);
-  }
+  
+    axios
+      .patch("/doctor/dayScheduleActivate",{dayId}, {
+        headers: { doctortoken: doctorToken },
+      })
+      .then((response) => {
+        const result = response.data;
+        if (result.success) {
+          setRefresh(!refresh);
+          message.success(result.message);
+        } else {
+          message.error(result.message);
+        }
+      });
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Selected day:", selectedDay);
@@ -91,12 +121,12 @@ function DoctorTimeSchedule() {
     axios
       .post(
         "/doctor/postDoctorAvailability",
-        { selectedDay, timings },
+        { selectedDay, timings ,slots},
         { headers: { doctortoken: doctorToken } }
       )
       .then((response) => {
         if (response.data.success) {
-          setRefresh(!refresh) 
+          setRefresh(!refresh);
           message.success(response.data.message);
         } else {
           message.error(response.data.message);
@@ -134,7 +164,7 @@ function DoctorTimeSchedule() {
           </thead>
           <tbody className="  bg-white divide-y divide-gray-200 ">
             {schedule.map((schedule) => (
-              <tr className={`${schedule.status === "active" ? "bg-white" : "bg-slate-400"}`}>
+              <tr className={`bg-white" `}>
                 <td className=" p-3 text-base text-gray-700 whitespace-nowrap">
                   {schedule.day}
                 </td>
@@ -148,23 +178,32 @@ function DoctorTimeSchedule() {
                       <span className="">
                         {moment(times.end).format(" h:mm a")}
                       </span>
-                      <span onClick={() =>deleteTimeFromDB(times._id)} className="text-red-600 hover:text-red-900 cursor-pointer">Remove</span>
+                      <span
+                        onClick={() => deleteTimeFromDB(times._id)}
+                        className="text-red-600 hover:text-red-900 cursor-pointer"
+                      >
+                        Remove
+                      </span>
                     </div>
                   ))}
                 </td>
 
                 <td className=" p-3 text-base text-gray-700 whitespace-nowrap">
-                  {
-                    schedule.status === 'active' ?
-
-                  <span className="cursor-pointer" onClick={()=>disableSchedulDay(schedule._id)}>
-                  Disable
-                  </span>
-                    :
-                    <span className="cursor-pointer" onClick={()=>activeSchedulDay(schedule._id)}>
-                 Active
-                  </span>
-                  }
+                  {schedule.status === "active" ? (
+                    <span
+                      className="cursor-pointer"
+                      onClick={() => disableSchedulDay(schedule._id)}
+                    >
+                      Disable
+                    </span>
+                  ) : (
+                    <span
+                      className="cursor-pointer"
+                      onClick={() => activeSchedulDay(schedule._id)}
+                    >
+                      Active
+                    </span>
+                  )}
                 </td>
               </tr>
             ))}
@@ -221,7 +260,7 @@ function DoctorTimeSchedule() {
                       </div>
 
                       {timings.map((timing, index) => (
-                        <div key={index} className="p-1">
+                        <div key={index} className="p-1 mb-3">
                           <label className="pr-4">
                             Start time:
                             <input
@@ -232,7 +271,7 @@ function DoctorTimeSchedule() {
                               }
                             />
                           </label>
-                          <label className="pr-4">
+                          <label className="pr-4 ">
                             End time:
                             <input
                               type="time"
@@ -242,6 +281,7 @@ function DoctorTimeSchedule() {
                               }
                             />
                           </label>
+                         
                           <button
                             className="text-red-700 cursor-pointer hover:text-red-500"
                             type="button"
@@ -251,6 +291,15 @@ function DoctorTimeSchedule() {
                           </button>
                         </div>
                       ))}
+                       <label className="mt-2 ">
+                            Totol Slots:
+                            <input
+                              type="number"
+                              value={slots}
+                              onChange={(e) => setSlots(e.target.value)
+                              }
+                            />
+                          </label>
                       <div className="flex justify-center content-center mt-5">
                         <button
                           className="flex justify-center content-center cursor-pointer hover:bg-opacity-75 rounded-md text-white  bg-[#194569] px-6"

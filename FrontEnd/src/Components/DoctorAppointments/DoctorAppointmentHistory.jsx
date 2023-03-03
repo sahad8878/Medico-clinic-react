@@ -3,64 +3,7 @@ import { message } from "antd";
 import Moment from "react-moment";
 import axios from "../../Axios/Axios";
 
-function DoctorAppointments() {
-  const [Appointments, setAppointments] = useState([]);
-  const [refresh, setRefresh] = useState(false);
-  const doctor = JSON.parse(localStorage.getItem("doctorToken"));
-  const doctorId = doctor.doctorId;
-  const doctorToken = doctor.doctorToken;
-  useEffect(() => {
-    axios
-      .get(`/doctor/getAppointments?doctorId=${doctorId}`, {
-        headers: { doctortoken: doctorToken },
-      })
-      .then((response) => {
-        if (response.data.success) {
-          console.log(response.data.pendingAppointments);
-          setAppointments(response.data.pendingAppointments);
-        } else {
-          message.error(response.data.error);
-        }
-      });
-  }, [refresh]);
-
-  // accept appointment
-  const acceptAppointment = (id) => {
-    axios
-      .patch(
-        "/doctor/acceptAppointment",
-        { id },
-        { headers: { doctortoken: doctorToken } }
-      )
-      .then((response) => {
-        if (response.data.success) {
-          message.success(response.data.message);
-          setRefresh(!refresh);
-        } else {
-          message.error(response.data.message);
-        }
-      });
-  };
-
-  // reject appointment requests
-
-  const rejectAppointment = (id) => {
-    axios
-      .patch(
-        "/doctor/rejecrAppointment",
-        { id },
-        { headers: { doctortoken: doctorToken } }
-      )
-      .then((response) => {
-        if (response.data.success) {
-          message.success(response.data.message);
-          setRefresh(!refresh);
-        } else {
-          message.error(response.data.message);
-        }
-      });
-  };
-
+function DoctorAppointmentHistory() {
   return (
     <div className=" ">
      
@@ -151,8 +94,7 @@ function DoctorAppointments() {
 
         {/*  */}
       </div>
-    
-  );
+  )
 }
 
-export default DoctorAppointments;
+export default DoctorAppointmentHistory

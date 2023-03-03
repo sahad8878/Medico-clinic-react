@@ -84,7 +84,8 @@ const doctorDetails = async (req, res) => {
 
 const doctorStatusChecking = async (req, res) => {
   try {
-    doctor = await DoctorModel.findById(req.query.id);
+    const doctorId = req.body.doctorId
+  const   doctor = await DoctorModel.findById(doctorId);
     let doctorStatus;
 
     if (doctor.block === false) {
@@ -101,7 +102,7 @@ const doctorStatusChecking = async (req, res) => {
       doctorStatus = "blocked";
     }
 
-    res.status(201).send({ doctorStatus, success: true });
+    res.status(201).send({ doctorStatus,doctor, success: true });
   } catch (error) {
     console.log(error);
     res.status(500).send({
@@ -248,8 +249,8 @@ const postDoctorAvailability = async(req, res) => {
   console.log(req.body);
   console.log(req.body.doctorId);
 const doctorId =req.body.doctorId
-  const {selectedDay,timings} = req.body
-  console.log(selectedDay,timings);
+  const {selectedDay,timings ,slots} = req.body
+  console.log(selectedDay,timings ,slots,"timinnnnnnnnnnnnnnnnnnnnnnn");
 
 
   const doctorData = await DoctorModel.findOne({_id:doctorId})
@@ -261,15 +262,18 @@ const doctorId =req.body.doctorId
       ...timings.map((timing) => ({
         start: new Date(`2023-03-01T${timing.startTime}:00Z`),
         end: new Date(`2023-03-01T${timing.endTime}:00Z`),
+       
       }))
     );
   } else {
     // If the day does not exist, create a new day object and push it to the availability array
     doctorData.availablity.push({
       day: selectedDay,
+      slots:slots,
       time: timings.map((timing) => ({
         start: new Date(`2023-03-01T${timing.startTime}:00Z`),
         end: new Date(`2023-03-01T${timing.endTime}:00Z`),
+        
       })),
     });
   }
@@ -371,7 +375,7 @@ const timingId = req.query.timingId
 
  }else{
   doctor.availablity.forEach((day) => {
-    day.time.pull({ _id: timingId }); // remove the timing with the given ID
+    day.time.pull({ _id: timingId }); 
   });
 
   doctor.save().then(()=>{
@@ -412,6 +416,70 @@ const timingId = req.query.timingId
 }
 
 }
+
+
+const dayScheduleDisable = async(req, res) => {
+try {
+  const doctorId = req.body.doctorId
+ const dayId = req.body.dayId
+ const doctor = await  DoctorModel.updateOne(
+    { _id: doctorId, 'availablity._id': dayId },
+    { $set: { 'availablity.$.status': "inActive" } }
+  )
+console.log(doctor);
+  if(doctor){
+
+    res.status(201).send({message:"Day is inactivated", success: true });
+  }else{
+    return res
+    .status(200)
+    .send({ message: " doctor not Exist  ", success: false });
+    
+  }
+
+
+
+} catch (error) {
+  console.log(error);
+  res.status(500).send({
+    success: false,
+    message: `postDoctorAvailability controller ${error.message}`,
+  });
+}
+
+}
+
+
+const dayScheduleActivate = async(req, res) => {
+try{
+
+  const doctorId = req.body.doctorId
+  const dayId = req.body.dayId
+  console.log(doctorId,dayId,"iddddddd");
+  const doctor = await  DoctorModel.updateOne(
+     { _id: doctorId, 'availablity._id': dayId },
+     { $set: { 'availablity.$.status': "active" } }
+   )
+   console.log(doctor);
+   if(doctor){
+ 
+     res.status(201).send({message:"Day is activated", success: true });
+   }else{
+     return res
+     .status(200)
+     .send({ message: " doctor not Exist  ", success: false });
+     
+   }
+ 
+
+} catch (error) {
+  console.log(error);
+  res.status(500).send({
+    success: false,
+    message: `postDoctorAvailability controller ${error.message}`,
+  });
+}
+}
 module.exports = {
   getDepartments,
   doctorDetails,
@@ -422,5 +490,7 @@ module.exports = {
   rejecrAppointment,
   postDoctorAvailability,
   getScheduleDetails,
-  deleteScheduleTime
+  deleteScheduleTime,
+  dayScheduleActivate,
+  dayScheduleDisable
 };

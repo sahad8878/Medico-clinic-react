@@ -10,7 +10,9 @@ const {
   rejecrAppointment,
   postDoctorAvailability,
   getScheduleDetails,
-  deleteScheduleTime
+  deleteScheduleTime,
+  dayScheduleDisable,
+  dayScheduleActivate
 } = require("../controller/doctorController");
 
 const doctorAuthmiddlwares = require("../middlewares/doctorAuthmiddlwares");
@@ -69,5 +71,13 @@ router.get('/getScheduleDetails',doctorAuthmiddlwares,getScheduleDetails)
 // delete doctor time schedul || DELETE 
 
 router.delete('/deleteScheduleTime',doctorAuthmiddlwares,deleteScheduleTime)
+
+// disabel day schedul || PATCH
+
+router.patch('/dayScheduleDisable',doctorAuthmiddlwares,dayScheduleDisable)
+
+// acivate day schedul || PATCH 
+
+router.patch('/dayScheduleActivate',doctorAuthmiddlwares,dayScheduleActivate)
 
 module.exports = router;

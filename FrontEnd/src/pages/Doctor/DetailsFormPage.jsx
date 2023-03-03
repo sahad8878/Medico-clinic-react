@@ -7,23 +7,24 @@ import Navbar from '../../Components/Navbar/Navbar';
 import DoctorDetail from '../../Components/Signup/DoctorDetailForm';
 import TopNav from '../../Components/TopNav/TopNav';
 import axios from '../../Axios/Axios'
-import {useDoctorAuthContext} from '../../Hooks/useDoctorAuthContext'
-
+import { useDispatch } from "react-redux";
+import { setLogout } from "../../Store/Slice/DoctorSlice";
 function DetailsFormPage() {
   const [ refresh , setRefresh ] = useState(false)
   const navigate = useNavigate()
-  const {dispatch } = useDoctorAuthContext();
+  const dispatch = useDispatch()
+
 
   useEffect(()=>{
     const doctor = JSON.parse(localStorage.getItem('doctorToken'));
     const doctorToken = doctor.doctorToken
-    axios.get(`/doctor/statusChecking?id=${doctor.doctorId}`,{headers:{'doctortoken':doctorToken}}).then((response) => {
+    axios.get(`/doctor/statusChecking`,{headers:{'doctortoken':doctorToken}}).then((response) => {
     const result = response.data
   
     if(result.doctorStatus === "blocked"){
       message.error("Youn have been blocked")
       localStorage.removeItem("doctorToken");
-      dispatch({ type: "LOGOUT" })
+      dispatch(setLogout())
       navigate('/')
     }
     if(result.doctorStatus === "pending"){

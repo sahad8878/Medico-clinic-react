@@ -1,20 +1,22 @@
 
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+
 import { message } from "antd";
 import { InfinitySpin } from "react-loader-spinner";
 import { useNavigate, Link } from "react-router-dom";
-import { useDoctorAuthContext } from '../../Hooks/useDoctorAuthContext';
 import axios from "../../Axios/Axios";
+import { setLogin } from "../../Store/Slice/DoctorSlice";
 
 function DoctorLogin() {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { dispatch } = useDoctorAuthContext();
 
   const handleLogin = async (event) => {
     try {
@@ -25,7 +27,11 @@ function DoctorLogin() {
         const result = response.data;
         if (result.success) {
           localStorage.setItem("doctorToken", JSON.stringify(result));
-          dispatch({ type: 'LOGIN', payload: result });
+          dispatch(setLogin ({
+            doctor:"doctor",
+            name:result.doctorName,
+            token:result.doctorToken
+          }))
           setIsLoading(false);
           message.success("Login  successfully!");
           navigate("/doctor");

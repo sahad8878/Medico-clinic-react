@@ -1,15 +1,15 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-/* eslint-disable no-shadow */
 import React, { useState } from "react";
 import "./Login.css";
 import { message } from "antd";
 import { useNavigate, Link } from "react-router-dom";
 import { InfinitySpin } from "react-loader-spinner";
-import { useAuthContext } from "../../Hooks/useAuthContext";
 import axios from "../../Axios/Axios";
+import { useDispatch } from "react-redux";
+import { setLogin } from "../../Store/Slice/ClientSlice";
 
 function ClientLogin() {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,7 +17,7 @@ function ClientLogin() {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   
-  const { dispatch } = useAuthContext();
+  
 
   const handleLogin = async (event) => {
     try {
@@ -28,7 +28,11 @@ function ClientLogin() {
         const result = response.data;
         if (result.success) {
           localStorage.setItem("clientToken", JSON.stringify(result));
-          dispatch({ type: "LOGIN", payload: result });
+          dispatch(setLogin ({
+            client:"client",
+            name:result.clientName,
+            token:result.clientToken
+          }))
           setIsLoading(false);
           message.success("Login  successfully!");
           navigate("/");

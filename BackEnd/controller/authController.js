@@ -270,12 +270,12 @@ const doctorSignup = async (req, res) => {
           }
         );
         const doctorId = doctor._id;
-        const doctorStatus = doctor.status;
+        const doctorName = doctor.fName;
         res
           .status(201)
           .send({
             doctorId,
-            doctorStatus,
+            doctorName,
             doctorToken,
             message: "signup successfully",
             success: true,

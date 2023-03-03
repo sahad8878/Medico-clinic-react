@@ -4,6 +4,8 @@ const DoctorModel = require("../model/doctorModel");
 const AppointmentModel = require("../model/appointmentModel");
 const ClientModel = require("../model/clientModel");
 
+const moment =require("moment");
+const appointmentModel = require("../model/appointmentModel");
 
 const availableSlots = [
   { date: "2023-02-23", time: "10:00am" },
@@ -227,24 +229,73 @@ const getExperiencedDoctors = async (req, res) => {
   }
 };
 
+// const postAppointment = async (req, res) => {
+//   try {
+//     const { date, time, doctor, client } = req.body;
+//     console.log(req.body);
+//     // const doctorAvailability = await DoctorModel.findOne({ doctorId, dayOfWeek: appointmentTime.getDay() });
+//     const selectedDay = moment(date).format('dddd');
+//     const doctors = await DoctorModel.findById(doctor);
+//     console.log(doctor);
+//     const doctorAvailability = doctors.availablity.find(day => day.day === selectedDay)
+//     console.log(doctorAvailability,"docooooavai");
+//     if (!doctorAvailability) {
+//       return res.status(400).json({ message: 'Doctor is not available on this day.' });
+//     }
+//     const bookedAppointments = await AppointmentModel.find({ doctor, time: { $gte: doctorAvailability.time.start, $lte: doctorAvailability.time.end } });
+//     const slotStart = new Date(time.getFullYear(), appointmentTime.getMonth(), time.getDate(), doctorAvailability.time.start.substr(0, 2), doctorAvailability.startTime.substr(3, 2), 0);
+//     const slotEnd = new Date(slotStart.getTime() + 15 * 60000);
+//     const overlappingAppointment = bookedAppointments.find(appointment => {
+//       const appointmentStart = new Date(appointment.startTime);
+//       const appointmentEnd = new Date(appointmentStart.getTime() + 15 * 60000);
+//       return (slotStart >= appointmentStart && slotStart < appointmentEnd) || (slotEnd > appointmentStart && slotEnd <= appointmentEnd);
+//     });
+//     if (overlappingAppointment) {
+//       return res.status(400).json({ message: 'This slot is already booked. Please select another slot.' });
+//     }
+//     const appointment = new Appointment({ doctorId, patientId, startTime: slotStart.toISOString() });
+//     await appointment.save();
+//     return res.status(200).json({ message: 'Appointment booked successfully.' });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).send({
+//       success: false,
+//       message: `client getSearchDoctor  controller ${error.message}`,
+//     });
+//   }
+// };
+
+
+
 const postAppointment = async (req, res) => {
   try {
     const { date, time, doctor, client } = req.body;
-    const selectedSlot = availableSlots.find(
-      (slot) => slot.date === date && slot.time === time
-    );
-    if (!selectedSlot) {
+    
+
+   const apointmentCount =  await AppointmentModel.find({doctor:doctor,date:date})
+
+    const selectedDay = moment(date).format('dddd')
+
+    const doctors = await DoctorModel.findById(doctor);
+    
+    const availability = doctors.availablity.find(day => day.day === selectedDay)
+
+  
+
+    if(availability.slots < apointmentCount.length){
       res
-        .status(201)
+        .status(200)
         .send({
           message: "The selected slot is no longer available.",
           success: false,
         });
       return;
     }
+
+const toTime = moment(time).format(" h:mm a")
     const newAppointment = new AppointmentModel({
       date,
-      time,
+      time:toTime,
       doctor,
       client,
     });
@@ -261,7 +312,39 @@ const postAppointment = async (req, res) => {
 };
 
 const availableSlot = async (req, res) => {
-  res.json(availableSlots);
+
+  try{
+
+
+    const { doctorId, selectedDate } = req.params;
+    console.log( doctorId, selectedDate );
+    const selectedDay = moment(selectedDate).format('dddd'); // convert selected date to day
+    const doctor = await DoctorModel.findById(doctorId);
+    console.log(doctor);
+    const availability = doctor.availablity.find(day => day.day === selectedDay);
+    
+    console.log(availability);
+    if (!availability) {
+      res
+        .status(200)
+        .send({
+          message: "Doctor is not available on this day.",
+          success: false,
+        });
+      return;
+      // return res.status(404).json({ message: 'Doctor is not available on this day',success: false });
+    }
+    // return availability for selected day
+    res.status(201).send({availability,success:true});
+
+    // res.json(availableSlots);
+  } catch(error){
+ console.log(error);
+    res.status(500).send({
+      success: false,
+      message: `client getSearchDoctor  controller ${error.message}`,
+    });
+  }
 };
 
 module.exports = {
