@@ -142,7 +142,7 @@ const getDoctorDetails = async(req, res) => {
 const getAppointments = async (req, res) => {
   try {
     const pendingAppointments = await AppointmentModel.find({
-      doctor: req.query.doctorId,
+      doctor: req.body.doctorId,
       status: "pending",
     })
       .populate("client")
@@ -167,12 +167,12 @@ const getAppointments = async (req, res) => {
 
 const acceptAppointment = async (req, res) => {
   try {
-    const appointmen = await AppointmentModel.findByIdAndUpdate(
+    const appointment = await AppointmentModel.findByIdAndUpdate(
       req.body.id,
       { status: "approved" },
       { new: true }
     );
-    if (appointmen) {
+    if (appointment) {
       res.status(201).send({
         message: ` Patient  Booking accepted`,
         success: true,
@@ -480,6 +480,144 @@ try{
   });
 }
 }
+
+
+const getDoctorAppointmentHistory = async(req, res) => {
+try {
+  
+const doctorId = req.body.doctorId
+
+const appointmentHistory = await AppointmentModel.find({doctor:doctorId,status:{$nin:["pending","rejected"]}}) .populate("client")
+.sort({ updatedAt:-1 });
+if(appointmentHistory){
+
+  res.status(201).send({appointmentHistory, success: true });
+}else{
+  return res
+  .status(200)
+  .send({ message: "No notifications Exist  ", success: false });
+}
+} catch (error) {
+    console.log(error);
+  res.status(500).send({
+    success: false,
+    message: `getDoctorAppointmentHistory controller ${error.message}`,
+  });
+}
+}
+
+
+const updateDoctorDetails = async(req, res) => {
+  try {
+    console.log(req.body);
+
+  const {fName,lName, specialization,experience,location,number,education,address,consultationFees} = req.body
+  if(fName && lName &&  specialization && experience && location && number && education && address && consultationFees){
+
+    const doctor = await DoctorModel.findByIdAndUpdate(
+      req.body.doctorId,req.body,
+      { new: true }
+    )
+    if (!doctor) {
+      return res
+      .status(200)
+      .send({ message: "No Client exist ", success: false });
+    }else{
+      res
+      .status(201)
+      .send({ message: "your details have been saved", success: true });
+    }
+        
+  }else{
+    return res
+    .status(200)
+    .send({ message: "All fields must be filled", success: false });
+
+  }
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: `updateDoctorDetails  controller ${error.message}`,
+    });
+  }
+}
+
+
+const getDashboardDetails = async(req, res) => {
+try{
+const doctorId = req.body.doctorId
+
+const patients = await AppointmentModel.find({doctor:doctorId}).count()
+const confirmedPatients = await AppointmentModel.find({doctor:doctorId,status:{$in:["confirmed"]}}).count()
+const result = await AppointmentModel.aggregate([
+  {
+    $match: {
+      doctor: mongoose.Types.ObjectId(doctorId),
+      status: 'confirmed'
+    }
+  },
+  {
+    $group: {
+      _id: null,
+      totalFees: {
+        $sum: '$consultationFees'
+      }
+    }
+  }
+]);
+
+const totalFees = result[0].totalFees;
+const salesReport = await AppointmentModel.aggregate([
+  {
+    $match: {
+      status: 'confirmed'
+    }
+  },
+  {
+    $group: {
+      _id: {
+        month: { $month: "$createdAt" },
+        year: { $year: "$createdAt" }
+      },
+      totalSales: {
+        $sum: '$consultationFees'
+      },
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      month: "$_id.month",
+      year: "$_id.year",
+      totalSales: 1
+    }
+  }
+]);
+console.log(salesReport);
+
+
+console.log(patients,confirmedPatients);
+if (!patients && !confirmedPatients && !totalFees) {
+      return res
+      .status(200)
+      .send({ message: "No Appointments exist ", success: false });
+    }else{
+      res
+      .status(201)
+      .send({ patients,confirmedPatients,totalFees,salesReport,success: true });
+    }
+
+}catch (error){
+  console.log(error);
+  res.status(500).send({
+    success: false,
+    message: `updateDoctorDetails  controller ${error.message}`,
+  });
+}
+
+}
 module.exports = {
   getDepartments,
   doctorDetails,
@@ -492,5 +630,8 @@ module.exports = {
   getScheduleDetails,
   deleteScheduleTime,
   dayScheduleActivate,
-  dayScheduleDisable
+  dayScheduleDisable,
+  getDoctorAppointmentHistory,
+  updateDoctorDetails,
+  getDashboardDetails
 };

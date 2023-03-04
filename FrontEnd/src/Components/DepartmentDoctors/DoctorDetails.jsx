@@ -17,15 +17,10 @@ function DoctorDetails() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [availability, setAvailability] = useState(null);
-  const [slots, setSlots] = useState([]);
-  // const [selectedDate, setSelectedDate] = useState(new Date());
+
   const [selectedTime, setSelectedTime] = useState(null);
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   console.log(selectedDate, selectedTime);
-  //   // handle form submission
-  // };
+
 
   const { doctorId } = useParams();
   const client = JSON.parse(localStorage.getItem("clientToken"));
@@ -41,29 +36,6 @@ function DoctorDetails() {
         }
       });
   }, []);
-
-  // useEffect(() => {
-  //   axios
-  //     .get("/availableSlot", { headers: { accesstoken: clientToken } })
-
-  //     .then((response) => {
-  //       if (response.data) {
-  //         console.log(response.data);
-  //         setSlots(response.data);
-  //       }
-  //     });
-  //   // .then((response) => setSlots(response.data))
-  //   // .catch((error) => console.log(error));
-  // }, []);
-
-  // const handleDateChange = (event) => {
-  //   setSelectedDate(event.target.value);
-  //   setSelectedTime("");
-  // };
-
-  const handleTimeChange = (event) => {
-    setSelectedTime(event.target.value);
-  };
 
   const handleAppointment = (event) => {
     try {
@@ -144,7 +116,7 @@ function DoctorDetails() {
           </div>
           {/*  */}
           <div className="w-full md:w-6/12  px-3">
-            <div className="lg:w-[600px] mdw-[400px] mt-7 md:mt-[100px] bg-[#E3E8EE] pb-10 p-5 sm:p-10 ">
+            <div className="lg:w-[600px] md-[400px] mt-7 md:mt-[100px] bg-[#E3E8EE] pb-10 p-5 sm:p-10 ">
               <div className="mb-4 sm:flex   ">
                 <span className="block sm:pr-6 text-gray-700 font-medium mb-2  text-center">
                   Specialization
@@ -161,13 +133,25 @@ function DoctorDetails() {
                   {Doctor.education}
                 </div>
               </div>
-              <div className="mb-4 sm:flex ">
+              <div className="lg:flex ">
+
+
+              <div className="mb-4  sm:flex lg:w-6/12">
                 <span className="block text-gray-700  text-center sm:text-start font-medium mb-2 sm:pr-[44px]">
                   Experiance
                 </span>
                 <div className="bg-white text-center sm:text-start bg-opacity-60 p-2 w-full">
                   {Doctor.experience}
                 </div>
+              </div>
+              <div className="lg:ml-4 mb-4 sm:flex lg:w-6/12">
+                <span className="block text-gray-700  text-center sm:text-start font-medium mb-2 lg:pr-8 sm:pr-[90px]">
+                   Fees 
+                </span>
+                <div className="bg-white text-center sm:text-start bg-opacity-60 p-2 w-full">
+                  {Doctor.consultationFees}
+                </div>
+              </div>
               </div>
               <div className="mb-4 sm:flex bg-opacity-60  ">
                 <span className="block text-center sm:text-start text-gray-700  font-medium mb-2 sm:pr-[60px]">
@@ -181,7 +165,7 @@ function DoctorDetails() {
                 <span className="block text-center sm:text-start text-gray-700  font-medium mb-2 sm:pr-[61px]">
                   Address
                 </span>
-                <div className="bg-white text-center sm:text-start bg-opacity-60 p-2 w-full">
+                <div className="bg-white text-center sm:text-start bg-opacity-60  p-2 w-full">
                   {Doctor.address}
                 </div>
               </div>

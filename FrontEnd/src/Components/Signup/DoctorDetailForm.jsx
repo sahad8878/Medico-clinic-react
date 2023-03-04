@@ -61,7 +61,7 @@ function DoctorDetailForm() {
         endingTime: data.get("endingTime"),
         doctorImg: data.get("profileImg"),
         consultationFees: data.get("fees"),
-        availableDate: selectedValue,
+        
         doctorId: doctor.doctorId,
       };
 
@@ -191,7 +191,7 @@ function DoctorDetailForm() {
             </div>
           </div>
           
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label
               className="block text-gray-700 font-medium mb-2 "
               htmlFor="education"
@@ -208,7 +208,7 @@ function DoctorDetailForm() {
               isMulti
               isClearable
             />
-          </div>
+          </div> */}
           {/*  */}
           {/* {selectedValue && <div style={{ marginTop: 20, lineHeight: '25px' }}>
         <div><b>Selected Value: </b> {JSON.stringify(selectedValue, null, 2)}</div>

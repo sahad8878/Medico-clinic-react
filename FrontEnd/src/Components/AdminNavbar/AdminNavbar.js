@@ -75,19 +75,6 @@ const path = location.pathname
               )}
             </button>
           </div>
-          {/* const useStyles = makeStyles((theme) => ({
-  root: {
-    [theme.breakpoints.down("sm")]: {
-      backgroundColor: theme.palette.secondary.main,
-    },
-    [theme.breakpoints.up("md")]: {
-      backgroundColor: theme.palette.primary.main,
-    },
-    [theme.breakpoints.up("lg")]: {
-      backgroundColor: "green",
-    },
-  },
-})); */}
           <span className=" mr-7  mt-8 sm:mt-7 flext justify-between ">
             <AccountCircleIcon
               sx={{

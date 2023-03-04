@@ -50,7 +50,7 @@ function DoctorDashboardPage() {
 <div>
 <TopNav />
 <DoctorNavbar />
-<div className="bg-[#EDF4FE] mt-[112px]  md:mt-[127px]  w-screen  ">
+<div className="bg-[#edf4fe] mt-[112px]  md:mt-[127px]  w-screen  ">
   <div className="container flex mx-auto pt-16 py-14">
     <div className=" md:pl-10 lg:pl-32  md:block hidden ">
       <DoctorSidebar doctor={doctor} />

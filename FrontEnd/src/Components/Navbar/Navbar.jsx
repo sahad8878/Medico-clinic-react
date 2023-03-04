@@ -21,7 +21,7 @@ export default function Nav() {
   }
 
   return (
-    <nav className="w-full z-10 bg-[#97CADB] fixed top-7">
+    <nav className="w-full z-[200] bg-[#97CADB] fixed top-7">
       <div className="justify-between px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-5">
         <div>
           <div className="flex items-center px-6 justify-between py-3 md:py-5 md:block">
@@ -106,21 +106,36 @@ export default function Nav() {
                 {
                   client ?
               <Link to="/clientNotificationPage">
-                <span className="text-white font-semibold text-lg px-5 hover:text-[#194569] rounded">
-                  <CircleNotificationsRoundedIcon
+                  {
+                    path === "/clientNotificationPage" ?
+
+                    <span className="text-[#194569] font-semibold text-lg px-5 hover:text-white rounded">
+                    <CircleNotificationsRoundedIcon
+                      sx={{
+                       
+                        fontSize: "30px",
+                        cursor: "pointer",
+                      }}
+                    />
+                    </span>
+                    :
+                    <span className="text-white font-semibold text-lg px-5 hover:text-[#194569] rounded">
+
+                    <CircleNotificationsRoundedIcon
                     sx={{
-                      color: "#194569",
+                     
                       fontSize: "30px",
                       cursor: "pointer",
                     }}
                   />
-                </span>
+                  </span>
+
+                  }
                     </Link>
                     :
                     <span onClick={notLogin}   className="text-white font-semibold text-lg px-5 hover:text-[#194569] rounded">
                   <CircleNotificationsRoundedIcon
                     sx={{
-                      color: "#194569",
                       fontSize: "30px",
                       cursor: "pointer",
                     }}

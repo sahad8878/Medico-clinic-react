@@ -5,7 +5,7 @@ module.exports = async (req, res, next) => {
 try {
  
   const token = req.headers["doctortoken"];
-console.log(token,"token");
+
   JWT.verify(token, process.env.JWT_SECRET,(err, decode) => {
     if(err){
       return res.status(200).send({

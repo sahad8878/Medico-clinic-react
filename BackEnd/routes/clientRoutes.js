@@ -17,7 +17,7 @@ const {
   
 } = require("../controller/clientController");
 
-const {getClientNotifications } = require("../controller/clientAppointmentController")
+const {getClientNotifications,patchConfirmAppointment,getConfirmedAppointments} = require("../controller/clientAppointmentController")
 const clientAuthMiddlewares = require("../middlewares/clientAuthMiddlewares");
 
 // router object
@@ -71,5 +71,11 @@ router.get("/availableSlot/:doctorId/:selectedDate",clientAuthMiddlewares, avail
 
 router.get('/getClientNotifications',clientAuthMiddlewares,getClientNotifications)
 
+// confirm client appointment || PATCH
 
+router.patch('/patchConfirmAppointment',clientAuthMiddlewares,patchConfirmAppointment)
+
+// get confirmed client appointments || GET
+
+router.get("/getConfirmedAppointments",clientAuthMiddlewares,getConfirmedAppointments)
 module.exports = router;

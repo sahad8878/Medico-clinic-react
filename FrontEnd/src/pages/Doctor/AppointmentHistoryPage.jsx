@@ -9,6 +9,7 @@ import { message } from 'antd';
 import DoctorSidebar from '../../Components/DoctorSidebar/DoctorSidebar';
 import { useDispatch } from "react-redux";
 import { setLogout } from "../../Store/Slice/DoctorSlice";
+import DoctorAppointmentHistory from '../../Components/DoctorAppointments/DoctorAppointmentHistory';
 
 
 
@@ -58,7 +59,7 @@ function AppointmentHistoryPage() {
         </div>
         <div className="w-full  py-8 md:py-0  sm:pr-0">
         <div className="  bg-[#EDF4FE] bg-opacity-50 shadow-2xl   h-full p-5 ">
-               <DoctorAppointments/>
+               <DoctorAppointmentHistory/>
                </div>
         </div>
       </div>

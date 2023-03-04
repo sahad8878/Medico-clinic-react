@@ -22,7 +22,7 @@ function DoctorNavbar() {
     <>
     <nav
 
-className="w-full z-10 bg-[#97CADB] fixed top-7"
+className="w-full z-[200] bg-[#97CADB] fixed top-7"
 >
 <div className="justify-between px-4 mx-auto lg:max-w-7xl md:items-center md:flex md:px-5">
   <div>

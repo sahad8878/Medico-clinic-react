@@ -5,16 +5,7 @@ const AppointmentModel = require("../model/appointmentModel");
 const ClientModel = require("../model/clientModel");
 
 const moment =require("moment");
-const appointmentModel = require("../model/appointmentModel");
 
-const availableSlots = [
-  { date: "2023-02-23", time: "10:00am" },
-  { date: "2023-02-24", time: "11:00am" },
-  { date: "2023-02-25", time: "2:00pm" },
-  { date: "2023-02-26", time: "3:00pm" },
-  { date: "2023-02-27", time: "9:00am" },
-  { date: "2023-02-28", time: "10:00am" },
-];
 
 //get client details 
 

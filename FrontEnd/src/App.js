@@ -37,7 +37,7 @@ import DoctorDetailsForm from './Pages/Doctor/DetailsFormPage'
 import DoctorAppointmentsPage from './Pages/Doctor/DoctorAppointmentsPage';
 import DoctorProfilePage from './Pages/Doctor/DoctorDetailsPage'
 import DoctorSchedulePage from './Pages/Doctor/DoctorSchedulePage'
-
+import AppointmentHistoryPage from './Pages/Doctor/AppointmentHistoryPage';
 
 // admin pages
 import AdminLoginPage from './Pages/Admin/AdminLoginPage';
@@ -91,7 +91,7 @@ function App() {
         <Route path="/doctor/doctorDetailsForm" element={<DoctorDetailsForm />  } />
         <Route path="/doctor/DoctorAppointmentsPage" element={ <DoctorAppointmentsPage />} />
         <Route path="/doctor/DoctorSchedulePage" element={<DoctorSchedulePage />} />
-
+         <Route path="/doctor/doctorAppointmentHistory"  element={<AppointmentHistoryPage/>}/>
         </Route>
         
 

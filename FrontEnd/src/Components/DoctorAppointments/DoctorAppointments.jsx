@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { message } from "antd";
+import { Link } from "react-router-dom";
 import Moment from "react-moment";
 import axios from "../../Axios/Axios";
 
@@ -7,11 +8,10 @@ function DoctorAppointments() {
   const [Appointments, setAppointments] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const doctor = JSON.parse(localStorage.getItem("doctorToken"));
-  const doctorId = doctor.doctorId;
   const doctorToken = doctor.doctorToken;
   useEffect(() => {
     axios
-      .get(`/doctor/getAppointments?doctorId=${doctorId}`, {
+      .get(`/doctor/getAppointments`, {
         headers: { doctortoken: doctorToken },
       })
       .then((response) => {
@@ -70,7 +70,7 @@ function DoctorAppointments() {
 
         {/*  */}
         <div className=" flex justify-end content-end">
-       <Link to="/doctor/appointmentHistory">
+       <Link to="/doctor/doctorAppointmentHistory">
        
         <h1
           className="text-end py-1 px-3 text-white bg-[#194569] cursur-pointer hover:bg-opacity-80 m-2"

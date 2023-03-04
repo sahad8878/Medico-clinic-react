@@ -12,7 +12,10 @@ const {
   getScheduleDetails,
   deleteScheduleTime,
   dayScheduleDisable,
-  dayScheduleActivate
+  dayScheduleActivate,
+  getDoctorAppointmentHistory,
+  updateDoctorDetails,
+  getDashboardDetails
 } = require("../controller/doctorController");
 
 const doctorAuthmiddlwares = require("../middlewares/doctorAuthmiddlwares");
@@ -80,4 +83,16 @@ router.patch('/dayScheduleDisable',doctorAuthmiddlwares,dayScheduleDisable)
 
 router.patch('/dayScheduleActivate',doctorAuthmiddlwares,dayScheduleActivate)
 
+// Doctor appointments history || GET
+
+router.get("/getDoctorAppointmentHistory",doctorAuthmiddlwares,getDoctorAppointmentHistory)
+
+
+// Update Doctor Detials || POST
+
+router.patch("/updateDoctorDetails",doctorAuthmiddlwares,updateDoctorDetails)
+
+// Get Dashbard Details || GET
+
+router.get("/getDashboardDetails",doctorAuthmiddlwares,getDashboardDetails)
 module.exports = router;

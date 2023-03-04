@@ -21,7 +21,7 @@ function Navbar() {
     <>
       <nav
         style={{ position: 'fixed', width: '-webkit-fill-available' }}
-        className="bg-[#97CADB] p-3 flex items-center h-28 justify-between mt-7"
+        className="bg-[#97CADB]  p-3 flex items-center h-28 justify-between mt-7"
       >
         <span className="text-white font-bold ml-[50px] cursor-pointer">
           <img className="w-[80px] h-[60px]" src={log} alt="logo" />
