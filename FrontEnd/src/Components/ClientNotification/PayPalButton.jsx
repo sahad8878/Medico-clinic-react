@@ -28,7 +28,7 @@ function PayPalButton({notification,refresh,setRefresh} ) {
         purchase_units: [
           {
             amount: {
-              value: 5,
+              value: notification.consultationFees,
             },
           },
         ],

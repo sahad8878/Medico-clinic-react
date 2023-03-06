@@ -1,7 +1,7 @@
 const DepartmentModel = require("../model/departmentModel");
 const DoctorModel = require("../model/doctorModel");
 const ClientModel = require("../model/clientModel");
-
+const AppointmentModel = require("../model/appointmentModel")
 // Get Pending Doctors Details
 
 const getPendingDoctors = async (req, res) => {
@@ -344,6 +344,120 @@ const putEditDepartment = async (req, res) => {
     });
   }
 };
+
+
+const getAllAppointments = async(req, res) => {
+try {
+
+const appointments = await AppointmentModel.find().populate("client").populate("doctor").sort({updatedAt:1})
+if (!appointments) {
+  return res
+  .status(200)
+  .send({ message: "No Appointments exist ", success: false });
+}else{
+  res
+  .status(201)
+  .send({ appointments,success: true });
+}
+  
+} catch (error) {
+  console.log(error);
+  res.status(500).send({
+    success: false,
+    message: `getAllAppointments controller ${error.message}`,
+  });
+}
+
+}
+
+const getAdminDashboardDetails = async(req, res) => {
+try {
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  
+  const totalPatients = await ClientModel.find().count()
+   const totalDoctors = await DoctorModel.find({status:{$ne:"pending"}}).count()
+  //  const result = await AppointmentModel.aggregate([
+  //   {
+  //     $match: {
+  //       status: 'confirmed'
+  //     }
+  //   },
+  //   {
+  //     $group: {
+  //       _id: null,
+  //       totalFees: {
+  //         $sum: '$consultationFees'
+  //       }
+  //     }
+  //   }
+  // ]);
+  
+  // const totalFees = result[0].totalFees;
+  const salesReport = await AppointmentModel.aggregate([
+    {
+      $match: {
+        status: 'confirmed'
+      }
+    },
+    {
+      $group: {
+        _id: {
+          month: { $month: "$createdAt" },
+          year: { $year: "$createdAt" }
+        },
+        totalSales: {
+          $sum: '$consultationFees'
+        },
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        month: "$_id.month",
+        year: "$_id.year",
+        totalSales: 1
+      }
+    }
+  ]);
+  
+  const newSalesReport = salesReport.map((el) => {
+    let newEl = { ...el };
+    newEl.month = months[newEl.month - 1];
+    return newEl;
+  });
+  
+  
+  if (!totalPatients && !totalDoctors ) {
+    return res
+    .status(200)
+    .send({ message: "No Appointments exist ", success: false });
+  }else{
+    res
+    .status(201)
+    .send({ totalPatients,totalDoctors,salesReport:newSalesReport,success: true });
+  }
+} catch (error) {
+  console.log(error);
+  res.status(500).send({
+    success: false,
+    message: `editDepartment controller ${error.message}`,
+  });
+}
+
+}
 module.exports = {
   getPendingDoctors,
   acceptDoctorAppointment,
@@ -354,8 +468,10 @@ module.exports = {
   getClientDetails,
   blockClient,
   unBlockClient,
+  getAllAppointments,
   postDepartments,
   getDepartments,
   deleteDepartment,
   putEditDepartment,
+  getAdminDashboardDetails
 };

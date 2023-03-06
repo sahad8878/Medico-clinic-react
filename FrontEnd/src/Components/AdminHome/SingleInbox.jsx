@@ -5,7 +5,7 @@ import Moment from 'react-moment';
 import axios from '../../Axios/Axios'
 
 
-function SingleAppointment({penDoctor,refresh,setRefresh}) {
+function SingleInbox({penDoctor,refresh,setRefresh}) {
     const [isOpen, setIsOpen] = useState(false);
     const admin = JSON.parse(localStorage.getItem('adminToken'));
     const adminToken = admin.adminToken
@@ -128,4 +128,4 @@ function SingleAppointment({penDoctor,refresh,setRefresh}) {
   )
 }
 
-export default SingleAppointment
+export default SingleInbox

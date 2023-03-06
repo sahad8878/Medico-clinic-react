@@ -21,6 +21,10 @@ const [ refresh , setRefresh ] = useState(false)
     axios.get(`/doctor/statusChecking`,{headers:{'doctortoken':doctorToken}}).then((response) => {
     const result = response.data
     console.log(result.doctorStatus,"aaa");
+    if(result.doctorStatus == null){
+      message.error("Your request has  been rejected for some reason. Please try again")
+      navigate('/doctor/deniedUi')
+    }
     if(result.doctorStatus === "blocked"){
       message.error("Youn have been blocked")
       localStorage.removeItem("doctorToken");

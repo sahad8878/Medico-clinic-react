@@ -5,6 +5,7 @@ const {
   acceptDoctorAppointment,
   rejectDoctorAppointment,
   getDoctorsDetails,
+  getAllAppointments,
   blockDoctor,
   unBlockDoctor,
   getClientDetails,
@@ -13,7 +14,8 @@ const {
   postDepartments,
   getDepartments,
   deleteDepartment,
-  putEditDepartment
+  putEditDepartment,
+  getAdminDashboardDetails
 } = require("../controller/adminController");
 
 const adminAuthMiddlewares = require("../middlewares/adminAuthMiddlewares");
@@ -39,9 +41,13 @@ router.patch("/acceptAppointment",adminAuthMiddlewares, acceptDoctorAppointment)
 
 router.patch("/rejectAppointment",adminAuthMiddlewares, rejectDoctorAppointment);
 
-// Doctor Details || Get
+// Doctor Details || GET
 
 router.get("/getDoctorsDetails",adminAuthMiddlewares, getDoctorsDetails);
+
+// Get full Appointments || GET
+
+router.get("/getAllAppointments",adminAuthMiddlewares,getAllAppointments)
 
 // Block Doctor || PATCH
 
@@ -78,5 +84,9 @@ router.delete("/deleteDepartment",adminAuthMiddlewares, deleteDepartment);
 // Edit Department || PUT
 
 router.put("/putEditDepartment",adminAuthMiddlewares,putEditDepartment)
+
+// get Admin Dashboard Details || GET
+
+router.get('/getAdminDashboardDetails',adminAuthMiddlewares,getAdminDashboardDetails)
 
 module.exports = router;

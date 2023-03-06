@@ -1,10 +1,10 @@
-import { message } from 'antd';
 import React,{useState,useEffect} from 'react'
+import { message } from 'antd';
 
 import axios from '../../Axios/Axios'
-import SingleAppointment from './SingleAppointment';
+import SingleInbox from './SingleInbox';
 
-function AdminAppointments() {
+function AdminInbox() {
   const [ penDoctors , setpenDoctors ] = useState([])
   const [ refresh , setRefresh ] = useState(false)
   const admin = JSON.parse(localStorage.getItem('adminToken'));
@@ -30,7 +30,7 @@ function AdminAppointments() {
     <>
      
                <div className=" p-6 sm:p-16 h-screen border-gray-200 ">
-      <h1 className="font-semibold text-center sm:text-left mb-2 pb-9 font-serif text-2xl">Appointments</h1>
+      <h1 className="font-semibold text-center sm:text-left mb-2 pb-9 font-serif text-2xl">Inbox</h1>
 
       <div className="overflow-auto rounded-lg shadow">
 
@@ -65,7 +65,7 @@ function AdminAppointments() {
         <tbody className=" bg-white divide-y divide-gray-200">
           {
             penDoctors.map(penDoctor =>(
-            <SingleAppointment penDoctor={penDoctor} refresh={refresh} setRefresh={setRefresh}/>
+            <SingleInbox penDoctor={penDoctor} refresh={refresh} setRefresh={setRefresh}/>
           ))
            }   
         </tbody>
@@ -80,4 +80,4 @@ function AdminAppointments() {
   )
 }
 
-export default AdminAppointments
+export default AdminInbox

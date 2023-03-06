@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import image from "../../Assets/doctor.ico";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { message } from "antd";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
@@ -20,7 +20,7 @@ function DoctorDetails() {
 
   const [selectedTime, setSelectedTime] = useState(null);
 
-
+  const navigate = useNavigate()
 
   const { doctorId } = useParams();
   const client = JSON.parse(localStorage.getItem("clientToken"));
@@ -46,6 +46,7 @@ function DoctorDetails() {
           date: selectedDate,
           time: selectedTime,
           doctor: doctorId,
+          consultationFees:Doctor.consultationFees,
           client: client.clientId,
         },
         { headers: { accesstoken: clientToken } }
@@ -56,7 +57,7 @@ function DoctorDetails() {
           const result = response.data;
           if (result.success) {
             message.success(result.message);
-            // navigate('/admin/AdminDepartmentPage');
+            navigate('/clientNotificationPage');
             handleCloseModal();
           } else {
             message.error(result.message).then(() => {});
@@ -232,8 +233,9 @@ function DoctorDetails() {
                           { availability &&
                           availability.time.map((times) => (
                             <option key={times.start} value={times.start} >
-                              {moment(times.start).format(" h:mm a")} To
-                              {moment(times.end).format(" h:mm a")}
+                              
+                              {moment(times.start).format(" h:mm ")} To
+                              {moment(times.end).format(" h:mm ")}
                             </option>
                           ))}
                         </select>

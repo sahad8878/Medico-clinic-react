@@ -57,11 +57,8 @@ function DoctorDetailForm() {
       data = {
         education: data.get("education"),
         address: data.get("address"),
-        startingTime: data.get("startingTime"),
-        endingTime: data.get("endingTime"),
         doctorImg: data.get("profileImg"),
         consultationFees: data.get("fees"),
-        
         doctorId: doctor.doctorId,
       };
 
@@ -215,7 +212,7 @@ function DoctorDetailForm() {
       </div>} */}
           {/*  */}
 
-          <div className="mb-4   flex flex-row">
+          {/* <div className="mb-4   flex flex-row">
             <div>
               <label
                 className=" text-gray-700 font-medium mb-2  "
@@ -245,7 +242,7 @@ function DoctorDetailForm() {
                 required
               />
             </div>
-          </div>
+          </div> */}
 
           {error && (
             <div className="text-center error text-red-500 w-full bg-red-500 bg-opacity-50 ">

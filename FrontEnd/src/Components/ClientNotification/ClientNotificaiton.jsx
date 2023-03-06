@@ -5,44 +5,7 @@ import PayPalButton from "./PayPalButton";
 function ClientNotificaiton() {
   const [notification, setNotification] = useState([]);
   const [ refresh , setRefresh ] = useState(false)
-  //   const [show, setShow] = useState(false);
-  //   const [success, setSuccess] = useState(false);
-  //   const [errorMessage, setErrorMessage] = useState("");
-  // const [orderId,setOrderId] = useState(false)
 
-  //  const createOrder = (data,actions)=> {
-  //   return actions.order.create({
-  //     purchase_units:[
-  //       {
-  //         description:'Book',
-  //         amount:{
-  //           currency:'USD',
-  //           value:100
-  //         },
-  //       },
-  //     ],
-  //     application_context:{
-  //       shipping_preference:"NO_SHIPPING"
-  //     }
-  //   })
-  //   .then((orderID) => {
-  //     setOrderId(orderID)
-  //     return orderID
-  //   })
-
-  //  }
-
-  //  const onApprove = (data,actions) => {
-  //  return actions.order.capture().then( function(details){
-  //    const {payer} = details
-  //    setSuccess(true)
-  //  })
-  //  }
-
-  //  const onError = (data,actions) => {
-  // setErrorMessage("An error occured with your payment")
-
-  //  }
   const client = JSON.parse(localStorage.getItem("clientToken"));
   const clientToken = client.clientToken;
 

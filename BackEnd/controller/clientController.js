@@ -81,12 +81,8 @@ console.log(req.body,"update client address");
 // get departments
 const getdepartments = async (req, res) => {
   try {
-    const { page, limit } = req.query;
-    const options = {
-      page: parseInt(page, 10) || 1,
-      limit: parseInt(limit, 4) || 4,
-    };
-    const departments = await DepartmentModel.paginate({}, options);
+ 
+    const departments = await DepartmentModel.find();
     if (departments) {
       res.status(201).json(departments);
     } else {
@@ -260,15 +256,16 @@ const getExperiencedDoctors = async (req, res) => {
 
 const postAppointment = async (req, res) => {
   try {
-    const { date, time, doctor, client } = req.body;
+    const { date, time, doctor,consultationFees, client } = req.body;
     
-
+console.log(date, time, doctor,consultationFees, client,"poooo");
    const apointmentCount =  await AppointmentModel.find({doctor:doctor,date:date})
 
     const selectedDay = moment(date).format('dddd')
 
     const doctors = await DoctorModel.findById(doctor);
     
+    console.log(doctors.consultationFees  );
     const availability = doctors.availablity.find(day => day.day === selectedDay)
 
   
@@ -288,6 +285,7 @@ const toTime = moment(time).format(" h:mm a")
       date,
       time:toTime,
       doctor,
+      consultationFees,
       client,
     });
     await newAppointment.save();

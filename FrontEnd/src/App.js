@@ -10,12 +10,12 @@ import './App.css';
 
 // protected and public Routes
 
-import ClientPrivateRoutes from './utils/ClientPrivateRoutes';
-import ClientPublicRoutes from './utils/ClientPublicRoutes';
-import DoctorPrivateRoutes from './utils/DoctorPrivateRoutes';
-import DoctorPublicRoutes from './utils/DoctorPublicRoutes';
-import AdminPrivateRoutes from './utils/AdminPrivateRoutes';
-import AdminPublicRoutes from './utils/AdminPublicRoutes';
+import ClientPrivateRoutes from './Utils/ClientPrivateRoutes';
+import ClientPublicRoutes from './Utils/ClientPublicRoutes';
+import DoctorPrivateRoutes from './Utils/DoctorPrivateRoutes';
+import DoctorPublicRoutes from './Utils/DoctorPublicRoutes';
+import AdminPrivateRoutes from './Utils/AdminPrivateRoutes';
+import AdminPublicRoutes from './Utils/AdminPublicRoutes';
 
 
 // client pages
@@ -27,6 +27,7 @@ import DepartmentDoctorsPage from './Pages/Client/DepartmentDoctorsPage';
 import DoctorDetailsPage from './Pages/Client/DoctorDetailsPage'
 import ClientProfilePage from './Pages/Client/ClientProfilePage';
 import AppointmentHistory from './Pages/Client/AppointmentHistory';
+import ClientNotificationPage from './Pages/Client/ClientNotificationPage';
 
 // doctor pages
 import DoctorDashboardPage from './Pages/Doctor/DoctorDashboardPage';
@@ -38,15 +39,16 @@ import DoctorAppointmentsPage from './Pages/Doctor/DoctorAppointmentsPage';
 import DoctorProfilePage from './Pages/Doctor/DoctorDetailsPage'
 import DoctorSchedulePage from './Pages/Doctor/DoctorSchedulePage'
 import AppointmentHistoryPage from './Pages/Doctor/AppointmentHistoryPage';
+import DeniedUi from './Pages/Doctor/DeniedUi';
 
 // admin pages
 import AdminLoginPage from './Pages/Admin/AdminLoginPage';
 import AdminHomePage from './Pages/Admin/AdminHomePage';
 import AdminClientPage from './Pages/Admin/AdminClientPage';
 import AdminDoctorsPage from './Pages/Admin/AdminDoctorsPage';
-import AdminAppointmentspage from './Pages/Admin/AdminAppointmentsPage';
+import AdminInboxPage from './Pages/Admin/AdminInboxPage';
 import AdminDepartmentPage from './Pages/Admin/AdminDepartmentPage';
-import ClientNotificationPage from './Pages/Client/ClientNotificationPage';
+import AdminAppointmentsPage  from './Pages/Admin/AdminAppointmentsPage';
 
 function App() {
 
@@ -77,16 +79,17 @@ function App() {
 
         {/* Doctor routes */}
 
+        <Route path="/doctor/deniedUi" element={<DeniedUi /> } />
         <Route element={<DoctorPublicRoutes/>}>
 
         <Route path="/doctor/doctorLogin" element={<DoctorLogin /> } />
-
+        <Route path="/doctor/doctorSignup" element={ <DoctorSignup /> } />
+         
         </Route>
         <Route element={<DoctorPrivateRoutes/>}>
 
         <Route path="/doctor" element={<DoctorDashboardPage /> } />
         <Route path="/doctor/DoctorProfilePage" element={<DoctorProfilePage /> } />
-        <Route path="/doctor/doctorSignup" element={ <DoctorSignup /> } />
         <Route path="/doctor/doctorPendingPage" element={  <DoctorPendingPage />  } />
         <Route path="/doctor/doctorDetailsForm" element={<DoctorDetailsForm />  } />
         <Route path="/doctor/DoctorAppointmentsPage" element={ <DoctorAppointmentsPage />} />
@@ -108,8 +111,9 @@ function App() {
         <Route path="/admin/adminHome" element={ <AdminHomePage />} />
         <Route path="/admin/adminClientPage" element={ <AdminClientPage />} />
         <Route path="/admin/adminDoctorsPage" element={ <AdminDoctorsPage />} />
-        <Route path="/admin/AdminAppointmentspage" element={ <AdminAppointmentspage />} />
+        <Route path="/admin/AdminInboxPage" element={ <AdminInboxPage />} />
         <Route path="/admin/AdminDepartmentPage" element={ <AdminDepartmentPage />} />
+        <Route path="/admin/AdminAppointmentsPage" element={ <AdminAppointmentsPage />} />
 
         </Route>
 

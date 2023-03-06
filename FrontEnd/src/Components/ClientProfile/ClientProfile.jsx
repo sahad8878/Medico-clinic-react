@@ -219,7 +219,7 @@ function ClientProfile() {
         </div>
       </div>
       {isOpen && (
-        <div className="fixed z-50 inset-0 overflow-y-auto">
+        <div className="fixed z-[1000] mt-10- inset-0 overflow-y-auto">
           <div className="flex items-center justify-center min-h-screen px-4">
             <div
               className="fixed inset-0 transition-opacity"

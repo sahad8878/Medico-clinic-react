@@ -10,20 +10,14 @@ const doctorDetails = async (req, res) => {
     const {
       education,
       address,
-      startingTime,
-      endingTime,
       doctorImg,
-      availableDate,
       consultationFees
     } = req.body;
 
     if (
       education &&
       address &&
-      startingTime &&
-      endingTime &&
       doctorImg &&
-      availableDate && 
       consultationFees
     ) {
       const doctor = await DoctorModel.findByIdAndUpdate(
@@ -32,10 +26,7 @@ const doctorDetails = async (req, res) => {
           $set: {
             education,
             address,
-            startingTime,
-            endingTime,
             doctorImg,
-            availableDate,
             consultationFees,
             status: "active",
           },
@@ -88,21 +79,28 @@ const doctorStatusChecking = async (req, res) => {
   const   doctor = await DoctorModel.findById(doctorId);
     let doctorStatus;
 
-    if (doctor.block === false) {
-      if (doctor.status === "pending") {
-        doctorStatus = doctor.status;
-      }
-      if (doctor.status === "approved") {
-        doctorStatus = doctor.status;
-      }
-      if (doctor.status === "active") {
-        doctorStatus = doctor.status;
-      }
-    } else {
-      doctorStatus = "blocked";
-    }
+       if(doctor){
 
-    res.status(201).send({ doctorStatus,doctor, success: true });
+         if (doctor.block === false) {
+           if (doctor.status === "pending") {
+             doctorStatus = doctor.status;
+           }
+           if (doctor.status === "approved") {
+             doctorStatus = doctor.status;
+           }
+           if (doctor.status === "active") {
+             doctorStatus = doctor.status;
+           }
+         } else {
+           doctorStatus = "blocked";
+         }
+
+         res.status(201).send({ doctorStatus,doctor, success: true });
+       }else{
+        res.status(200).send({  success: false });
+        
+       }
+
   } catch (error) {
     console.log(error);
     res.status(500).send({
@@ -549,29 +547,44 @@ const getDashboardDetails = async(req, res) => {
 try{
 const doctorId = req.body.doctorId
 
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
 const patients = await AppointmentModel.find({doctor:doctorId}).count()
 const confirmedPatients = await AppointmentModel.find({doctor:doctorId,status:{$in:["confirmed"]}}).count()
-const result = await AppointmentModel.aggregate([
-  {
-    $match: {
-      doctor: mongoose.Types.ObjectId(doctorId),
-      status: 'confirmed'
-    }
-  },
-  {
-    $group: {
-      _id: null,
-      totalFees: {
-        $sum: '$consultationFees'
-      }
-    }
-  }
-]);
+// const result = await AppointmentModel.aggregate([
+//   {
+//     $match: {
+//       status: 'confirmed'
+//     }
+//   },
+//   {
+//     $group: {
+//       _id: null,
+//       totalFees: {
+//         $sum: '$consultationFees'
+//       }
+//     }
+//   }
+// ]);
 
-const totalFees = result[0].totalFees;
+// const totalFees = result[0].totalFees;
 const salesReport = await AppointmentModel.aggregate([
   {
     $match: {
+      doctor: mongoose.Types.ObjectId(doctorId),
       status: 'confirmed'
     }
   },
@@ -595,18 +608,22 @@ const salesReport = await AppointmentModel.aggregate([
     }
   }
 ]);
-console.log(salesReport);
+
+const newSalesReport = salesReport.map((el) => {
+  let newEl = { ...el };
+  newEl.month = months[newEl.month - 1];
+  return newEl;
+});
 
 
-console.log(patients,confirmedPatients);
-if (!patients && !confirmedPatients && !totalFees) {
+if (!patients && !confirmedPatients ) {
       return res
       .status(200)
       .send({ message: "No Appointments exist ", success: false });
     }else{
       res
       .status(201)
-      .send({ patients,confirmedPatients,totalFees,salesReport,success: true });
+      .send({ patients,confirmedPatients,salesReport:newSalesReport,success: true });
     }
 
 }catch (error){

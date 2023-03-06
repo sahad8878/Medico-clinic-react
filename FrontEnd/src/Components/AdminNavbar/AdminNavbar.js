@@ -6,7 +6,8 @@ import { Link,useLocation,useNavigate } from "react-router-dom";
 import docIcon from "../../Assets/doctor.ico";
 import clientIcon from "../../Assets/group.ico";
 import homeIcon from "../../Assets/home.ico";
-import inboxIcon from "../../Assets/book-appointments.ico";
+import inboxIcon from '../../Assets/inbox.png'
+import appointmenIcon from "../../Assets/book-appointments.ico";
 import departmentIcon from '../../Assets/department.png'
 import { setLogout } from "../../Store/Slice/AdminSlice";
 
@@ -132,14 +133,14 @@ const path = location.pathname
                   </span>
                   </Link>
                 </li>
-                <li className="rounded-sm">
-                  <Link to="/admin/AdminAppointmentspage" >
+                  <li className="rounded-sm">
+                  <Link to="/admin/AdminInboxPage" >
                   <span
                     className="flex items-center uppercase p-2 space-x-3 rounded-md"
                   >
                     <img className=" h-7" src={inboxIcon} alt="logo" />
 
-                    <span className={ `  hover:text-[#D6E8EE] ${path === "/admin/AdminAppointmentspage" ? "text-white font-semibold " : "text-[#97CADB] "} `}>Inbox</span>
+                    <span className={ `  hover:text-[#D6E8EE] ${path === "/admin/AdminInboxPage" ? "text-white font-semibold " : "text-[#97CADB] "} `}>Inbox</span>
                   </span>
                   </Link>
                 </li>
@@ -173,6 +174,16 @@ const path = location.pathname
                   >
                     <img className=" h-7" src={departmentIcon} alt="logo" />
                     <span className={ `  hover:text-[#D6E8EE] ${path === "/admin/AdminDepartmentPage" ? "text-white font-semibold " : "text-[#97CADB] "} `}>Departments</span>
+                  </span>
+                  </Link>
+                </li>
+                 <li className="rounded-sm">
+                <Link to="/admin/AdminAppointmentsPage" >
+                  <span
+                    className="flex items-center p-2 space-x-3 rounded-md uppercase"
+                  >
+                    <img className=" h-7" src={appointmenIcon} alt="logo" />
+                    <span className={ `  hover:text-[#D6E8EE] ${path === "/admin/AdminAppointmentsPage" ? "text-white font-semibold " : "text-[#97CADB] "} `}>Appointments</span>
                   </span>
                   </Link>
                 </li>

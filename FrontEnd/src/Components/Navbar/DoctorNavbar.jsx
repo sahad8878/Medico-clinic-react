@@ -83,6 +83,25 @@ className="w-full z-[200] bg-[#97CADB] fixed top-7"
           </span>
             </Link>
         </li>
+     {
+      navbar &&
+      <div className='space-y-8 md:hidden'>
+
+      
+<li className="">
+          <Link to='/doctor/DoctorProfilePage'>
+        <span className="text-white font-semibold text-lg px-5 cursor-pointer hover:text-[#194569] rounded">
+      Details
+    </span>
+    </Link>
+        </li>
+        <li className="">
+          <Link to='/doctor/DoctorSchedulePage'>
+        <span className="text-white font-semibold text-lg px-5 cursor-pointer hover:text-[#194569] rounded">
+      schedule
+    </span>
+    </Link>
+        </li>
         <li className="">
           <Link to='/doctor/DoctorAppointmentsPage'>
         <span className="text-white font-semibold text-lg px-5 cursor-pointer hover:text-[#194569] rounded">
@@ -90,18 +109,9 @@ className="w-full z-[200] bg-[#97CADB] fixed top-7"
     </span>
     </Link>
         </li>
-        {/* {doctor&&(
+</div>
+     }
         
-       
-          <li>
-           <span className=" font-semibold text-lg px-5 cursor-pointer hover:text-[#194569] rounded">
-         {user.clientName}
-          </span>
-
-          </li>
-       
-        
-        )} */}
         {doctor&&(
         
         <li className="">

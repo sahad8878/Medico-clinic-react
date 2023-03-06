@@ -60,7 +60,7 @@ function ClientSignup() {
       <div className=" pl-5   w-[600px] mt-[170px] lg:mt-[240px] px-4">
         <h2 className=" text-3xl   font-mono font-bold">Create an account</h2>
         <p className="mb-10 text-[#1F6CD6] cursor-pointer">
-          <Link to="/doctor/doctorLogin">Already have one? Log in</Link>
+          <Link to="/login">Already have one? Log in</Link>
         </p>
         <form omponent="form" noValidate onSubmit={handleSignup}>
           <label
