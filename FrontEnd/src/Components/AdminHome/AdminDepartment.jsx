@@ -2,27 +2,31 @@ import React, { useState, useEffect } from "react";
 import { message } from "antd";
 import axios from "../../Axios/Axios";
 import { useNavigate } from "react-router-dom";
+import { InfinitySpin } from "react-loader-spinner";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import { storage } from "../../Firebase/confic";
 import SingleDepartment from "./SingleDepartment";
 
 function AdminDepartment() {
   const navigate = useNavigate();
- 
-  const [error, setError] = useState(null);
 
+  const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [departments, setDepartments] = useState([]);
-  const [depImg,setDepImg] = useState(null)
+  const [depImg, setDepImg] = useState(null);
   const [refresh, setRefresh] = useState(false);
-  const admin = JSON.parse(localStorage.getItem('adminToken'));
-  const adminToken = admin.adminToken
+  const admin = JSON.parse(localStorage.getItem("adminToken"));
+  const adminToken = admin.adminToken;
   useEffect(() => {
-    axios.get("/admin/getdepartments" ,{headers:{'admintoken':adminToken}}).then((response) => {
-      console.log(response.data);
-      setDepartments(response.data.departments);
-    });
+    setIsLoading(true);
+    axios
+      .get("/admin/getdepartments", { headers: { admintoken: adminToken } })
+      .then((response) => {
+        setDepartments(response.data.departments);
+        setIsLoading(false);
+      });
   }, [refresh]);
 
   const handleOpenModal = () => {
@@ -37,14 +41,15 @@ function AdminDepartment() {
     try {
       event.preventDefault();
       setError(null);
+      setIsLoading(true);
 
       let data = new FormData(event.currentTarget);
       data = {
         department: data.get("department"),
         description: data.get("description"),
-        departmentImg:depImg ,
+        departmentImg: depImg,
       };
-      console.log(data);
+
       if (data.departmentImg.name) {
         const date = Date.now();
         const rand = Math.random();
@@ -65,26 +70,31 @@ function AdminDepartment() {
         const imgBase = await toBase64(departmentImg);
         await uploadString(imageRef, imgBase, "data_url").then(async () => {
           const downloadURL = await getDownloadURL(imageRef);
-         data.departmentImg = downloadURL
+          data.departmentImg = downloadURL;
         });
       } else {
-        data.departmentImg = null
+        data.departmentImg = null;
       }
-      axios.post("/admin/postDepartments", data,{headers:{'admintoken':adminToken}}).then((response) => {
-        console.log(response, "responseeee");
-        const result = response.data;
-        if (result.success) {
-          message.success("new department Added");
-          // navigate('/admin/AdminDepartmentPage');
-          handleCloseModal();
-          setRefresh(!refresh);
-        } else {
-          setError(result.message);
-          message.error(result.message).then(() => {
-            setError(null);
-          });
-        }
-      });
+      axios
+        .post("/admin/postDepartments", data, {
+          headers: { admintoken: adminToken },
+        })
+        .then((response) => {
+          console.log(response, "responseeee");
+          const result = response.data;
+          if (result.success) {
+            message.success("new department Added");
+            setIsLoading(false);
+            handleCloseModal();
+            setRefresh(!refresh);
+          } else {
+            setError(result.message);
+            setIsLoading(false);
+            message.error(result.message).then(() => {
+              setError(null);
+            });
+          }
+        });
     } catch (error) {
       console.log(error);
       message.error("Somthing went wrong!");
@@ -109,11 +119,30 @@ function AdminDepartment() {
             Add Department
           </button>
         </div>
-        <div className=" grid grid-cols-1 lg:grid-cols-2  gap-4 p-5 ">
-          {departments.map((department) => (
-              <SingleDepartment department={department} refresh={refresh} setRefresh={setRefresh}/>
-          ))}
-        </div>
+
+        {isLoading ? (
+          <div className=" flex justify-center">
+            <InfinitySpin width="200" color="#194569" />
+          </div>
+        ) : (
+          <div>
+            {departments.length === 0 ? (
+              <div className="flex  justify-center  pt-28 font-serif text-[#194569] text-xl ">
+                Departments Not Exist...!
+              </div>
+            ) : (
+              <div className=" grid grid-cols-1 lg:grid-cols-2  gap-4 p-5 ">
+                {departments.map((department) => (
+                  <SingleDepartment
+                    department={department}
+                    refresh={refresh}
+                    setRefresh={setRefresh}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Overlay modal */}
@@ -149,8 +178,6 @@ function AdminDepartment() {
                       id="department"
                       name="department"
                       placeholder="Department Name"
-                      // value={email}
-                      // onChange={(event) => setEmail(event.target.value)}
                     />
                   </div>
                   <div className="mb-4">
@@ -161,7 +188,10 @@ function AdminDepartment() {
                       Image
                     </label>
                     <div>
-                      <img src={depImg ? window.URL.createObjectURL(depImg) : null} alt="" />
+                      <img
+                        src={depImg ? window.URL.createObjectURL(depImg) : null}
+                        alt=""
+                      />
                     </div>
                     <input
                       className="bg-white p-2 rounded-lg w-full"
@@ -172,8 +202,6 @@ function AdminDepartment() {
                       onChange={(e) => {
                         setDepImg(e.target.files[0]);
                       }}
-                      // value={email}
-                      // onChange={(event) => setEmail(event.target.value)}
                     />
                   </div>
                   <div className="mb-4">
@@ -188,8 +216,6 @@ function AdminDepartment() {
                       id="description"
                       name="description"
                       placeholder="Add Discription"
-                      // value={password}
-                      // onChange={(event) => setPassword(event.target.value)}
                     />
                   </div>
                   {error && (
@@ -197,13 +223,19 @@ function AdminDepartment() {
                       {error}
                     </div>
                   )}
-                  <div className="mb-4 mt-10 flex justify-center">
-                    <input
-                      className="bg-white  hover:bg-[#194569] text-black font-bold py-2 px-20 rounded-lg"
-                      type="submit"
-                      value="Continue"
-                    />
-                  </div>
+                  {isLoading ? (
+                    <div className="mb-4 mt-10 flex justify-center ">
+                      <InfinitySpin width="200" color="#194569" />
+                    </div>
+                  ) : (
+                    <div className="mb-4 mt-10 flex justify-center">
+                      <input
+                        className="bg-white  hover:bg-[#194569] text-black font-bold py-2 px-20 rounded-lg"
+                        type="submit"
+                        value="Continue"
+                      />
+                    </div>
+                  )}
                 </form>
               </div>
 
@@ -219,7 +251,7 @@ function AdminDepartment() {
             </div>
           </div>
         </div>
-        // Cardiologists, audiologists, dentists, ENT specialists, gynecologists, orthopedic surgeons, pediatricians, psychiatrists, veterinarians, radiologists, pulmonologists, endocrinologists, oncologists, neurologists, cardiothoracic surgeons,
+     
       )}
     </>
   );

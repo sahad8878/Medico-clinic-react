@@ -1,5 +1,4 @@
 const express = require("express");
-const { adminLogin } = require("../controller/authController");
 const {
   getPendingDoctors,
   acceptDoctorAppointment,
@@ -23,11 +22,8 @@ const adminAuthMiddlewares = require("../middlewares/adminAuthMiddlewares");
 // route object
 const router = express.Router();
 
+
 // routes
-
-// Admin Login || post
-
-router.post("/admin", adminLogin);
 
 // Pending Doctor Details || GET
 

@@ -1,20 +1,23 @@
 const cors = require('cors');
 const express = require('express');
-// eslint-disable-next-line no-unused-vars
 const colors = require('colors');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const connectDB = require('./config/db');
+
 const userRouter = require('./routes/clientRoutes');
 const adminRouter = require('./routes/adminRoutes');
 const doctorRouter = require('./routes/doctorRoutes')
+const authRouter = require('./routes/authRoutes')
+
+
 
 // dotenv config
 dotenv.config();
 
 // Mongodb connection
-connectDB();
+connectDB()
 
 // rest object
 const app = express();
@@ -36,6 +39,7 @@ app.use(morgan('dev'));
 
 // routes
 app.use('/', userRouter);
+app.use('/auth',authRouter)
 app.use('/admin', adminRouter);
 app.use('/doctor', doctorRouter)
 

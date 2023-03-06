@@ -35,7 +35,7 @@ function ClientSignup() {
         address: data.get("address"),
 
       };
-      axios.post("/clientSignup", data).then((response) => {
+      axios.post("/auth/clientSignup", data).then((response) => {
         const result = response.data;
         if (result.success) {
           setIsLoading(false);
@@ -76,8 +76,6 @@ function ClientSignup() {
               id="fName"
               name="fName"
               placeholder="First Name"
-              // value={name}
-              // onChange={(event) => setName(event.target.value)}
               required
             />
             <input
@@ -86,8 +84,6 @@ function ClientSignup() {
               id="lName"
               name="lName"
               placeholder="Last Name"
-              // value={name}
-              // onChange={(event) => setName(event.target.value)}
               required
             />
           </div>
@@ -105,8 +101,6 @@ function ClientSignup() {
                 type="date"
                 id="dateOfBirth"
                 name="dateOfBirth"
-                // value={number}
-                // onChange={(event) => setNumber(event.target.value)}
                 required
               />
             </div>
@@ -120,8 +114,6 @@ function ClientSignup() {
                 id="age"
                 name="age"
                 placeholder="Age"
-                // value={number}
-                // onChange={(event) => setNumber(event.target.value)}
                 required
               />
             </div>
@@ -194,8 +186,6 @@ function ClientSignup() {
               id="address"
               name="address"
               placeholder="Enter Your Address"
-              // value={email}
-              // onChange={(event) => setEmail(event.target.value)}
               required
             />
           </div>
@@ -212,8 +202,6 @@ function ClientSignup() {
               id="number"
               name="number"
               placeholder="Phone Number"
-              // value={number}
-              // onChange={(event) => setNumber(event.target.value)}
               required
             />
           </div>
@@ -230,8 +218,6 @@ function ClientSignup() {
               id="email"
               name="email"
               placeholder="Enter Your Email"
-              // value={email}
-              // onChange={(event) => setEmail(event.target.value)}
               required
             />
           </div>
@@ -248,8 +234,6 @@ function ClientSignup() {
               id="password"
               name="password"
               placeholder="Enter Your Password"
-              // value={password}
-              // onChange={(event) => setPassword(event.target.value)}
               required
             />
           </div>
@@ -266,8 +250,6 @@ function ClientSignup() {
               id="confirmPassword"
               name="confirmPassword"
               placeholder="Confirm Your Password"
-              // value={conPassword}
-              // onChange={(event) => setConPassword(event.target.value)}
               required
             />
           </div>

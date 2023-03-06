@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { message } from "antd";
 import axios from "../../Axios/Axios";
+import { InfinitySpin } from "react-loader-spinner";
+
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import { storage } from "../../Firebase/confic";
 
@@ -13,6 +15,7 @@ function SingleDepartment({ department, setRefresh, refresh }) {
   const [description,setDescription] = useState(department.description)
   const [depImg,setDepImg] = useState(null)
 const [previewUrl, setPreviewUrl] = useState(department.departmentImg);
+const [isLoading, setIsLoading] = useState(false);
 
   const handleFileInputChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -74,6 +77,7 @@ const [previewUrl, setPreviewUrl] = useState(department.departmentImg);
     try {
       event.preventDefault();
       setError(null);
+      setIsLoading(true);
 
       let data = new FormData(event.currentTarget);
       data = {
@@ -82,10 +86,6 @@ const [previewUrl, setPreviewUrl] = useState(department.departmentImg);
         departmentImg:depImg ,
         departmentId:department._id
       };
-      console.log(data ,);
-    console.log(previewUrl,"prevvvvvvv")
-    console.log(depImg,"eeeeeeeeeeeee");
-
       if (data.departmentImg !== null) {
         const date = Date.now();
         const rand = Math.random();
@@ -107,23 +107,20 @@ const [previewUrl, setPreviewUrl] = useState(department.departmentImg);
         await uploadString(imageRef, imgBase, "data_url").then(async () => {
           const downloadURL = await getDownloadURL(imageRef);
          data.departmentImg = downloadURL
-         console.log(data.departmentImg,"not null");
         });
       } else {
         data.departmentImg = department.departmentImg
-        console.log(data.departmentImg,"null");
       }
-      console.log(data,'last data');
       axios.put("/admin/putEditDepartment", data,{headers:{'admintoken':adminToken}}).then((response) => {
-        console.log(response, "responseeee");
         const result = response.data;
         if (result.success) {
-          message.success("Department successfully Updated");
-          // navigate('/admin/AdminDepartmentPage');
+          message.success(result.message);
+          setIsLoading(false);
           handleCloseModal();
           setRefresh(!refresh);
         } else {
           setError(result.message);
+          setIsLoading(false);
           message.error(result.message).then(() => {
             setError(null);
           });
@@ -234,7 +231,7 @@ const [previewUrl, setPreviewUrl] = useState(department.departmentImg);
             <div className="rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full sm:max-w-md">
               <div className="bg-[#EDF4FE] bg-opacity-70 px-4 py-3">
                 <h2 className="text-lg text-center font-medium text-gray-900">
-                  Add Department
+                Update Department
                 </h2>
               </div>
               <div className=" bg-[#EDF4FE]    px-4 pt-5 pb-4">
@@ -266,7 +263,6 @@ const [previewUrl, setPreviewUrl] = useState(department.departmentImg);
                     <div>
                       <img 
                       src={previewUrl}
-                      // src={depImg ? window.URL.createObjectURL(depImg) : department.departmentImg } 
                       alt="" />
                     </div>
 
@@ -276,9 +272,7 @@ const [previewUrl, setPreviewUrl] = useState(department.departmentImg);
                       id="departmentImg"
                       name="departmentImg"
                       placeholder="Department Image"
-                      // onChange={(e) => {
-                      //   setDepImg(e.target.files[0]);
-                      // }}
+                
                       accept="image/*"
                       onChange={handleFileInputChange}
                     />
@@ -305,13 +299,19 @@ const [previewUrl, setPreviewUrl] = useState(department.departmentImg);
                       {error}
                     </div>
                   )}
-                  <div className="mb-4 mt-10 flex justify-center">
-                    <input
-                      className="bg-white  hover:bg-[#194569] text-black font-bold py-2 px-20 rounded-lg"
-                      type="submit"
-                      value="Continue"
-                    />
-                  </div>
+                  {isLoading ? (
+                    <div className="mb-4 mt-10 flex justify-center ">
+                      <InfinitySpin width="200" color="#194569" />
+                    </div>
+                  ) : (
+                    <div className="mb-4 mt-10 flex justify-center">
+                      <input
+                        className="bg-white  hover:bg-[#194569] text-black font-bold py-2 px-20 rounded-lg"
+                        type="submit"
+                        value="Continue"
+                      />
+                    </div>
+                  )}
                 </form>
               </div>
 

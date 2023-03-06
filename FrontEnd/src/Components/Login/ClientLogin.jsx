@@ -24,7 +24,7 @@ function ClientLogin() {
       event.preventDefault();
       setIsLoading(true);
       setError(null);
-      axios.post("/clientLogin", { email, password }).then((response) => {
+      axios.post("/auth/clientLogin", { email, password }).then((response) => {
         const result = response.data;
         if (result.success) {
           localStorage.setItem("clientToken", JSON.stringify(result));

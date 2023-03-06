@@ -19,7 +19,7 @@ function DoctorTimeSchedule() {
   const [timings, setTimings] = useState([]);
   const [schedule, setSchedule] = useState([]);
   const [refresh, setRefresh] = useState(false);
-  const [slots, setSlots] = useState("")
+  // const [slots, setSlots] = useState("")
   const doctor = JSON.parse(localStorage.getItem("doctorToken"));
   const doctorToken = doctor.doctorToken;
 
@@ -49,7 +49,7 @@ function DoctorTimeSchedule() {
   };
 
   const handleTimingAdd = () => {
-    setTimings([...timings, { startTime: "", endTime: "",}]);
+    setTimings([...timings, { startTime: "", endTime: "",slots:""}]);
   };
   const handleTimingRemove = (indexToRemove) => {
     setTimings((prevTimings) =>
@@ -121,11 +121,13 @@ function DoctorTimeSchedule() {
     axios
       .post(
         "/doctor/postDoctorAvailability",
-        { selectedDay, timings ,slots},
+        { selectedDay, timings},
         { headers: { doctortoken: doctorToken } }
       )
       .then((response) => {
         if (response.data.success) {
+          setTimings([])
+          setSelectedDay("")
           setRefresh(!refresh);
           message.success(response.data.message);
         } else {
@@ -177,6 +179,9 @@ function DoctorTimeSchedule() {
                       <span>To </span>
                       <span className="">
                         {moment(times.end).format(" h:mm a")}
+                      </span>
+                      <span className="">
+                       slots: {times.slots}
                       </span>
                       <span
                         onClick={() => deleteTimeFromDB(times._id)}
@@ -281,6 +286,16 @@ function DoctorTimeSchedule() {
                               }
                             />
                           </label>
+                          <label className="pr-4 ">
+                            slots:
+                            <input
+                              type="number"
+                              value={timing.slots}
+                              onChange={(e) =>
+                                handleTimingChange(e, index, "slots")
+                              }
+                            />
+                          </label>
                          
                           <button
                             className="text-red-700 cursor-pointer hover:text-red-500"
@@ -291,7 +306,7 @@ function DoctorTimeSchedule() {
                           </button>
                         </div>
                       ))}
-                       <label className="mt-2 ">
+                       {/* <label className="mt-2 ">
                             Totol Slots:
                             <input
                               type="number"
@@ -299,7 +314,7 @@ function DoctorTimeSchedule() {
                               onChange={(e) => setSlots(e.target.value)
                               }
                             />
-                          </label>
+                          </label> */}
                       <div className="flex justify-center content-center mt-5">
                         <button
                           className="flex justify-center content-center cursor-pointer hover:bg-opacity-75 rounded-md text-white  bg-[#194569] px-6"

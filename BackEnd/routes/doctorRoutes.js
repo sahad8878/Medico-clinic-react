@@ -1,5 +1,5 @@
 const express = require("express");
-const { doctorSignup, doctorLogin } = require("../controller/authController");
+
 const {
   doctorDetails,
   getDepartments,
@@ -24,14 +24,6 @@ const doctorAuthmiddlwares = require("../middlewares/doctorAuthmiddlwares");
 const router = express.Router();
 
 // routes
-
-// Doctor Signup || post
-router.post("/doctorSignup", doctorSignup);
-
-// Doctor Login || Post
-
-router.post("/doctorLogin", doctorLogin);
-
 
 // Get Departments || GET
 
@@ -95,4 +87,5 @@ router.patch("/updateDoctorDetails",doctorAuthmiddlwares,updateDoctorDetails)
 // Get Dashbard Details || GET
 
 router.get("/getDashboardDetails",doctorAuthmiddlwares,getDashboardDetails)
+
 module.exports = router;

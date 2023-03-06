@@ -69,7 +69,7 @@ function DoctorSignup() {
         data.licenceImg = "";
       }
 
-      axios.post("/doctor/doctorSignup", data).then((response) => {
+      axios.post("/auth/doctorSignup", data).then((response) => {
         const result = response.data;
         if (result.success) {
           localStorage.setItem("doctorToken", JSON.stringify(result));

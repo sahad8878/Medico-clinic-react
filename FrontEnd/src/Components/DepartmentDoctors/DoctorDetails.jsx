@@ -40,6 +40,7 @@ function DoctorDetails() {
   const handleAppointment = (event) => {
     try {
       event.preventDefault();
+      console.log(selectedTime);
       const client = JSON.parse(localStorage.getItem("clientToken"));
       axios
         .post("/postAppointment", {
@@ -55,9 +56,10 @@ function DoctorDetails() {
         .then((response) => {
           console.log(response, "responseeee");
           const result = response.data;
+          
           if (result.success) {
             message.success(result.message);
-            navigate('/clientNotificationPage');
+            // navigate('/clientNotificationPage');
             handleCloseModal();
           } else {
             message.error(result.message).then(() => {});
@@ -232,7 +234,7 @@ function DoctorDetails() {
                          
                           { availability &&
                           availability.time.map((times) => (
-                            <option key={times.start} value={times.start} >
+                            <option key={times.start} value={times._id} >
                               
                               {moment(times.start).format(" h:mm ")} To
                               {moment(times.end).format(" h:mm ")}

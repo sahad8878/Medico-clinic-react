@@ -61,9 +61,15 @@ function AdminClient() {
           {" "}
           Clients
         </h1>
-        {clients  ? 
-        
-        
+        {clients.length === 0 ? 
+         (
+          
+          <div className="flex  justify-center  font-serif text-[#194569] text-xl ">
+            Clients details are empty...!
+          </div>
+       
+      )
+        :
         (
           <div className="overflow-auto rounded-lg shadow">
             <table className="w-full">
@@ -132,9 +138,8 @@ function AdminClient() {
               </tbody>
             </table>
           </div>
-        ) : (
-          <div>no client details</div>
-        )}
+        )
+       }
       </div>
     </>
   );

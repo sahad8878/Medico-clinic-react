@@ -258,10 +258,65 @@ const postAppointment = async (req, res) => {
   try {
     const { date, time, doctor,consultationFees, client } = req.body;
     
-console.log(date, time, doctor,consultationFees, client,"poooo");
+console.log(date, time, doctor,consultationFees, client,"poooooooooooooooooooooooooooooooo");
+const totalAppointments =20
+const selectedDay = moment(date).format('dddd')
+const query = {
+  _id: doctor,
+  'availablity.day': selectedDay,
+  'availablity.time._id': time,
+  
+};
+
+const projection = {
+  'availablity.$': 1,
+};
+
+DoctorModel.findOne(query, projection, (err, doctor) => {
+  if (err) {
+    console.error(err);
+    // handle error
+    return;
+  }
+  console.log(doctor,"dooooooooooooooooooooooooooooooooooo");
+
+  if (!doctor) {
+    console.log('Doctor not found');
+    // handle doctor not found
+    return;
+  }
+
+  const availablity = doctor.availablity[0];
+
+  const time1 = availablity.time.find((t) => t._id === time);
+console.log(time1.slots,"timeeeeeee");
+  if (!time1) {
+    console.log('Time not found');
+    // handle time not found
+    return;
+  }
+
+  const totalSlots = time.slots;
+
+  if (totalSlots > totalAppointments) {
+    console.log('Total slots are greater than total appointments');
+    // handle total slots are greater than total appointments
+    return;
+  }
+
+  console.log('Total slots are not greater than total appointments');
+  // handle total slots are not greater than total appointments
+});
+ 
+ 
+
+     
+
+
    const apointmentCount =  await AppointmentModel.find({doctor:doctor,date:date})
 
-    const selectedDay = moment(date).format('dddd')
+         
+
 
     const doctors = await DoctorModel.findById(doctor);
     
@@ -288,7 +343,7 @@ const toTime = moment(time).format(" h:mm a")
       consultationFees,
       client,
     });
-    await newAppointment.save();
+    // await newAppointment.save();
 
     res.send({ message: "Appointment booked successfully.", success: true });
   } catch (error) {

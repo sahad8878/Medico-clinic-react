@@ -23,7 +23,7 @@ function DoctorLogin() {
       event.preventDefault();
       setIsLoading(true);
       setError(null);
-      axios.post("/doctor/doctorLogin", { email, password }).then((response) => {
+      axios.post("/auth/doctorLogin", { email, password }).then((response) => {
         const result = response.data;
         if (result.success) {
           localStorage.setItem("doctorToken", JSON.stringify(result));

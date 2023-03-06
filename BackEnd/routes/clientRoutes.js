@@ -1,8 +1,4 @@
 const express = require("express");
-const {
-  loginController,
-  signupController,
-} = require("../controller/authController");
 
 const {
   getClietProfile,
@@ -24,12 +20,6 @@ const clientAuthMiddlewares = require("../middlewares/clientAuthMiddlewares");
 const router = express.Router();
 
 // routes
-
-// LOGIN || POST
-router.post("/clientLogin", loginController);
-
-// SIGNUP || POST
-router.post("/clientSignup", signupController);
 
 
 // Appointments || POST
@@ -78,4 +68,5 @@ router.patch('/patchConfirmAppointment',clientAuthMiddlewares,patchConfirmAppoin
 // get confirmed client appointments || GET
 
 router.get("/getConfirmedAppointments",clientAuthMiddlewares,getConfirmedAppointments)
+
 module.exports = router;

@@ -30,17 +30,8 @@ const path = location.pathname
     <>
       <div className=" fixed z-10">
         <div className="h-20 sm:h-24 w-screen flex  justify-between  bg-[#194569]">
-          <div className=" px-4">
-            <span className=" items-center px-4 ">
-              <img
-                className=" w-[60px] sm:w-[80px] h-[40px] sm:h-[60px] "
-                src={log}
-                alt="logo"
-              />
-            </span>
-          </div>
 
-          <div className="mt-7 sm:mt-10 sm:hidden text-white ">
+        <div className="mt-7 sm:mt-10 sm:hidden text-white ">
             <button
               className="p-2 rounded-md outline-none focus:border-gray-400 focus:border"
               onClick={() => setNavbar(!navbar)}
@@ -76,6 +67,17 @@ const path = location.pathname
               )}
             </button>
           </div>
+          <div className=" px-4">
+            <span className=" items-center px-4 ">
+              <img
+                className=" w-[60px] sm:w-[80px] h-[40px] sm:h-[60px] "
+                src={log}
+                alt="logo"
+              />
+            </span>
+          </div>
+         
+
           <span className=" mr-7  mt-8 sm:mt-7 flext justify-between ">
             <AccountCircleIcon
               sx={{

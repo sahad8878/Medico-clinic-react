@@ -20,7 +20,7 @@ function AdminLogin() {
 
       setIsLoading(true);
       setError(null);
-      axios.post("/admin/admin", { email, password }).then((response) => {
+      axios.post("/auth/admin", { email, password }).then((response) => {
         const result = response.data;
         if (result.success) {
           localStorage.setItem("adminToken", JSON.stringify(result));

@@ -247,8 +247,8 @@ const postDoctorAvailability = async(req, res) => {
   console.log(req.body);
   console.log(req.body.doctorId);
 const doctorId =req.body.doctorId
-  const {selectedDay,timings ,slots} = req.body
-  console.log(selectedDay,timings ,slots,"timinnnnnnnnnnnnnnnnnnnnnnn");
+  const {selectedDay,timings } = req.body
+  console.log(selectedDay,timings ,"timinnnnnnnnnnnnnnnnnnnnnnn");
 
 
   const doctorData = await DoctorModel.findOne({_id:doctorId})
@@ -260,18 +260,18 @@ const doctorId =req.body.doctorId
       ...timings.map((timing) => ({
         start: new Date(`2023-03-01T${timing.startTime}:00Z`),
         end: new Date(`2023-03-01T${timing.endTime}:00Z`),
-       
+        slots:timing.slots
       }))
     );
   } else {
     // If the day does not exist, create a new day object and push it to the availability array
     doctorData.availablity.push({
       day: selectedDay,
-      slots:slots,
+      // slots:slots,
       time: timings.map((timing) => ({
         start: new Date(`2023-03-01T${timing.startTime}:00Z`),
         end: new Date(`2023-03-01T${timing.endTime}:00Z`),
-        
+        slots:timing.slots
       })),
     });
   }
