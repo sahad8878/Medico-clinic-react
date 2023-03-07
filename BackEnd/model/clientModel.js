@@ -40,6 +40,19 @@ const clientSchema = new mongoose.Schema({
   clientImage: {
     type: String,
   },
+  
+  wallet: {
+    type: Number,
+    default:0
+  },
+  notifications:{
+    type:Array,
+    default:[]
+  },
+  seenNotifications:{
+    type:Array,
+    default:[]
+  },
   isAdmin: {
     type: Boolean,
     default: false,

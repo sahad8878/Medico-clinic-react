@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const DoctorModel = require("../model/doctorModel");
 const DepartmentModel = require("../model/departmentModel");
 const AppointmentModel = require("../model/appointmentModel");
+const ClientModel = require("../model/clientModel");
+
 const { exists } = require("../model/clientModel");
 
 // post doctor details
@@ -141,7 +143,7 @@ const getAppointments = async (req, res) => {
   try {
     const pendingAppointments = await AppointmentModel.find({
       doctor: req.body.doctorId,
-      status: "pending",
+      status: "confirmed",
     })
       .populate("client")
       .sort({ updatedAt: -1 });
@@ -163,16 +165,16 @@ const getAppointments = async (req, res) => {
 
 // Accept  Appoiontments
 
-const acceptAppointment = async (req, res) => {
+const checkedAppointment = async (req, res) => {
   try {
     const appointment = await AppointmentModel.findByIdAndUpdate(
       req.body.id,
-      { status: "approved" },
+      { status: "checked"},
       { new: true }
     );
     if (appointment) {
       res.status(201).send({
-        message: ` Patient  Booking accepted`,
+        message: ` mark as Checked`,
         success: true,
       });
     } else {
@@ -192,16 +194,40 @@ const acceptAppointment = async (req, res) => {
 
 // Reject Appointment
 
-const rejecrAppointment = async (req, res) => {
+const cancelAppointment = async (req, res) => {
   try {
-    const appointmen = await AppointmentModel.findByIdAndUpdate(
+    const appointment= await AppointmentModel.findByIdAndUpdate(
       req.body.id,
-      { status: "rejected" },
+      { status: "cancelled" },
       { new: true }
     );
-    if (appointmen) {
-      res.status(201).send({
-        message: ` Patient Booking rejected`,
+       console.log(appointment,"apooooooooooooooooooooooooooooo"); 
+       
+       if (appointment) {
+        const client = await ClientModel.findById(appointment.client)
+
+        if(client.wallet === 0){
+        await  ClientModel.findByIdAndUpdate( appointment.client,{wallet:appointment.consultationFees},{ new: true })
+        }else{
+    
+          await ClientModel.findOneAndUpdate(
+            { _id: appointment.client },
+            {
+              $inc: {
+                wallet: appointment.consultationFees,
+              },
+            }
+          );
+
+          const notifications = client.notifications 
+          notifications.push({
+            type:'cancelAppointment',
+            message:`dr.sahad  has canceled the ${appointment.date} ${appointment.time} booking ` 
+          })
+
+        }
+         res.status(201).send({
+        message: ` Patient Booking cancelled`,
         success: true,
       });
     } else {
@@ -485,7 +511,7 @@ try {
   
 const doctorId = req.body.doctorId
 
-const appointmentHistory = await AppointmentModel.find({doctor:doctorId,status:{$nin:["pending","rejected"]}}) .populate("client")
+const appointmentHistory = await AppointmentModel.find({doctor:doctorId,status:{$nin:["confirmed"]}}) .populate("client")
 .sort({ updatedAt:-1 });
 if(appointmentHistory){
 
@@ -641,8 +667,8 @@ module.exports = {
   doctorStatusChecking,
   getDoctorDetails,
   getAppointments,
-  acceptAppointment,
-  rejecrAppointment,
+  checkedAppointment,
+  cancelAppointment,
   postDoctorAvailability,
   getScheduleDetails,
   deleteScheduleTime,

@@ -6,8 +6,8 @@ const {
   doctorStatusChecking,
   getDoctorDetails,
   getAppointments,
-  acceptAppointment,
-  rejecrAppointment,
+  checkedAppointment,
+  cancelAppointment,
   postDoctorAvailability,
   getScheduleDetails,
   deleteScheduleTime,
@@ -52,11 +52,11 @@ router.get('/getAppointments',doctorAuthmiddlwares,getAppointments)
 
 // accept appointment || PATCH
 
-router.patch('/acceptAppointment',doctorAuthmiddlwares,acceptAppointment)
+router.patch('/checkedAppointment',doctorAuthmiddlwares,checkedAppointment)
 
 // reject appointment || PATCH
 
-router.patch('/rejecrAppointment',doctorAuthmiddlwares,rejecrAppointment)
+router.patch('/cancelAppointment',doctorAuthmiddlwares,cancelAppointment)
 
 
 // get doctor time schedul  || GET

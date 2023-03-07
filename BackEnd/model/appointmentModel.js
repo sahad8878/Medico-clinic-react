@@ -20,8 +20,12 @@ const appointmentSchema = new mongoose.Schema(
     date: {
       type: String,
     },
+  
     time: {
       type: String,
+    },
+    token: {
+      type: Number,
     },
   },
   {

@@ -3,6 +3,7 @@ import image from "../../Assets/doctor.ico";
 import { useNavigate, useParams } from "react-router-dom";
 import { message } from "antd";
 import { Calendar, momentLocalizer } from "react-big-calendar";
+import PayPalButton from "./PayPalButton";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import axios from "../../Axios/Axios";
@@ -10,17 +11,18 @@ import DatePicker from "react-datepicker";
 import Select from "react-select";
 import "react-datepicker/dist/react-datepicker.css";
 
-
 const localizer = momentLocalizer(moment);
 function DoctorDetails() {
   const [Doctor, setDoctor] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [availability, setAvailability] = useState(null);
-
   const [selectedTime, setSelectedTime] = useState(null);
+  const [token, setToken] = useState(null);
+  const [schedulTime, setSchedulTime] = useState("");
+  const [showPaypal, setShowPaypal] = useState(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const { doctorId } = useParams();
   const client = JSON.parse(localStorage.getItem("clientToken"));
@@ -42,25 +44,28 @@ function DoctorDetails() {
       event.preventDefault();
       console.log(selectedTime);
       const client = JSON.parse(localStorage.getItem("clientToken"));
+
       axios
-        .post("/postAppointment", {
-          date: selectedDate,
-          time: selectedTime,
-          doctor: doctorId,
-          consultationFees:Doctor.consultationFees,
-          client: client.clientId,
-        },
-        { headers: { accesstoken: clientToken } }
-        
+        .post(
+          "/verifyAppointment",
+          {
+            date: selectedDate,
+            timeId: selectedTime,
+            doctor: doctorId,
+          },
+          { headers: { accesstoken: clientToken } }
         )
         .then((response) => {
           console.log(response, "responseeee");
           const result = response.data;
-          
+
           if (result.success) {
-            message.success(result.message);
             // navigate('/clientNotificationPage');
-            handleCloseModal();
+            setToken(result.token);
+            setSchedulTime(result.schedulTime);
+            setShowPaypal(true);
+            message.success(result.message);
+            console.log(token, schedulTime, "schedullllll");
           } else {
             message.error(result.message).then(() => {});
           }
@@ -77,6 +82,9 @@ function DoctorDetails() {
 
   const handleCloseModal = () => {
     setIsOpen(false);
+    setShowPaypal(false);
+    setSelectedDate(null);
+    setSelectedTime(null);
   };
 
   const handleDateChange = async (event) => {
@@ -137,24 +145,22 @@ function DoctorDetails() {
                 </div>
               </div>
               <div className="lg:flex ">
-
-
-              <div className="mb-4  sm:flex lg:w-6/12">
-                <span className="block text-gray-700  text-center sm:text-start font-medium mb-2 sm:pr-[44px]">
-                  Experiance
-                </span>
-                <div className="bg-white text-center sm:text-start bg-opacity-60 p-2 w-full">
-                  {Doctor.experience}
+                <div className="mb-4  sm:flex lg:w-6/12">
+                  <span className="block text-gray-700  text-center sm:text-start font-medium mb-2 sm:pr-[44px]">
+                    Experiance
+                  </span>
+                  <div className="bg-white text-center sm:text-start bg-opacity-60 p-2 w-full">
+                    {Doctor.experience}
+                  </div>
                 </div>
-              </div>
-              <div className="lg:ml-4 mb-4 sm:flex lg:w-6/12">
-                <span className="block text-gray-700  text-center sm:text-start font-medium mb-2 lg:pr-8 sm:pr-[90px]">
-                   Fees 
-                </span>
-                <div className="bg-white text-center sm:text-start bg-opacity-60 p-2 w-full">
-                  {Doctor.consultationFees}
+                <div className="lg:ml-4 mb-4 sm:flex lg:w-6/12">
+                  <span className="block text-gray-700  text-center sm:text-start font-medium mb-2 lg:pr-8 sm:pr-[90px]">
+                    Fees
+                  </span>
+                  <div className="bg-white text-center sm:text-start bg-opacity-60 p-2 w-full">
+                    {Doctor.consultationFees}
+                  </div>
                 </div>
-              </div>
               </div>
               <div className="mb-4 sm:flex bg-opacity-60  ">
                 <span className="block text-center sm:text-start text-gray-700  font-medium mb-2 sm:pr-[60px]">
@@ -200,8 +206,7 @@ function DoctorDetails() {
                     </h2>
                   </div>
                   <div className=" bg-[#EDF4FE]    px-4 pt-5 pb-4">
-                    <div>
-                    </div>
+                    <div></div>
                     <form
                       component="form "
                       className="flex-col items-center justify-center"
@@ -231,29 +236,39 @@ function DoctorDetails() {
                           className
                         >
                           <option value="">--Select a time--</option>
-                         
-                          { availability &&
-                          availability.time.map((times) => (
-                            <option key={times.start} value={times._id} >
-                              
-                              {moment(times.start).format(" h:mm ")} To
-                              {moment(times.end).format(" h:mm ")}
-                            </option>
-                          ))}
+
+                          {availability &&
+                            availability.time.map((times) => (
+                              <option key={times.start} value={times._id}>
+                                {moment(times.start).format(" h:mm ")} To
+                                {moment(times.end).format(" h:mm ")}
+                              </option>
+                            ))}
                         </select>
                       </div>
 
                       <div className="mb-4 mt-10 flex justify-center">
-                        <button
-                          className="bg-white  hover:bg-[#194569] text-black font-bold py-2 px-20 rounded-lg"
-                          type="submit"
-                          disabled={!selectedDate || !selectedTime}
-                        >
-                          Continue{" "}
-                        </button>
+                        {!showPaypal ? (
+                          <button
+                            className="bg-white  hover:bg-[#194569] text-black font-bold py-2 px-20 rounded-lg"
+                            type="submit"
+                            disabled={!selectedDate || !selectedTime}
+                          >
+                            Continue{" "}
+                          </button>
+                        ) : (
+                          <PayPalButton
+                            selectedDate={selectedDate}
+                            doctorId={doctorId}
+                            token={token}
+                            schedulTime={schedulTime}
+                            consultationFees={Doctor.consultationFees}
+                            setShowPaypal={setShowPaypal}
+                            handleCloseModal={handleCloseModal}
+                          />
+                        )}
                       </div>
                     </form>
-                    
                   </div>
 
                   <div className="bg-[#EDF4FE] bg-opacity-70 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">

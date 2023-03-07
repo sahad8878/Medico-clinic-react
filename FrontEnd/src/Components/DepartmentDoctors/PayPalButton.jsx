@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 
 
-function PayPalButton({notification,refresh,setRefresh} ) {
+function PayPalButton({selectedDate,token,schedulTime,doctorId,consultationFees,setShowPaypal,handleCloseModal} ) {
    
     const [paymentComplete, setPaymentComplete] = useState(false);
  const navigate = useNavigate()
@@ -28,7 +28,7 @@ function PayPalButton({notification,refresh,setRefresh} ) {
         purchase_units: [
           {
             amount: {
-              value: notification.consultationFees,
+              value: consultationFees,
             },
           },
         ],
@@ -37,24 +37,32 @@ function PayPalButton({notification,refresh,setRefresh} ) {
     const onApprove = async (data, actions) => {
       const result = await actions.order.capture();
       setPaymentComplete(true);
-      console.log(notification._id );
-      axios
-        .patch(
-          "/patchConfirmAppointment",
-          { appointmentId:notification._id },
-          { headers: { accesstoken: clientToken } }
-        )
-        .then((response) => {
-          console.log(response,"responsee");
-          const result = response.data;
-          if (result.success) {
-            setRefresh(!refresh) 
-            message.success("Your Appointment confirmed Check your History");
-            navigate("/clientAppHistory")
-          } else {
-            message.error(result.message);
-          }
-        });
+    //   console.log(notification._id );
+console.log(schedulTime,"ttttttttttttttttt");
+    axios
+    .post("/postAppointment", {
+      date: selectedDate,
+      time: schedulTime,
+      token:token,
+      doctor: doctorId,
+      consultationFees:consultationFees,
+    },
+    { headers: { accesstoken: clientToken } }
+    
+    )
+    .then((response) => {
+      console.log(response, "responseeee");
+      const result = response.data;
+      
+      if (result.success) {
+        // navigate('/clientNotificationPage');
+        setShowPaypal(false)
+        handleCloseModal()
+        message.success(result.message);
+      } else {
+        message.error(result.message).then(() => {});
+      }
+    });
     };
   
   return (

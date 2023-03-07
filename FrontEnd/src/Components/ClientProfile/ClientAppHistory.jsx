@@ -7,6 +7,8 @@ import axios from "../../Axios/Axios";
 function ClientAppHistory() {
   const [Appointments, setAppointments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+
   const clientloc = JSON.parse(localStorage.getItem("clientToken"));
   const clientToken = clientloc.clientToken;
   useEffect(() => {
@@ -24,8 +26,24 @@ function ClientAppHistory() {
           message.error(response.data.message);
         }
       });
-  }, []);
+  }, [refresh]);
 
+    const cancelAppointment = (id) => {
+    axios
+      .patch(
+        "/patchCancelAppointment",
+        { id },
+        {  headers: { accesstoken: clientToken } }
+      )
+      .then((response) => {
+        if (response.data.success) {
+          message.success(response.data.message);
+          setRefresh(!refresh);
+        } else {
+          message.error(response.data.message);
+        }
+      });
+  };
   return (
     <div className=" p-5 sm:p-20 pb-10">
       <div className="bg-[#D6E8EE] mb-11">
@@ -41,11 +59,11 @@ function ClientAppHistory() {
           <div>
             {Appointments.length === 0 ? (
               <div className="flex p-16 justify-center font-serif text-[#194569] text-xl">
-                {" "}
-                Appointments Not Exist..!
+            
+                No Appointments Yet..
               </div>
             ) : (
-              <div className="overflow-auto rounded-lg shadow px-20 pb-4">
+              <div className="overflow-auto rounded-lg shadow px-20 pb-20">
                 <table className="w-full  ">
                   <thead className=" bg-gray-50 border-b-2 border-gray-200">
                     <tr>
@@ -65,8 +83,8 @@ function ClientAppHistory() {
                         status
                       </th>
                       <th className="p-3 text-sm font-semibold tracking-wide text-left">
-                        Date
                       </th>
+                      
                     </tr>
                   </thead>
                   <tbody className="  bg-white divide-y divide-gray-200 ">
@@ -84,13 +102,17 @@ function ClientAppHistory() {
                         <td className=" p-3 text-base text-gray-700 whitespace-nowrap">
                           {appointment.consultationFees}
                         </td>
-                        <td className=" p-3 text-base text-gray-700 whitespace-nowrap">
+                        <td className={` ${appointment.status === "cancelled" && "text-red-600"} ${appointment.status === "confirmed" && "text-[#194569]"}  p-3 text-base text-black whitespace-nowrap`}>
+                          
                           {appointment.status}
                         </td>
                         <td className=" p-3 text-base text-gray-700 whitespace-nowrap">
-                          <Moment format="YYYY/MM/DD">
-                            {appointment.createdAt}
-                          </Moment>
+                           {
+                            appointment.status === "confirmed" && 
+                            <span
+                            onClick={() => cancelAppointment(appointment._id)}
+                             className=" rounded-lg bg-red-400 px-1 text-white cursor-pointer text-sm hover:bg-opacity-70">CANCEL</span>  
+                           }
                         </td>
                       </tr>
                     ))}

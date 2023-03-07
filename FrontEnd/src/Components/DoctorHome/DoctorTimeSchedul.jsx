@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { message } from "antd";
 import moment from "moment";
-import profile from "../../Assets/user.png";
+import { InfinitySpin } from "react-loader-spinner";
 import axios from "../../Axios/Axios";
 const daysOfWeek = [
   "Monday",
@@ -19,11 +18,12 @@ function DoctorTimeSchedule() {
   const [timings, setTimings] = useState([]);
   const [schedule, setSchedule] = useState([]);
   const [refresh, setRefresh] = useState(false);
-  // const [slots, setSlots] = useState("")
+  const [isLoading, setIsLoading] = useState(false);
   const doctor = JSON.parse(localStorage.getItem("doctorToken"));
   const doctorToken = doctor.doctorToken;
 
   useEffect(() => {
+    setIsLoading(true);
     axios
       .get("/doctor/getScheduleDetails", {
         headers: { doctortoken: doctorToken },
@@ -31,7 +31,7 @@ function DoctorTimeSchedule() {
       .then((response) => {
         const result = response.data;
         if (result.success) {
-          console.log(result);
+          setIsLoading(false);
           setSchedule(result.schedule);
         }
       });
@@ -49,7 +49,7 @@ function DoctorTimeSchedule() {
   };
 
   const handleTimingAdd = () => {
-    setTimings([...timings, { startTime: "", endTime: "",slots:""}]);
+    setTimings([...timings, { startTime: "", endTime: "", slots: "" }]);
   };
   const handleTimingRemove = (indexToRemove) => {
     setTimings((prevTimings) =>
@@ -65,11 +65,9 @@ function DoctorTimeSchedule() {
 
   const deleteTimeFromDB = (timeId) => {
     axios
-      .delete(`/doctor/deleteScheduleTime?timingId=${timeId}`,
-       {
+      .delete(`/doctor/deleteScheduleTime?timingId=${timeId}`, {
         headers: { doctortoken: doctorToken },
-      }
-      )
+      })
       .then((response) => {
         if (response.data.success) {
           setRefresh(!refresh);
@@ -84,8 +82,10 @@ function DoctorTimeSchedule() {
     console.log(dayId);
     console.log(doctorToken);
     axios
-      .patch("/doctor/dayScheduleDisable",{dayId} ,
-      { headers: { doctortoken: doctorToken } }
+      .patch(
+        "/doctor/dayScheduleDisable",
+        { dayId },
+        { headers: { doctortoken: doctorToken } }
       )
       .then((response) => {
         const result = response.data;
@@ -99,11 +99,14 @@ function DoctorTimeSchedule() {
   };
 
   const activeSchedulDay = (dayId) => {
-  
     axios
-      .patch("/doctor/dayScheduleActivate",{dayId}, {
-        headers: { doctortoken: doctorToken },
-      })
+      .patch(
+        "/doctor/dayScheduleActivate",
+        { dayId },
+        {
+          headers: { doctortoken: doctorToken },
+        }
+      )
       .then((response) => {
         const result = response.data;
         if (result.success) {
@@ -121,13 +124,13 @@ function DoctorTimeSchedule() {
     axios
       .post(
         "/doctor/postDoctorAvailability",
-        { selectedDay, timings},
+        { selectedDay, timings },
         { headers: { doctortoken: doctorToken } }
       )
       .then((response) => {
         if (response.data.success) {
-          setTimings([])
-          setSelectedDay("")
+          setTimings([]);
+          setSelectedDay("");
           setRefresh(!refresh);
           message.success(response.data.message);
         } else {
@@ -136,86 +139,114 @@ function DoctorTimeSchedule() {
       });
   };
   return (
-    <div className=" ">
-      <div className="flex justify-center content-center py-8">
-        <h1 className="text-2xl font-serif  font-semibold">Your Schedule</h1>
-      </div>
-      <div className=" flex justify-end content-end">
-        <h1
-          onClick={handleOpenModal}
-          className="text-end py-1 px-3 bg-gray-300 m-2"
-        >
-          Add Time
-        </h1>
-      </div>
-      {/*  */}
-      <div className="overflow-auto rounded-lg shadow  ">
-        <table className="w-full">
-          <thead className=" bg-gray-50 border-b-2 border-gray-200">
-            <tr>
-              <th className="p-3 text-sm font-semibold tracking-wide text-left">
-                Day
-              </th>
+    <>
+      <div className=" ">
+        <div className="flex justify-center content-center py-8">
+          <h1 className="text-2xl font-serif  font-semibold">Your Schedule</h1>
+        </div>
+        {isLoading ? (
+          <div className=" flex justify-center">
+            <InfinitySpin width="200" color="#194569" />
+          </div>
+        ) : (
+          <div>
 
-              <th className="p-3 text-sm font-semibold tracking-wide text-center">
-                Timing
-              </th>
+         
+        {schedule.length === 0 ? (
+          <div className="">
+            <div className="flex pt-28 justify-center font-serif text-[#194569] text-xl">
+              Schedule Not Exist..!
+            </div>
 
-              <th className="p-3 text-sm font-semibold tracking-wide text-left"></th>
-            </tr>
-          </thead>
-          <tbody className="  bg-white divide-y divide-gray-200 ">
-            {schedule.map((schedule) => (
-              <tr className={`bg-white" `}>
-                <td className=" p-3 text-base text-gray-700 whitespace-nowrap">
-                  {schedule.day}
-                </td>
-                <td className=" p-3 text-base border text-gray-700 whitespace-nowrap">
-                  {schedule.time.map((times) => (
-                    <div className="p-1 border-b flex justify-between">
-                      <span className="">
-                        {moment(times.start).format(" h:mm a")}
-                      </span>
-                      <span>To </span>
-                      <span className="">
-                        {moment(times.end).format(" h:mm a")}
-                      </span>
-                      <span className="">
-                       slots: {times.slots}
-                      </span>
-                      <span
-                        onClick={() => deleteTimeFromDB(times._id)}
-                        className="text-red-600 hover:text-red-900 cursor-pointer"
-                      >
-                        Remove
-                      </span>
-                    </div>
+            <div className=" flex justify-center content-end">
+              <h1
+                onClick={handleOpenModal}
+                className="text-white py-1 px-3 bg-[#194569] m-2 cursor-pointer hover:bg-opacity-80"
+              >
+                Add Your Schedule
+              </h1>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <div className=" flex justify-end content-end">
+              <h1
+                onClick={handleOpenModal}
+                className="text-end py-1 px-3 bg-gray-300 m-2 cursor-pointer hover:bg-opacity-80"
+              >
+                Add Time
+              </h1>
+            </div>
+            {/*  */}
+            <div className="overflow-auto rounded-lg shadow  ">
+              <table className="w-full">
+                <thead className=" bg-gray-50 border-b-2 border-gray-200">
+                  <tr>
+                    <th className="p-3 text-sm font-semibold tracking-wide text-left">
+                      Day
+                    </th>
+
+                    <th className="p-3 text-sm font-semibold tracking-wide text-center">
+                      Timing
+                    </th>
+
+                    <th className="p-3 text-sm font-semibold tracking-wide text-left"></th>
+                  </tr>
+                </thead>
+                <tbody className="  bg-white divide-y divide-gray-200 ">
+                  {schedule.map((schedule) => (
+                    <tr className={`bg-white" `}>
+                      <td className=" p-3 text-base text-gray-700 whitespace-nowrap">
+                        {schedule.day}
+                      </td>
+                      <td className=" p-3 text-base border text-gray-700 whitespace-nowrap">
+                        {schedule.time.map((times) => (
+                          <div className="p-1 border-b flex justify-between">
+                            <span className="">
+                              {moment(times.start).format(" h:mm a")}
+                            </span>
+                            <span>To </span>
+                            <span className="">
+                              {moment(times.end).format(" h:mm a")}
+                            </span>
+                            <span className="">slots: {times.slots}</span>
+                            <span
+                              onClick={() => deleteTimeFromDB(times._id)}
+                              className="text-red-600 hover:text-red-900 cursor-pointer"
+                            >
+                              Remove
+                            </span>
+                          </div>
+                        ))}
+                      </td>
+
+                      <td className=" p-3 text-base text-gray-700 whitespace-nowrap">
+                        {schedule.status === "active" ? (
+                          <span
+                            className="cursor-pointer"
+                            onClick={() => disableSchedulDay(schedule._id)}
+                          >
+                            Disable
+                          </span>
+                        ) : (
+                          <span
+                            className="cursor-pointer"
+                            onClick={() => activeSchedulDay(schedule._id)}
+                          >
+                            Active
+                          </span>
+                        )}
+                      </td>
+                    </tr>
                   ))}
-                </td>
-
-                <td className=" p-3 text-base text-gray-700 whitespace-nowrap">
-                  {schedule.status === "active" ? (
-                    <span
-                      className="cursor-pointer"
-                      onClick={() => disableSchedulDay(schedule._id)}
-                    >
-                      Disable
-                    </span>
-                  ) : (
-                    <span
-                      className="cursor-pointer"
-                      onClick={() => activeSchedulDay(schedule._id)}
-                    >
-                      Active
-                    </span>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+         </div>
+        )}
       </div>
-
       {/*  */}
       {isOpen && (
         <div className="fixed z-50 inset-0 overflow-y-auto">
@@ -296,7 +327,7 @@ function DoctorTimeSchedule() {
                               }
                             />
                           </label>
-                         
+
                           <button
                             className="text-red-700 cursor-pointer hover:text-red-500"
                             type="button"
@@ -306,15 +337,15 @@ function DoctorTimeSchedule() {
                           </button>
                         </div>
                       ))}
-                       {/* <label className="mt-2 ">
-                            Totol Slots:
-                            <input
-                              type="number"
-                              value={slots}
-                              onChange={(e) => setSlots(e.target.value)
-                              }
-                            />
-                          </label> */}
+                      {/* <label className="mt-2 ">
+                          Totol Slots:
+                          <input
+                            type="number"
+                            value={slots}
+                            onChange={(e) => setSlots(e.target.value)
+                            }
+                          />
+                        </label> */}
                       <div className="flex justify-center content-center mt-5">
                         <button
                           className="flex justify-center content-center cursor-pointer hover:bg-opacity-75 rounded-md text-white  bg-[#194569] px-6"
@@ -341,7 +372,7 @@ function DoctorTimeSchedule() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
 

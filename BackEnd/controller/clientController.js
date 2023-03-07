@@ -4,23 +4,20 @@ const DoctorModel = require("../model/doctorModel");
 const AppointmentModel = require("../model/appointmentModel");
 const ClientModel = require("../model/clientModel");
 
-const moment =require("moment");
+const moment = require("moment");
 
+//get client details
 
-//get client details 
-
-const getClietProfile = async(req, res) => {
+const getClietProfile = async (req, res) => {
   try {
-     const client = await ClientModel.findById(req.body.userId)
-     if (client) {
-        res.status(201)
-        .send({ client, success: true });
+    const client = await ClientModel.findById(req.body.userId);
+    if (client) {
+      res.status(201).send({ client, success: true });
     } else {
       return res
         .status(200)
         .send({ message: "No Departments ", success: false });
     }
-     
   } catch (error) {
     console.log(error);
     res.status(500).send({
@@ -28,60 +25,54 @@ const getClietProfile = async(req, res) => {
       message: `client getDepartments  controller ${error.message}`,
     });
   }
-}
+};
 
-// update client details 
+// update client details
 
-const patchUpdateClientDetails = async(req, res) => {
-try {
-  console.log(req.body.userId);
-console.log(req.body,"update client address");
-  const {address,clientImage,age} = req.body
+const patchUpdateClientDetails = async (req, res) => {
+  try {
+    console.log(req.body.userId);
+    console.log(req.body, "update client address");
+    const { address, clientImage, age } = req.body;
 
-  if(address,clientImage,age){
-
-  
-  const client = await ClientModel.findByIdAndUpdate(
-    req.body.userId,
-    {
-      $set: {
-        address,
-        clientImage,
-        age,
-      },
-    },
-    { new: true }
-  )
-  if (!client) {
-    return res
-    .status(200)
-    .send({ message: "No Client exist ", success: false });
-  }else{
-    res
-    .status(201)
-    .send({ message: "your details have been saved", success: true });
+    if ((address, clientImage, age)) {
+      const client = await ClientModel.findByIdAndUpdate(
+        req.body.userId,
+        {
+          $set: {
+            address,
+            clientImage,
+            age,
+          },
+        },
+        { new: true }
+      );
+      if (!client) {
+        return res
+          .status(200)
+          .send({ message: "No Client exist ", success: false });
+      } else {
+        res
+          .status(201)
+          .send({ message: "your details have been saved", success: true });
+      }
+    } else {
+      return res
+        .status(200)
+        .send({ message: "All fields must be filled", success: false });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: `client getDepartments  controller ${error.message}`,
+    });
   }
-}else{
-  return res
-  .status(200)
-  .send({ message: "All fields must be filled", success: false });
-
-}
-  
-} catch (error) {
-  console.log(error);
-  res.status(500).send({
-    success: false,
-    message: `client getDepartments  controller ${error.message}`,
-  });
-}
-
-}
+};
 
 // get departments
 const getdepartments = async (req, res) => {
   try {
- 
     const departments = await DepartmentModel.find();
     if (departments) {
       res.status(201).json(departments);
@@ -99,38 +90,33 @@ const getdepartments = async (req, res) => {
   }
 };
 
-
-
-
-
-
-
 const getDepartmentDoctors = async (req, res) => {
   try {
-    const {id} = req.params
+    const { id } = req.params;
     const { page, limit } = req.query;
     const did = mongoose.Types.ObjectId(id.trim());
 
-    console.log(id,page, limit,'get depa');
+    console.log(id, page, limit, "get depa");
     const options = {
       page: parseInt(page, 10) || 1,
       limit: parseInt(limit, 4) || 4,
     };
 
-    const department = await DepartmentModel.findById(did)
-    console.log(department,"department");
+    const department = await DepartmentModel.findById(did);
+    console.log(department, "department");
     if (!department) {
-      return res.status(404).json({ message: 'Department not found' });
+      return res.status(404).json({ message: "Department not found" });
     }
     let regExp = new RegExp(department.department, "i");
-    const doctors = await DoctorModel.paginate({ specialization:regExp,status:'active'}, options);
-    console.log(doctors,"doctors");
+    const doctors = await DoctorModel.paginate(
+      { specialization: regExp, status: "active" },
+      options
+    );
+    console.log(doctors, "doctors");
     if (doctors) {
       res.status(201).json(doctors);
     } else {
-      return res
-        .status(200)
-        .send({ message: "No Doctors ", success: false });
+      return res.status(200).send({ message: "No Doctors ", success: false });
     }
   } catch (error) {
     console.log(error);
@@ -199,7 +185,10 @@ const getSearchDoctor = async (req, res) => {
 
 const getExperiencedDoctors = async (req, res) => {
   try {
-    let doctors = await DoctorModel.find({status:"active", experience: { $gte: "2 years" } });
+    let doctors = await DoctorModel.find({
+      status: "active",
+      experience: { $gte: "2 years" },
+    });
     if (doctors) {
       res.status(201).send({ doctors, success: true });
     } else {
@@ -216,180 +205,28 @@ const getExperiencedDoctors = async (req, res) => {
   }
 };
 
-// const postAppointment = async (req, res) => {
-//   try {
-//     const { date, time, doctor, client } = req.body;
-//     console.log(req.body);
-//     // const doctorAvailability = await DoctorModel.findOne({ doctorId, dayOfWeek: appointmentTime.getDay() });
-//     const selectedDay = moment(date).format('dddd');
-//     const doctors = await DoctorModel.findById(doctor);
-//     console.log(doctor);
-//     const doctorAvailability = doctors.availablity.find(day => day.day === selectedDay)
-//     console.log(doctorAvailability,"docooooavai");
-//     if (!doctorAvailability) {
-//       return res.status(400).json({ message: 'Doctor is not available on this day.' });
-//     }
-//     const bookedAppointments = await AppointmentModel.find({ doctor, time: { $gte: doctorAvailability.time.start, $lte: doctorAvailability.time.end } });
-//     const slotStart = new Date(time.getFullYear(), appointmentTime.getMonth(), time.getDate(), doctorAvailability.time.start.substr(0, 2), doctorAvailability.startTime.substr(3, 2), 0);
-//     const slotEnd = new Date(slotStart.getTime() + 15 * 60000);
-//     const overlappingAppointment = bookedAppointments.find(appointment => {
-//       const appointmentStart = new Date(appointment.startTime);
-//       const appointmentEnd = new Date(appointmentStart.getTime() + 15 * 60000);
-//       return (slotStart >= appointmentStart && slotStart < appointmentEnd) || (slotEnd > appointmentStart && slotEnd <= appointmentEnd);
-//     });
-//     if (overlappingAppointment) {
-//       return res.status(400).json({ message: 'This slot is already booked. Please select another slot.' });
-//     }
-//     const appointment = new Appointment({ doctorId, patientId, startTime: slotStart.toISOString() });
-//     await appointment.save();
-//     return res.status(200).json({ message: 'Appointment booked successfully.' });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send({
-//       success: false,
-//       message: `client getSearchDoctor  controller ${error.message}`,
-//     });
-//   }
-// };
+const getAllNotifications = async(req, res) => {
+try {
+  const client = await ClientModel.findOne({_id:req.body.userId})
+
+  const seenNotifications = client.seenNotifications
+  const notifications = client.notifications
+  seenNotifications.push(...notifications)
+  client.notifications = []
+  client.seenNotifications =  notifications
+  const updatedClien = await client.save()
+  res.status(200).send({success:true,message:"all notifications marked as read",data:updatedClien})
+} catch (error) {
+  console.log(error);
+  res.status(500).send({
+    success: false,
+    message: `getAllNotifications  controller ${error.message}`,
+  });
+}
+
+}
 
 
-
-const postAppointment = async (req, res) => {
-  try {
-    const { date, time, doctor,consultationFees, client } = req.body;
-    
-console.log(date, time, doctor,consultationFees, client,"poooooooooooooooooooooooooooooooo");
-const totalAppointments =20
-const selectedDay = moment(date).format('dddd')
-const query = {
-  _id: doctor,
-  'availablity.day': selectedDay,
-  'availablity.time._id': time,
-  
-};
-
-const projection = {
-  'availablity.$': 1,
-};
-
-DoctorModel.findOne(query, projection, (err, doctor) => {
-  if (err) {
-    console.error(err);
-    // handle error
-    return;
-  }
-  console.log(doctor,"dooooooooooooooooooooooooooooooooooo");
-
-  if (!doctor) {
-    console.log('Doctor not found');
-    // handle doctor not found
-    return;
-  }
-
-  const availablity = doctor.availablity[0];
-
-  const time1 = availablity.time.find((t) => t._id === time);
-console.log(time1.slots,"timeeeeeee");
-  if (!time1) {
-    console.log('Time not found');
-    // handle time not found
-    return;
-  }
-
-  const totalSlots = time.slots;
-
-  if (totalSlots > totalAppointments) {
-    console.log('Total slots are greater than total appointments');
-    // handle total slots are greater than total appointments
-    return;
-  }
-
-  console.log('Total slots are not greater than total appointments');
-  // handle total slots are not greater than total appointments
-});
- 
- 
-
-     
-
-
-   const apointmentCount =  await AppointmentModel.find({doctor:doctor,date:date})
-
-         
-
-
-    const doctors = await DoctorModel.findById(doctor);
-    
-    console.log(doctors.consultationFees  );
-    const availability = doctors.availablity.find(day => day.day === selectedDay)
-
-  
-
-    if(availability.slots < apointmentCount.length){
-      res
-        .status(200)
-        .send({
-          message: "The selected slot is no longer available.",
-          success: false,
-        });
-      return;
-    }
-
-const toTime = moment(time).format(" h:mm a")
-    const newAppointment = new AppointmentModel({
-      date,
-      time:toTime,
-      doctor,
-      consultationFees,
-      client,
-    });
-    // await newAppointment.save();
-
-    res.send({ message: "Appointment booked successfully.", success: true });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      success: false,
-      message: `client getSearchDoctor  controller ${error.message}`,
-    });
-  }
-};
-
-const availableSlot = async (req, res) => {
-
-  try{
-
-
-    const { doctorId, selectedDate } = req.params;
-    console.log( doctorId, selectedDate );
-    const selectedDay = moment(selectedDate).format('dddd'); // convert selected date to day
-    const doctor = await DoctorModel.findById(doctorId);
-    console.log(doctor);
-    const availability = doctor.availablity.find(day => day.day === selectedDay);
-    
-    console.log(availability);
-    if (!availability) {
-      res
-        .status(200)
-        .send({
-          message: "Doctor is not available on this day.",
-          success: false,
-        });
-      return;
-      // return res.status(404).json({ message: 'Doctor is not available on this day',success: false });
-    }
-    // return availability for selected day
-    res.status(201).send({availability,success:true});
-
-    // res.json(availableSlots);
-  } catch(error){
- console.log(error);
-    res.status(500).send({
-      success: false,
-      message: `client getSearchDoctor  controller ${error.message}`,
-    });
-  }
-};
 
 module.exports = {
   getClietProfile,
@@ -399,6 +236,6 @@ module.exports = {
   getDoctorDetails,
   getSearchDoctor,
   getExperiencedDoctors,
-  postAppointment,
-  availableSlot,
+  getAllNotifications
+
 };

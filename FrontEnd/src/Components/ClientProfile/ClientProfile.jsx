@@ -238,7 +238,14 @@ function ClientProfile() {
               <div className=" bg-[#EDF4FE]    px-4 pt-5 pb-4">
                 <div className=" inset-0 min-w-fit min-h-fit   flex items-center justify-center ">
                   <h1>
-                    Balance:<span className="text-red">0</span>
+                    Balance:
+                    {client.wallet === 0
+                    ?
+                    <span className=" pl-2 text-red-500">No Balance</span>
+                  :
+                  <span className="pl-2 text-[#194569]">${client.wallet}</span>
+                  
+                  }
                   </h1>
                 </div>
               </div>
