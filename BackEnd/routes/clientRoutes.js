@@ -4,17 +4,17 @@ const {
   getClietProfile,
   patchUpdateClientDetails,
   getdepartments,
-  getDepartmentDoctors,
   getDoctorDetails,
-  getSearchDoctor,
   getExperiencedDoctors,
-  getAllNotifications
+  getAllNotifications,
+  notificationMarkAllRead,
+  notificationDeleteAllRead,
+  getDepartmentDoctors
 } = require("../controller/clientController");
 
 const {
   verifyAppointment,
   availableSlot,
-  getClientNotifications,
   postAppointment,
   getConfirmedAppointments,
   patchCancelAppointment
@@ -56,13 +56,6 @@ router.post(
   patchUpdateClientDetails
 );
 
-// Get Department Doctors || GET
-
-router.get(
-  "/getDepartmentDoctors/:id/doctors",
-  clientAuthMiddlewares,
-  getDepartmentDoctors
-);
 
 // Get  Doctor Details || GET
 
@@ -72,9 +65,11 @@ router.get(
   getDoctorDetails
 );
 
-// Search Doctors || GET
 
-router.get("/getSearchDoctor", clientAuthMiddlewares, getSearchDoctor);
+
+// Get department doctors || GET
+
+router.get('/getDepartmentDoctors/:id/doctors',clientAuthMiddlewares,getDepartmentDoctors)
 
 // get Experienced Doctors || GET
 
@@ -92,13 +87,7 @@ router.get(
   availableSlot
 );
 
-// get Client Booking notifications
 
-router.get(
-  "/getClientNotifications",
-  clientAuthMiddlewares,
-  getClientNotifications
-);
 
 
 // get confirmed client appointments || GET
@@ -115,10 +104,21 @@ router.patch('/patchCancelAppointment',
 clientAuthMiddlewares,
 patchCancelAppointment)
 
-// Notifications || POST
+//get  Notifications || GET
 
-router.post('/getAllNotifications',
+router.get('/getAllNotifications',
 clientAuthMiddlewares,
 getAllNotifications)
+
+
+// notifications mark all read || PATCH
+router.patch('/notificationMarkAllRead',
+clientAuthMiddlewares,
+notificationMarkAllRead)
+
+// notifications Delete all read || PATCH
+router.patch('/notificationDeleteAllRead',
+clientAuthMiddlewares,
+notificationDeleteAllRead)
 
 module.exports = router;

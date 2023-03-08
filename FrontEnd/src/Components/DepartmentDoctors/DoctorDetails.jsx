@@ -8,10 +8,32 @@ import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import axios from "../../Axios/Axios";
 import DatePicker from "react-datepicker";
-import Select from "react-select";
 import "react-datepicker/dist/react-datepicker.css";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/dist/style.css";
 
 const localizer = momentLocalizer(moment);
+const formats = {
+  dateFormat: 'D',
+  dayFormat: (date, culture, localizer) =>
+    localizer.format(date, 'ddd D MMM', culture),
+  weekdayFormat: (date, culture, localizer) =>
+    localizer.format(date, 'ddd', culture),
+  monthHeaderFormat: (date, culture, localizer) =>
+    localizer.format(date, 'MMMM yyyy', culture),
+  dayHeaderFormat: (date, culture, localizer) =>
+    localizer.format(date, 'ddd D', culture),
+  agendaHeaderFormat: (date, culture, localizer) =>
+    localizer.format(date, 'ddd D MMM yyyy', culture),
+  selectRangeFormat: ({ start, end }, culture, localizer) =>
+    `${localizer.format(start, 'D MMM', culture)} - ${localizer.format(
+      end,
+      'D MMM',
+      culture
+    )}`,
+};
+
+const enabledDays = [ 'Wednesday', 'Thursday', 'Friday'];
 function DoctorDetails() {
   const [Doctor, setDoctor] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -21,6 +43,7 @@ function DoctorDetails() {
   const [token, setToken] = useState(null);
   const [schedulTime, setSchedulTime] = useState("");
   const [showPaypal, setShowPaypal] = useState(false);
+  const [enabledDays, setEnabledDays] = useState([]);
 
   const navigate = useNavigate();
 
@@ -35,6 +58,7 @@ function DoctorDetails() {
       .then((response) => {
         if (response.data.success) {
           setDoctor(response.data.doctor);
+          setEnabledDays(["Sunday", "Friday"]);
         }
       });
   }, []);
@@ -106,6 +130,18 @@ function DoctorDetails() {
     }
   };
   console.log(availability);
+
+  // const includeDays = (date) => {
+  //   const day = date.toLocaleDateString("en-US", { weekday: "long" });
+  //   return enabledDays.includes(day);
+  // };
+  // function isDayDisabled(day) {
+  //   const dayOfWeek = day.getDay();
+  //   return !enabledDays.includes(dayOfWeek);
+  // }
+  function isDayEnabled(day) {
+    return enabledDays.includes(day);
+  }
   return (
     <>
       <div className="container mx-auto px-4 pt-7">
@@ -224,6 +260,21 @@ function DoctorDetails() {
                           value={selectedDate}
                           onChange={handleDateChange}
                         />
+                        <DayPicker  />
+                        {/* <Calendar
+  //  disabledDays={(day) => !isDayEnabled(day)}
+  localizer={localizer}
+  formats={formats}
+  // other props...
+/> */}
+                        {/* <DatePicker
+                         disabledDays={(day) => !isDayEnabled(day)
+                          selected={selectedDate}
+                          onChange={(date) => setSelectedDate(date)}
+                          includeDay={includeDays}
+                          minDate={new Date()}
+                         
+                        /> */}
                       </div>
                       <div className="mb-4 text-center">
                         <label className="block text-gray-700 font-medium mb-2 ">

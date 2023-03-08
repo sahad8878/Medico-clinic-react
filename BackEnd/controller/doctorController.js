@@ -219,13 +219,17 @@ const cancelAppointment = async (req, res) => {
             }
           );
 
-          const notifications = client.notifications 
-          notifications.push({
-            type:'cancelAppointment',
-            message:`dr.sahad  has canceled the ${appointment.date} ${appointment.time} booking ` 
-          })
-
+          
         }
+        const doctor = await DoctorModel.findById(appointment.doctor)
+
+        const notifications = client.notifications 
+        notifications.push({
+          type:'cancelAppointment',
+          message:`${doctor.fName} ${doctor.lName} has canceled the ${appointment.date} ${appointment.time} booking ` ,
+        })
+        await ClientModel.findByIdAndUpdate(appointment.client,{notifications})
+        
          res.status(201).send({
         message: ` Patient Booking cancelled`,
         success: true,
