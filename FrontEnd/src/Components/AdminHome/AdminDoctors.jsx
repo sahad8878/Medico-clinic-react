@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../Axios/Axios";
 import SingleDoctor from "./SingleDoctor";
+
 function AdminDoctors() {
   const [doctors, setdoctors] = useState([]);
   const [refresh, setRefresh] = useState(false);
@@ -45,6 +46,9 @@ function AdminDoctors() {
                   </th>
                   <th className="p-3 text-sm font-semibold tracking-wide text-left">
                     Details
+                  </th>
+                  <th className="p-3 text-sm font-semibold tracking-wide text-left">
+                    Date
                   </th>
                   <th className="p-3 text-sm font-semibold tracking-wide text-left"></th>
                 </tr>

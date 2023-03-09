@@ -16,11 +16,11 @@ function SingleDoctor({doctor}) {
       <h5 className="mb-1 text-xl font-serif font-medium text-gray-900 dark:text-white">
         {doctor.fName} {doctor.lName}
       </h5>
-      <span className="text-sm text-gray-500  dark:text-gray-400">
-      <span className='font-serif text-gray-600 '>Cunsultation Fees:</span><span className='text-center font-serif text-gray-600 '> {doctor.consultationFees}</span>
-      </span>
       <span className="text-sm font-serif text-gray-600  dark:text-gray-400">
       <span>Experience:</span><span className='text-center font-serif text-gray-600 '> {doctor.experience}</span>
+      </span>
+      <span className="text-sm text-gray-500  dark:text-gray-400">
+      <span className='font-serif text-gray-600 '>Cunsultation Fees:</span><span className='text-center font-serif text-gray-600 '> {doctor.consultationFees}</span>
       </span>
       <div className="flex mt-4 space-x-3 md:mt-6">
       

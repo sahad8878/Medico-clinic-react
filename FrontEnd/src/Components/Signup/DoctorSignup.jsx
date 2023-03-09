@@ -16,6 +16,7 @@ function DoctorSignup() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [departments, setDepartments] = useState([]);
+  
   const [refresh, setRefresh] = useState(false);
   useEffect(() => {
     axios.get("/doctor/getdepartments").then((response) => {

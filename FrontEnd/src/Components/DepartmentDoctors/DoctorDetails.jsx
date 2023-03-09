@@ -1,39 +1,14 @@
 import React, { useState, useEffect } from "react";
+import "./DoctorCss.css";
 import image from "../../Assets/doctor.ico";
 import { useNavigate, useParams } from "react-router-dom";
 import { message } from "antd";
-import { Calendar, momentLocalizer } from "react-big-calendar";
 import PayPalButton from "./PayPalButton";
 import moment from "moment";
-import "react-big-calendar/lib/css/react-big-calendar.css";
 import axios from "../../Axios/Axios";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { DayPicker } from "react-day-picker";
-import "react-day-picker/dist/style.css";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 
-const localizer = momentLocalizer(moment);
-const formats = {
-  dateFormat: 'D',
-  dayFormat: (date, culture, localizer) =>
-    localizer.format(date, 'ddd D MMM', culture),
-  weekdayFormat: (date, culture, localizer) =>
-    localizer.format(date, 'ddd', culture),
-  monthHeaderFormat: (date, culture, localizer) =>
-    localizer.format(date, 'MMMM yyyy', culture),
-  dayHeaderFormat: (date, culture, localizer) =>
-    localizer.format(date, 'ddd D', culture),
-  agendaHeaderFormat: (date, culture, localizer) =>
-    localizer.format(date, 'ddd D MMM yyyy', culture),
-  selectRangeFormat: ({ start, end }, culture, localizer) =>
-    `${localizer.format(start, 'D MMM', culture)} - ${localizer.format(
-      end,
-      'D MMM',
-      culture
-    )}`,
-};
-
-const enabledDays = [ 'Wednesday', 'Thursday', 'Friday'];
 function DoctorDetails() {
   const [Doctor, setDoctor] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -43,7 +18,7 @@ function DoctorDetails() {
   const [token, setToken] = useState(null);
   const [schedulTime, setSchedulTime] = useState("");
   const [showPaypal, setShowPaypal] = useState(false);
-  const [enabledDays, setEnabledDays] = useState([]);
+  const [availableDays, setavailableDays] = useState([]);
 
   const navigate = useNavigate();
 
@@ -58,7 +33,7 @@ function DoctorDetails() {
       .then((response) => {
         if (response.data.success) {
           setDoctor(response.data.doctor);
-          setEnabledDays(["Sunday", "Friday"]);
+          setavailableDays(response.data.availableDays);
         }
       });
   }, []);
@@ -67,7 +42,6 @@ function DoctorDetails() {
     try {
       event.preventDefault();
       console.log(selectedTime);
-      const client = JSON.parse(localStorage.getItem("clientToken"));
 
       axios
         .post(
@@ -111,37 +85,64 @@ function DoctorDetails() {
     setSelectedTime(null);
   };
 
-  const handleDateChange = async (event) => {
-    const selectedDate = event.target.value;
-    setSelectedDate(selectedDate);
+  const activeDays = ["Monday", "Wednesday"];
 
-    try {
-      const response = await axios.get(
-        `/availableSlot/${doctorId}/${selectedDate}`,
-        { headers: { accesstoken: clientToken } }
-      );
-      if (response.data.success) {
-        setAvailability(response.data.availability);
-      } else {
-        message.error(response.data.message);
+  function tileClassName({ date }) {
+    const dayOfWeek = date.toLocaleString("en-US", { weekday: "long" });
+
+    if (availableDays.includes(dayOfWeek)) {
+      // Active day
+      if (date < new Date()) {
+        return "inactive";
       }
+      return "active";
+    } else {
+      // Inactive day
+      return "inactive";
+    }
+  }
+
+  function tileDisabled({ activeStartDate, date, view }) {
+    if (date < new Date()) {
+      return true;
+    }
+    // Disable all days that are not in the availableDays array
+    if (
+      view === "month" &&
+      !availableDays.includes(date.toLocaleString("en-US", { weekday: "long" }))
+    ) {
+      return true;
+    }
+  }
+  // function tileClassName({ date, view }) {
+  //   // Return "active" class for active days
+  //   if (view === "month" && activeDays.includes(date.toLocaleString("en-US", { weekday: "long" }))) {
+  //     return "active";
+  //   }
+  // }
+  function handleDateChange(date) {
+    console.log(date);
+    const selectedDay = date.toLocaleString("en-us", { weekday: "long" });
+    console.log(selectedDay);
+    setSelectedDate(date);
+    try {
+      axios
+        .get(`/availableSlot/${doctorId}/${selectedDay}`, {
+          headers: { accesstoken: clientToken },
+        })
+        .then((response) => {
+          if (response.data.success) {
+            setAvailability(response.data.availability);
+          } else {
+            message.error(response.data.message);
+          }
+        });
     } catch (error) {
       console.log(error);
     }
-  };
+  }
   console.log(availability);
 
-  // const includeDays = (date) => {
-  //   const day = date.toLocaleDateString("en-US", { weekday: "long" });
-  //   return enabledDays.includes(day);
-  // };
-  // function isDayDisabled(day) {
-  //   const dayOfWeek = day.getDay();
-  //   return !enabledDays.includes(dayOfWeek);
-  // }
-  function isDayEnabled(day) {
-    return enabledDays.includes(day);
-  }
   return (
     <>
       <div className="container mx-auto px-4 pt-7">
@@ -225,7 +226,7 @@ function DoctorDetails() {
             BOOK
           </button>
           {isOpen && (
-            <div className="fixed z-50 inset-0 overflow-y-auto">
+            <div className="fixed z-[1000] inset-0 overflow-y-auto">
               <div className="flex items-center justify-center min-h-screen px-4">
                 <div
                   className="fixed inset-0 transition-opacity"
@@ -235,12 +236,18 @@ function DoctorDetails() {
                 </div>
 
                 {/* Modal */}
+               
                 <div className="rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full sm:max-w-md">
                   <div className="bg-[#EDF4FE] bg-opacity-70 px-4 py-3">
                     <h2 className="text-lg text-center font-medium text-gray-900">
                       Make Your Appointment
                     </h2>
                   </div>
+                {
+                  availableDays.length === 0 ?
+
+                  <div className="bg-[#EDF4FE] py-10 font-serif font-medium text-xl">Not available yer</div>
+                  :
                   <div className=" bg-[#EDF4FE]    px-4 pt-5 pb-4">
                     <div></div>
                     <form
@@ -255,26 +262,22 @@ function DoctorDetails() {
                         >
                           Availabel Date
                         </label>
-                        <input
+                        {/* <input
                           type="date"
                           value={selectedDate}
+                          min={new Date()}
                           onChange={handleDateChange}
-                        />
-                        <DayPicker  />
-                        {/* <Calendar
-  //  disabledDays={(day) => !isDayEnabled(day)}
-  localizer={localizer}
-  formats={formats}
-  // other props...
-/> */}
-                        {/* <DatePicker
-                         disabledDays={(day) => !isDayEnabled(day)
-                          selected={selectedDate}
-                          onChange={(date) => setSelectedDate(date)}
-                          includeDay={includeDays}
-                          minDate={new Date()}
-                         
                         /> */}
+                        <div className="ml-9">
+                          <Calendar
+                            tileDisabled={tileDisabled}
+                            tileClassName={tileClassName}
+                            onChange={handleDateChange}
+                          />
+                          {selectedDate && (
+                            <p>You selected: {selectedDate.toDateString()}</p>
+                          )}
+                        </div>
                       </div>
                       <div className="mb-4 text-center">
                         <label className="block text-gray-700 font-medium mb-2 ">
@@ -321,7 +324,7 @@ function DoctorDetails() {
                       </div>
                     </form>
                   </div>
-
+                }
                   <div className="bg-[#EDF4FE] bg-opacity-70 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                     <button
                       type="button"

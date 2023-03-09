@@ -1,20 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { message } from "antd";
-
 import axios from "../../Axios/Axios";
 import clientIcon from "../../Assets/group.ico";
-import totalSales from "../../Assets/gross.png";
+import totalAppointment from "../../Assets/totalAppointment.png";
 import doctrsImg from "../../Assets/medical-team.png";
-
-import log from "../../Assets/main-logo.png";
-
 
 function AdminHome() {
   const admin = JSON.parse(localStorage.getItem("adminToken"));
   const adminToken = admin.adminToken;
   const [patients, setPatients] = useState("");
   const [doctors, setDoctors] = useState("");
-  const [totalFees, setTotalFees] = useState("");
+  const [totalAppointments, setTotalAppointments] = useState("");
   const [salesReport, setSalesReport] = useState([]);
 
   useEffect(() => {
@@ -27,7 +23,7 @@ function AdminHome() {
         if (result.success) {
           setPatients(result.totalPatients);
           setDoctors(result.totalDoctors);
-          setTotalFees(result.totalFees);
+          setTotalAppointments(result.totalAppointments);
           setSalesReport(result.salesReport);
         } else {
           message.error(result.message);
@@ -54,60 +50,59 @@ function AdminHome() {
           <div className="flex flex-col w-60 h-20 shadow-xl items-center bg-white opacity-60 border border-gray-200 rounded-lg  md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 cursor-pointer">
             <img className=" ml-4 h-14" src={doctrsImg} alt="logo" />
             <div>
-              <h1 className="pl-3 text-black font-bold">Total Doctor</h1>
+              <h1 className="pl-3 text-black font-bold">Total Doctors</h1>
               <span className="flex justify-center text-black font-bold">
                 {doctors}
               </span>
             </div>
           </div>
           <div className="flex flex-col w-60 h-20 shadow-xl items-center bg-white opacity-60 border border-gray-200 rounded-lg  md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 cursor-pointer">
-            <img className=" ml-4 h-14" src={totalSales} alt="logo" />
+            <img className=" ml-4 h-14" src={totalAppointment} alt="logo" />
             <div>
-              <h1 className="pl-4 text-black font-bold">Totol Sales</h1>
-              {totalFees ? (
-                <span className="flex justify-center text-black font-bold">
-                  {totalFees}
-                </span>
-              ) : (
-                <span className="flex justify-center text-black ">
-                  No sales
-                </span>
-              )}
+              <h1 className="pl-4 pr-2 text-black font-bold">
+                Totol Appointments
+              </h1>
+
+              <span className="flex justify-center text-black font-bold">
+                {totalAppointments}
+              </span>
             </div>
           </div>
         </div>
-        <div className="overflow-auto rounded-lg shadow">
-          <table className="w-full">
-            <thead className="bg-gray-50 border-b-2 border-gray-200">
-              <tr>
-                <th className="p-3 text-sm font-semibold tracking-wide text-center">
-                  Month
-                </th>
-                <th className="p-3 text-sm font-semibold tracking-wide text-center">
-                  Year
-                </th>
-                <th className="p-3 text-sm font-semibold tracking-wide text-center">
-                  Total Sales
-                </th>
-              </tr>
-            </thead>
-            <tbody className=" bg-white divide-y divide-gray-200">
-              {salesReport.map((salesReport) => (
-                <tr className="">
-                  <td className=" p-3 text-sm text-gray-700 text-center">
-                    {salesReport.month}
-                  </td>
-                  <td className=" p-3 text-sm text-gray-700 whitespace-nowrap text-center">
-                    {salesReport.year}
-                  </td>
-                  <td className=" p-3 text-sm text-gray-700 whitespace-nowrap text-center">
-                    {salesReport.totalSales}
-                  </td>
+        {salesReport.length !== 0 && (
+          <div className="overflow-auto rounded-lg shadow">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b-2 border-gray-200">
+                <tr>
+                  <th className="p-3 text-sm font-semibold tracking-wide text-center">
+                    Month
+                  </th>
+                  <th className="p-3 text-sm font-semibold tracking-wide text-center">
+                    Year
+                  </th>
+                  <th className="p-3 text-sm font-semibold tracking-wide text-center">
+                    Total Sales
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className=" bg-white divide-y divide-gray-200">
+                {salesReport.map((salesReport) => (
+                  <tr className="">
+                    <td className=" p-3 text-sm text-gray-700 text-center">
+                      {salesReport.month}
+                    </td>
+                    <td className=" p-3 text-sm text-gray-700 whitespace-nowrap text-center">
+                      {salesReport.year}
+                    </td>
+                    <td className=" p-3 text-sm text-gray-700 whitespace-nowrap text-center">
+                      {salesReport.totalSales}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </>
   );

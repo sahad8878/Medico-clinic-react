@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { message } from "antd";
 import axios from "../../Axios/Axios";
+import Moment from "react-moment";
 
 function SingleDoctor({ doctor, refresh, setRefresh }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -202,7 +203,6 @@ function SingleDoctor({ doctor, refresh, setRefresh }) {
                                 </div>
                               </div>
                             </li>
-                      
                           </div>
                         )}
                       </ul>
@@ -226,6 +226,10 @@ function SingleDoctor({ doctor, refresh, setRefresh }) {
           </div>
         )}
       </td>
+      <td className=" p-3 text-sm text-gray-700 whitespace-nowrap">
+        <Moment format="YYYY/MM/DD">{doctor.createdAt}</Moment>
+      </td>
+
       <td className=" p-3 text-sm text-gray-700 whitespace-nowrap">
         {doctor.block == true ? (
           <button

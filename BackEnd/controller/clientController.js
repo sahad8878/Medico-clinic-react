@@ -6,7 +6,6 @@ const ClientModel = require("../model/clientModel");
 
 const moment = require("moment");
 
-
 //get client details
 
 const getClietProfile = async (req, res) => {
@@ -132,9 +131,13 @@ const getDoctorDetails = async (req, res) => {
   try {
     const did = mongoose.Types.ObjectId(req.params.doctorId.trim());
     const doctor = await DoctorModel.findById(did);
-
+    const availableDays = [];
+    doctor.availablity.forEach((day) => {
+      if (day.status == "active") availableDays.push(day.day);
+    });
+    console.log(availableDays);
     if (doctor) {
-      res.status(201).send({ doctor, success: true });
+      res.status(201).send({ doctor, availableDays, success: true });
     } else {
       return res
         .status(200)
@@ -148,8 +151,6 @@ const getDoctorDetails = async (req, res) => {
     });
   }
 };
-
-
 
 // Get  Experienced Doctors
 
@@ -175,37 +176,40 @@ const getExperiencedDoctors = async (req, res) => {
   }
 };
 
-const getAllNotifications = async(req, res) => {
-try {
-  const client = await ClientModel.findOne({_id:req.body.userId})
-  const clientNotifications = client.notifications
-  const clientSeenNotification = client.seenNotifications
-  res.status(200).send({success:true,clientNotifications,clientSeenNotification})
-} catch (error) {
-  console.log(error);
-  res.status(500).send({
-    success: false,
-    message: `getAllNotifications  controller ${error.message}`,
-  });
-}
+// get all notifications
 
-}
-
-const notificationMarkAllRead = async (req, res) => {
-
+const getAllNotifications = async (req, res) => {
   try {
+    const client = await ClientModel.findOne({ _id: req.body.userId });
+    const clientNotifications = client.notifications;
+    const clientSeenNotification = client.seenNotifications;
+    res
+      .status(200)
+      .send({ success: true, clientNotifications, clientSeenNotification });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: `getAllNotifications  controller ${error.message}`,
+    });
+  }
+};
 
-  const client = await ClientModel.findOne({_id:req.body.userId})
-  console.log(client);
-    const seenNotifications = client.seenNotifications
-    const notifications = client.notifications
-    seenNotifications.push(...notifications)
-    client.notifications = []
-    client.seenNotifications =  notifications
-    const updatedClient = await client.save()
+// all notifications read
+const notificationMarkAllRead = async (req, res) => {
+  try {
+    const client = await ClientModel.findOne({ _id: req.body.userId });
+    console.log(client);
+    const seenNotifications = client.seenNotifications;
+    const notifications = client.notifications;
+    seenNotifications.push(...notifications);
+    client.notifications = [];
+    client.seenNotifications = notifications;
+    const updatedClient = await client.save();
     console.log(updatedClient);
-    res.status(200).send({success:true,message:"all notifications marked as read"})
-    
+    res
+      .status(200)
+      .send({ success: true, message: "all notifications marked as read" });
   } catch (error) {
     console.log(error);
     res.status(500).send({
@@ -213,46 +217,45 @@ const notificationMarkAllRead = async (req, res) => {
       message: `notificationMarkAllRead  controller ${error.message}`,
     });
   }
-}
+};
 
+//all notification Delete
 const notificationDeleteAllRead = async (req, res) => {
+  try {
+    const client = await ClientModel.findOne({ _id: req.body.userId });
+    client.seenNotifications = [];
+    const updateClient = await client.save();
+    res
+      .status(200)
+      .send({ success: true, message: "Notifications Deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: `notificationDeleteAllRead  controller ${error.message}`,
+    });
+  }
+};
 
-try {
-  const client = await ClientModel.findOne({_id:req.body.userId})
-  client.seenNotifications = []
-  const updateClient = await client.save()
-  res.status(200).send({success:true,message:"Notifications Deleted successfully"})
-} catch (error) {
-  console.log(error);
-  res.status(500).send({
-    success: false,
-    message: `notificationDeleteAllRead  controller ${error.message}`,
-  });
-}
+const getDepartmentDoctors = async (req, res) => {
+  try {
+    const departmentId = req.params.id;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 2;
+    const sortBy = req.query.sortBy || "createdAt";
+    const sortOrder = req.query.sortOrder || "desc";
+    const feeFilter = req.query.feeFilter || "";
+    const searchData = req.query.searchLocation || "";
 
-}
+    const did = mongoose.Types.ObjectId(departmentId.trim());
+    const department = await DepartmentModel.findOne({ _id: did });
 
-const getDepartmentDoctors =async (req, res) => {
-
-  try{
-
-  const departmentId = req.params.id
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 2;
-  const sortBy = req.query.sortBy || 'createdAt';
-  const sortOrder = req.query.sortOrder || 'desc';
-  const feeFilter = req.query.feeFilter || '';
-  const searchData = req.query.searchLocation || ''
-  console.log(searchData,"pageeeeeeeeeeeeeee");
-     // Build the query
-     const did = mongoose.Types.ObjectId(departmentId.trim());
-     const department = await DepartmentModel.findById(did)
-    
-
-     console.log(department);
-  const query = {specialization:department.department,status: "active"};
-    if (feeFilter !== '') {
-      const [minFee, maxFee] = feeFilter.split('-').map(parseFloat);
+    const query = {
+      specialization: department.department.trim(),
+      status: "active",
+    };
+    if (feeFilter !== "") {
+      const [minFee, maxFee] = feeFilter.split("-").map(parseFloat);
       console.log(minFee, maxFee);
       if (!isNaN(minFee)) {
         query.consultationFees = { $gte: minFee };
@@ -262,33 +265,28 @@ const getDepartmentDoctors =async (req, res) => {
         query.consultationFees.$lte = maxFee;
       }
     }
-    if(searchData !== ''){
-     query.location = { $regex: new RegExp(`^${searchData}.*`, "i") }
+    if (searchData !== "") {
+      query.location = { $regex: new RegExp(`^${searchData}.*`, "i") };
     }
-    console.log(query,"qeeeeeeeeee");
-  // Execute the query with pagination and sorting
-  const doctors = await DoctorModel.find(query)
-  .sort({ [sortBy]: sortOrder })
-  .skip((page - 1) * limit)
-  .limit(limit);
-  
 
-  // Return the results
-  res.json({
-    data: doctors,
-    currentPage: page,
-    totalPages: Math.ceil(await DoctorModel.countDocuments(query) / limit),
-  });
-  
-}catch(error){
-  console.log(error);
-  res.status(500).send({
-    success: false,
-    message: `notificationDeleteAllRead  controller ${error.message}`,
-  });
-    
-}
-}
+    const doctors = await DoctorModel.find(query)
+      .sort({ [sortBy]: sortOrder })
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    res.json({
+      data: doctors,
+      currentPage: page,
+      totalPages: Math.ceil((await DoctorModel.countDocuments(query)) / limit),
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: `notificationDeleteAllRead  controller ${error.message}`,
+    });
+  }
+};
 
 module.exports = {
   getClietProfile,
@@ -299,6 +297,5 @@ module.exports = {
   getAllNotifications,
   notificationMarkAllRead,
   notificationDeleteAllRead,
-  getDepartmentDoctors
-
+  getDepartmentDoctors,
 };

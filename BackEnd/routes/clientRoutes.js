@@ -82,7 +82,7 @@ router.get(
 // Check available Slotes || GET
 
 router.get(
-  "/availableSlot/:doctorId/:selectedDate",
+  "/availableSlot/:doctorId/:selectedDay",
   clientAuthMiddlewares,
   availableSlot
 );

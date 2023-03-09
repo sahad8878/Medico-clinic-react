@@ -4,14 +4,17 @@ const appointmentSchema = new mongoose.Schema(
   {
     client: {
       type: mongoose.Schema.Types.ObjectId,
+      trim: true,
       ref: "clients",
     },
     doctor: {
       type: mongoose.Schema.Types.ObjectId,
+      trim: true,
       ref: "doctors",
     },
     status: {
       type: String,
+      trim: true,
       default: "pending",
     },
     consultationFees: {

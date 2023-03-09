@@ -121,23 +121,38 @@ function DoctorTimeSchedule() {
     e.preventDefault();
     console.log("Selected day:", selectedDay);
     console.log("Timings:", timings);
-    axios
-      .post(
-        "/doctor/postDoctorAvailability",
-        { selectedDay, timings },
-        { headers: { doctortoken: doctorToken } }
-      )
-      .then((response) => {
-        if (response.data.success) {
-          setTimings([]);
-          setSelectedDay("");
-          setRefresh(!refresh);
-          message.success(response.data.message);
-        } else {
-          message.error(response.data.message);
-        }
-      });
+    let filled = true;
+    for (let i = 0; i < timings.length; i++) {
+      if (
+        timings[i].startTime == "" ||
+        timings[i].endTime == "" ||
+        timings[i].slots == ""
+      ) {
+        filled = false;
+      }
+    }
+    if (filled) {
+      axios
+        .post(
+          "/doctor/postDoctorAvailability",
+          { selectedDay, timings },
+          { headers: { doctortoken: doctorToken } }
+        )
+        .then((response) => {
+          if (response.data.success) {
+            setTimings([]);
+            setSelectedDay("");
+            setRefresh(!refresh);
+            message.success(response.data.message);
+          } else {
+            message.error(response.data.message);
+          }
+        });
+    } else {
+      message.error("All fields are required");
+    }
   };
+
   return (
     <>
       <div className=" ">
@@ -150,106 +165,115 @@ function DoctorTimeSchedule() {
           </div>
         ) : (
           <div>
+            {schedule.length === 0 ? (
+              <div className="">
+                <div className="flex pt-28 justify-center font-serif text-[#194569] text-xl">
+                  Schedule Not Exist..!
+                </div>
 
-         
-        {schedule.length === 0 ? (
-          <div className="">
-            <div className="flex pt-28 justify-center font-serif text-[#194569] text-xl">
-              Schedule Not Exist..!
-            </div>
+                <div className=" flex justify-center content-end">
+                  <h1
+                    onClick={handleOpenModal}
+                    className="text-white py-1 px-3 bg-[#194569] m-2 cursor-pointer hover:bg-opacity-80"
+                  >
+                    Add Your Schedule
+                  </h1>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div className=" flex justify-end content-end">
+                  <h1
+                    onClick={handleOpenModal}
+                    className="text-end py-1 px-3 bg-[#194569] text-white m-2 cursor-pointer hover:bg-opacity-80"
+                  >
+                    Add Schedule
+                  </h1>
+                </div>
+                {/*  */}
+                <div className="overflow-auto rounded-lg shadow  ">
+                  <table className="w-full">
+                    <thead className=" bg-gray-50 border-b-2 border-gray-200">
+                      <tr>
+                        <th className="p-3 text-sm font-semibold tracking-wide text-left">
+                          Day
+                        </th>
 
-            <div className=" flex justify-center content-end">
-              <h1
-                onClick={handleOpenModal}
-                className="text-white py-1 px-3 bg-[#194569] m-2 cursor-pointer hover:bg-opacity-80"
-              >
-                Add Your Schedule
-              </h1>
-            </div>
+                        <th className="p-3 text-sm font-semibold tracking-wide text-center">
+                          Timing
+                        </th>
+
+                        <th className="p-3 text-sm font-semibold tracking-wide text-left"></th>
+                      </tr>
+                    </thead>
+                    <tbody className="  bg-white divide-y divide-gray-200 ">
+                      {schedule.map((schedule) => (
+                        <tr className={`bg-white" `}>
+                          <td className=" p-3 text-base text-gray-700 whitespace-nowrap">
+                            {schedule.day}
+                          </td>
+                          <td className=" p-3 text-base border text-gray-700 whitespace-nowrap">
+                            {schedule.time.map((times) => (
+                              <div className="p-1 border-b flex justify-between">
+                                <span className="">
+                                  {moment(times.start).format(" h:mm a")}
+                                </span>
+                                <span>To </span>
+                                <span className="">
+                                  {moment(times.end).format(" h:mm a")}
+                                </span>
+                                <span className="">slots: {times.slots}</span>
+                                <span
+                                  onClick={() => deleteTimeFromDB(times._id)}
+                                  className="text-red-600 hover:text-red-900 cursor-pointer"
+                                >
+                                  Remove
+                                </span>
+                              </div>
+                            ))}
+                          </td>
+
+                          <td className=" p-3 text-base text-gray-700 whitespace-nowrap">
+                            {schedule.status === "active" ? (
+                              <div className="flex flex-col ">
+                                <span className="text-black text-justify flex justify-center">Are you want to<br/> disable this day?</span>
+                                <span
+                                  className="cursor-pointer text-rose-600 text-center"
+                                  onClick={() =>
+                                    disableSchedulDay(schedule._id)
+                                  }
+                                >
+                                  Disable
+                                </span>
+                              </div>
+                            ) : (
+
+                              <div className="flex flex-col ">
+                              <span className="text-black text-justify flex justify-center">Are you want to<br/> Active this day?</span>
+                              <span
+                                className="cursor-pointer text-green-600 text-center"
+                                onClick={() => activeSchedulDay(schedule._id)}
+                              >
+                                Active
+                              </span>
+                            </div>
+
+                            
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </div>
-        ) : (
-          <div>
-            <div className=" flex justify-end content-end">
-              <h1
-                onClick={handleOpenModal}
-                className="text-end py-1 px-3 bg-gray-300 m-2 cursor-pointer hover:bg-opacity-80"
-              >
-                Add Time
-              </h1>
-            </div>
-            {/*  */}
-            <div className="overflow-auto rounded-lg shadow  ">
-              <table className="w-full">
-                <thead className=" bg-gray-50 border-b-2 border-gray-200">
-                  <tr>
-                    <th className="p-3 text-sm font-semibold tracking-wide text-left">
-                      Day
-                    </th>
-
-                    <th className="p-3 text-sm font-semibold tracking-wide text-center">
-                      Timing
-                    </th>
-
-                    <th className="p-3 text-sm font-semibold tracking-wide text-left"></th>
-                  </tr>
-                </thead>
-                <tbody className="  bg-white divide-y divide-gray-200 ">
-                  {schedule.map((schedule) => (
-                    <tr className={`bg-white" `}>
-                      <td className=" p-3 text-base text-gray-700 whitespace-nowrap">
-                        {schedule.day}
-                      </td>
-                      <td className=" p-3 text-base border text-gray-700 whitespace-nowrap">
-                        {schedule.time.map((times) => (
-                          <div className="p-1 border-b flex justify-between">
-                            <span className="">
-                              {moment(times.start).format(" h:mm a")}
-                            </span>
-                            <span>To </span>
-                            <span className="">
-                              {moment(times.end).format(" h:mm a")}
-                            </span>
-                            <span className="">slots: {times.slots}</span>
-                            <span
-                              onClick={() => deleteTimeFromDB(times._id)}
-                              className="text-red-600 hover:text-red-900 cursor-pointer"
-                            >
-                              Remove
-                            </span>
-                          </div>
-                        ))}
-                      </td>
-
-                      <td className=" p-3 text-base text-gray-700 whitespace-nowrap">
-                        {schedule.status === "active" ? (
-                          <span
-                            className="cursor-pointer"
-                            onClick={() => disableSchedulDay(schedule._id)}
-                          >
-                            Disable
-                          </span>
-                        ) : (
-                          <span
-                            className="cursor-pointer"
-                            onClick={() => activeSchedulDay(schedule._id)}
-                          >
-                            Active
-                          </span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-         </div>
         )}
       </div>
       {/*  */}
       {isOpen && (
-        <div className="fixed z-50 inset-0 overflow-y-auto">
+        <div className="fixed z-[1000] inset-0 overflow-y-auto">
           <div className="flex items-center justify-center min-h-screen px-4">
             <div
               className="fixed inset-0 transition-opacity"
@@ -317,35 +341,29 @@ function DoctorTimeSchedule() {
                               }
                             />
                           </label>
-                          <label className="pr-4 ">
-                            slots:
-                            <input
-                              type="number"
-                              value={timing.slots}
-                              onChange={(e) =>
-                                handleTimingChange(e, index, "slots")
-                              }
-                            />
-                          </label>
+                          <div className=" mt-4">
+                            <label className="pr-4 pt-4 ">
+                              slots:
+                              <input
+                                className=""
+                                type="number"
+                                value={timing.slots}
+                                onChange={(e) =>
+                                  handleTimingChange(e, index, "slots")
+                                }
+                              />
+                            </label>
 
-                          <button
-                            className="text-red-700 cursor-pointer hover:text-red-500"
-                            type="button"
-                            onClick={() => handleTimingRemove(index)}
-                          >
-                            Remove
-                          </button>
+                            <button
+                              className="text-red-700 cursor-pointer hover:text-red-500 ml-4"
+                              type="button"
+                              onClick={() => handleTimingRemove(index)}
+                            >
+                              Remove
+                            </button>
+                          </div>
                         </div>
                       ))}
-                      {/* <label className="mt-2 ">
-                          Totol Slots:
-                          <input
-                            type="number"
-                            value={slots}
-                            onChange={(e) => setSlots(e.target.value)
-                            }
-                          />
-                        </label> */}
                       <div className="flex justify-center content-center mt-5">
                         <button
                           className="flex justify-center content-center cursor-pointer hover:bg-opacity-75 rounded-md text-white  bg-[#194569] px-6"

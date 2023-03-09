@@ -127,9 +127,9 @@ const postAppointment = async(req, res) => {
 
 const availableSlot = async (req, res) => {
   try {
-    const { doctorId, selectedDate } = req.params;
-    console.log(doctorId, selectedDate);
-    const selectedDay = moment(selectedDate).format("dddd"); // convert selected date to day
+    const { doctorId, selectedDay } = req.params;
+    console.log(doctorId, selectedDay);
+    // const selectedDay = moment(selectedDate).format("dddd"); // convert selected date to day
     const doctor = await DoctorModel.findById(doctorId);
     console.log(doctor);
     const availability = doctor.availablity.find(

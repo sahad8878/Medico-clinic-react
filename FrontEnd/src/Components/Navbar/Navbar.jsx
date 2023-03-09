@@ -1,24 +1,20 @@
 import React, { useState } from "react";
-import { Link,useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import CircleNotificationsRoundedIcon from "@mui/icons-material/CircleNotificationsRounded";
-import { message } from 'antd';
+import { message } from "antd";
 import { useSelector } from "react-redux";
-
-
 import Dropdown from "../dropdown/Dropdown";
 import log from "../../Assets/main-logo.png";
 
 export default function Nav() {
-  const {client} = useSelector((state) => state.clientLogin)
-
+  const { client } = useSelector((state) => state.clientLogin);
   const [navbar, setNavbar] = useState(false);
- const location = useLocation()
- const path = location.pathname
+  const location = useLocation();
+  const path = location.pathname;
 
   const notLogin = () => {
     message.error("Your must be logged in to continue");
-
-  }
+  };
 
   return (
     <nav className="w-full z-[200] bg-[#97CADB] fixed top-7">
@@ -75,74 +71,79 @@ export default function Nav() {
           >
             <ul className="items-center justify-center space-y-8 md:flex md:space-x-6 md:space-y-0">
               <li className="hover:text-[#194569]">
-                  <Link to="/">
-                <span className={` ${path === "/" ? "text-[#194569]"  :"text-white" } font-bold text-base px-5 uppercase hover:text-[#194569] rounded`}>
+                <Link to="/">
+                  <span
+                    className={` ${
+                      path === "/" ? "text-[#194569]" : "text-white"
+                    } font-bold text-base px-5 uppercase hover:text-[#194569] rounded`}
+                  >
                     Home
-                </span>
-                    </Link>
+                  </span>
+                </Link>
               </li>
               <li className="">
                 {client ? (
                   <Link to="/service">
-                    <span className={` ${path === '/service' ? "text-[#194569]"  :"text-white" } font-bold uppercase text-base px-5 hover:text-[#194569] rounded`}>
+                    <span
+                      className={` ${
+                        path === "/service" ? "text-[#194569]" : "text-white"
+                      } font-bold uppercase text-base px-5 hover:text-[#194569] rounded`}
+                    >
                       Service
                     </span>
                   </Link>
                 ) : (
-                  <span onClick={notLogin} className="text-white font-semibold text-lg px-5 cursor-pointer hover:text-[#194569] rounded">
+                  <span
+                    onClick={notLogin}
+                    className="text-white font-semibold text-lg px-5 cursor-pointer hover:text-[#194569] rounded"
+                  >
                     Service
                   </span>
                 )}
               </li>
-              
-                <li className="">
-                  <span className="">
-                    <Dropdown />
-                  </span>
-                </li>
-            
+
+              <li className="">
+                <span className="">
+                  <Dropdown />
+                </span>
+              </li>
+
               <li className="text-gray-600 ">
-
-                {
-                  client ?
-              <Link to="/clientNotificationPage">
-                  {
-                    path === "/clientNotificationPage" ?
-
-                    <span className="text-[#194569] font-semibold text-lg px-5 hover:text-white rounded">
+                {client ? (
+                  <Link to="/clientNotificationPage">
+                    {path === "/clientNotificationPage" ? (
+                      <span className="text-[#194569] font-semibold text-lg px-5 hover:text-white rounded">
+                        <CircleNotificationsRoundedIcon
+                          sx={{
+                            fontSize: "30px",
+                            cursor: "pointer",
+                          }}
+                        />
+                      </span>
+                    ) : (
+                      <span className="text-white font-semibold text-lg px-5 hover:text-[#194569] rounded">
+                        <CircleNotificationsRoundedIcon
+                          sx={{
+                            fontSize: "30px",
+                            cursor: "pointer",
+                          }}
+                        />
+                      </span>
+                    )}
+                  </Link>
+                ) : (
+                  <span
+                    onClick={notLogin}
+                    className="text-white font-semibold text-lg px-5 hover:text-[#194569] rounded"
+                  >
                     <CircleNotificationsRoundedIcon
                       sx={{
-                       
                         fontSize: "30px",
                         cursor: "pointer",
                       }}
                     />
-                    </span>
-                    :
-                    <span className="text-white font-semibold text-lg px-5 hover:text-[#194569] rounded">
-
-                    <CircleNotificationsRoundedIcon
-                    sx={{
-                     
-                      fontSize: "30px",
-                      cursor: "pointer",
-                    }}
-                  />
                   </span>
-
-                  }
-                    </Link>
-                    :
-                    <span onClick={notLogin}   className="text-white font-semibold text-lg px-5 hover:text-[#194569] rounded">
-                  <CircleNotificationsRoundedIcon
-                    sx={{
-                      fontSize: "30px",
-                      cursor: "pointer",
-                    }}
-                  />
-                </span>
-
-                }
+                )}
               </li>
             </ul>
           </div>

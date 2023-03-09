@@ -2,6 +2,7 @@ const DepartmentModel = require("../model/departmentModel");
 const DoctorModel = require("../model/doctorModel");
 const ClientModel = require("../model/clientModel");
 const AppointmentModel = require("../model/appointmentModel");
+
 // Get Pending Doctors Details
 
 const getPendingDoctors = async (req, res) => {
@@ -34,7 +35,7 @@ const acceptDoctorAppointment = async (req, res) => {
       { status: "approved" },
       { new: true }
     );
-    console.log(doctor);
+
     if (doctor) {
       res.status(201).send({
         message: ` Doctor ${doctor.fName} request accepted`,
@@ -59,19 +60,22 @@ const acceptDoctorAppointment = async (req, res) => {
 
 const rejectDoctorAppointment = async (req, res) => {
   try {
-    await DoctorModel.findByIdAndRemove(req.body.id).then((doctor) => {
-      if (doctor) {
-        res.status(201).send({
-          message: `Doctor ${doctor.fName} request rejected`,
-          success: true,
-        });
-      } else {
-        return res.status(200).send({
-          message: `Doctor ${doctor.fName} does not exist`,
-          success: false,
-        });
-      }
-    });
+    const doctor = await DoctorModel.findByIdAndUpdate(
+      req.body.id,
+      { status: "rejected" },
+      { new: true }
+    );
+    if (doctor) {
+      res.status(201).send({
+        message: `Doctor ${doctor.fName} request rejected`,
+        success: true,
+      });
+    } else {
+      return res.status(200).send({
+        message: `Doctor ${doctor.fName} does not exist`,
+        success: false,
+      });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send({
@@ -85,10 +89,9 @@ const rejectDoctorAppointment = async (req, res) => {
 
 const getDoctorsDetails = async (req, res) => {
   try {
-    const doctors = await DoctorModel.find({ status: { $ne: "pending" } }).sort(
-      { updatedAt: -1 }
-    );
-    console.log(doctors);
+    const doctors = await DoctorModel.find({
+      status: { $nin: ["pending", "rejected"] },
+    }).sort({ updatedAt: -1 });
     if (doctors) {
       res.status(201).send({ doctors, success: true });
     } else {
@@ -230,7 +233,7 @@ const postDepartments = async (req, res) => {
   try {
     const { department, departmentImg, description } = req.body;
     if (department && departmentImg && description) {
-      let regExp = new RegExp(department, "i");
+      let regExp = new RegExp(department.trim(), "i");
       let dbDepartment = await DepartmentModel.findOne({
         department: { $regex: regExp },
       });
@@ -317,62 +320,57 @@ const deleteDepartment = async (req, res) => {
 
 const putEditDepartment = async (req, res) => {
   try {
-    console.log(req.body);
     const { department, description, departmentImg, departmentId } = req.body;
-    console.log(department, description, departmentImg, departmentId);
     if (department && description && departmentImg) {
-      // const dep = await DepartmentModel.findById(departmentId);
-      // console.log(dep);
-      let regExp = new RegExp(department, "i");
-      let dep = await DepartmentModel.findOne({_id:departmentId,
+      let regExp = new RegExp(department.trim(), "i");
+      let dep = await DepartmentModel.findOne({
+        _id: departmentId,
         department: { $regex: regExp },
       });
-      console.log(dep);
-        if(dep){
-      await DepartmentModel.updateOne(
-        { _id: departmentId },
-        {
-          $set: {
-            department: department,
-            description: description,
-            departmentImg: departmentImg,
-          },
-        }
-      ).then((department) => {
-        console.log(department);
-        if (department) {
-          res
-            .status(201)
-            .send({ message: " department have been Updated", success: true });
-        }
-      });
-    }else{
-      let regExp = new RegExp(department, "i");
-      let dbDepartment = await DepartmentModel.findOne({
-        department: { $regex: regExp },
-      });
-      if (dbDepartment) {
-        return res.status(200).send({
-          message: `${dbDepartment.department} Department is already exist`,
-          success: false,
+      if (dep) {
+        await DepartmentModel.updateOne(
+          { _id: departmentId },
+          {
+            $set: {
+              department: department,
+              description: description,
+              departmentImg: departmentImg,
+            },
+          }
+        ).then((department) => {
+          if (department) {
+            res
+              .status(201)
+              .send({
+                message: " department have been Updated",
+                success: true,
+              });
+          }
         });
       } else {
-        const newDepartment = new DepartmentModel({
-          department,
-          departmentImg,
-          description,
+        let regExp = new RegExp(department.trim(), "i");
+        let dbDepartment = await DepartmentModel.findOne({
+          department: { $regex: regExp },
         });
-        await newDepartment.save().then(() => {
-          res.status(201).send({
-            message: "New department added successfully",
-            success: true,
+        if (dbDepartment) {
+          return res.status(200).send({
+            message: `${dbDepartment.department} Department is already exist`,
+            success: false,
           });
-        });
+        } else {
+          const newDepartment = new DepartmentModel({
+            department,
+            departmentImg,
+            description,
+          });
+          await newDepartment.save().then(() => {
+            res.status(201).send({
+              message: "New department added successfully",
+              success: true,
+            });
+          });
+        }
       }
-
-    }
-
-
     } else {
       return res
         .status(200)
@@ -386,6 +384,8 @@ const putEditDepartment = async (req, res) => {
     });
   }
 };
+
+// get all appointments
 
 const getAllAppointments = async (req, res) => {
   try {
@@ -409,6 +409,8 @@ const getAllAppointments = async (req, res) => {
   }
 };
 
+// get admin dashboard details
+
 const getAdminDashboardDetails = async (req, res) => {
   try {
     const months = [
@@ -428,29 +430,13 @@ const getAdminDashboardDetails = async (req, res) => {
 
     const totalPatients = await ClientModel.find().count();
     const totalDoctors = await DoctorModel.find({
-      status: { $ne: "pending" },
+      status: { $nin: ["pending", "rejected"] },
     }).count();
-    //  const result = await AppointmentModel.aggregate([
-    //   {
-    //     $match: {
-    //       status: 'confirmed'
-    //     }
-    //   },
-    //   {
-    //     $group: {
-    //       _id: null,
-    //       totalFees: {
-    //         $sum: '$consultationFees'
-    //       }
-    //     }
-    //   }
-    // ]);
-
-    // const totalFees = result[0].totalFees;
+    const totalAppointments = await AppointmentModel.find().count();
     const salesReport = await AppointmentModel.aggregate([
       {
         $match: {
-          status: "confirmed",
+          status: "checked",
         },
       },
       {
@@ -480,20 +466,13 @@ const getAdminDashboardDetails = async (req, res) => {
       return newEl;
     });
 
-    if (!totalPatients && !totalDoctors) {
-      return res
-        .status(200)
-        .send({ message: "No Appointments exist ", success: false });
-    } else {
-      res
-        .status(201)
-        .send({
-          totalPatients,
-          totalDoctors,
-          salesReport: newSalesReport,
-          success: true,
-        });
-    }
+    res.status(201).send({
+      totalPatients,
+      totalDoctors,
+      totalAppointments,
+      salesReport: newSalesReport,
+      success: true,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).send({

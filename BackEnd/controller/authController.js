@@ -53,12 +53,6 @@ const signupController = async (req, res) => {
           .status(200)
           .send({ message: "Phone Number is not valid", success: false });
       }
-      // if(!validator.isLength(fName,2,12)){
-      //   return res
-      //   .status(200)
-      //   .send({ message: ' first name is valid only if it is more than minimum  2 letters and less than 12 letters', success: false });
-      // }
-
       const existingClient = await ClientModel.findOne({ email: email });
       if (existingClient) {
         return res
@@ -115,7 +109,7 @@ const loginController = async (req, res) => {
           .status(200)
           .send({ message: "You have been blocked", success: false });
       }
-
+     
       const isMatch = await bcrypt.compare(password, client.password);
       if (!isMatch) {
         return res
@@ -237,6 +231,11 @@ const doctorSignup = async (req, res) => {
       }
 
       const existingDoctor = await DoctorModel.findOne({ email: email });
+      if (existingDoctor.status === "rejected") {
+        return res
+          .status(200)
+          .send({ message: "This account already rejected", success: false });
+      }
       if (existingDoctor) {
         return res
           .status(200)
@@ -311,7 +310,17 @@ const doctorLogin = async (req, res) => {
           return res
             .status(200)
             .send({ message: "Your have been blocked", success: false });
+           
         } else {
+          if (doctor.status === "rejected") {
+            return res
+              .status(200)
+              .send({ message: "This account already rejected", success: false });
+          }else{
+
+
+        
+
           const isMatch = await bcrypt.compare(password, doctor.password);
           if (!isMatch) {
             return res
@@ -336,6 +345,7 @@ const doctorLogin = async (req, res) => {
             });
           }
         }
+      }
       }
     } else {
       return res

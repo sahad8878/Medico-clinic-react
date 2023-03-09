@@ -29,7 +29,7 @@ function SelectDepartments() {
   }, []);
 
   return (
-    <div className="  bg-[#EDF4FE] py-14">
+    <div className="  bg-[#EDF4FE] py-14" id="myFirstComponent">
       <h1 className="font-bold text-center font-serif text-2xl ">
         Select departments
       </h1>

@@ -96,25 +96,22 @@ function DoctorProfile() {
       }
 
       axios
-        .patch(
-          "/doctor/updateDoctorDetails",
-           data ,
-          { headers: { doctortoken: doctorToken } }
-        )
+        .patch("/doctor/updateDoctorDetails", data, {
+          headers: { doctortoken: doctorToken },
+        })
         .then((response) => {
-          const result = response.data
+          const result = response.data;
           if (result.success) {
-            setRefresh(!refresh)
+            setRefresh(!refresh);
             setIsLoading(false);
             message.success("Your details have been updated ");
-            handleCloseModal()
+            handleCloseModal();
           } else {
             setIsLoading(false);
-          setError(result.message);
+            setError(result.message);
             message.error(result.message).then(() => {
               setError(null);
             });
-          
           }
         });
     } catch (error) {}
@@ -255,11 +252,17 @@ function DoctorProfile() {
                       >
                         Specialization
                       </label>
-                      <select class="bg-white p-2 rounded-lg  w-full" name="specialization">
-              {departments.map((department) => (
-                <option key={department._id}>{department.department}</option>
-              ))}
-            </select>
+                      <select
+                        class="bg-white p-2 rounded-lg  w-full"
+                        defaultValue={Doctor.specialization}
+                        name="specialization"
+                      >
+                        {departments.map((department) => (
+                          <option key={department._id}>
+                            {department.department}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                     <div className="mb-4 md:w-6/12">
                       <label
@@ -345,7 +348,6 @@ function DoctorProfile() {
                     </div>
                   </div>
 
-                 
                   <div className="md:flex">
                     <div className=" md:mr-4 mb-4">
                       <label
@@ -392,19 +394,19 @@ function DoctorProfile() {
                       {error}
                     </div>
                   )}
-                   {isLoading ? (
-            <div className="mb-4 mt-10 flex justify-center ">
-              <InfinitySpin width="200" color="#194569" />
-            </div>
-          ) : (
-            <div className="mb-4 mt-10 flex justify-center">
-              <input
-                className="bg-white  hover:bg-[#194569] text-black font-medium py-2 px-14 sm:px-20 mb-20 rounded-lg"
-                type="submit"
-                value="Save and Continue"
-              />
-            </div>
-          )}
+                  {isLoading ? (
+                    <div className="mb-4 mt-10 flex justify-center ">
+                      <InfinitySpin width="200" color="#194569" />
+                    </div>
+                  ) : (
+                    <div className="mb-4 mt-10 flex justify-center">
+                      <input
+                        className="bg-white  hover:bg-[#194569] text-black font-medium py-2 px-14 sm:px-20 mb-20 rounded-lg"
+                        type="submit"
+                        value="Save and Continue"
+                      />
+                    </div>
+                  )}
                 </form>
               </div>
 

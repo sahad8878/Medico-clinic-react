@@ -1,24 +1,29 @@
 const mongoose = require("mongoose");
-const mongoosePaginate = require("mongoose-paginate-v2");
+// const mongoosePaginate = require("mongoose-paginate-v2");
 
 const daySchema = new mongoose.Schema({
     day:{
       type:String,
+      trim: true,
     },
    
     status:{
       type:String,
+      trim: true,
       default:"active"
     },
     time:[{
       start:{
         type:Date,
+        trim: true
       },
         end:{
           type:Date,
+          trim: true
         },
         slots:{
-          type:Number
+          type:Number,
+          trim: true
         },
         
 
@@ -31,14 +36,17 @@ const doctorSchema = new mongoose.Schema(
   {
     fName: {
       type: String,
+      trim: true,
       required: [true, "fName is required"],
     },
     lName: {
       type: String,
+      trim: true,
       required: [true, "lName is required"],
     },
     specialization: {
       type: String,
+      trim: true,
       required: [true, "specialization of birth is required"],
     },
     experience: {
@@ -51,14 +59,17 @@ const doctorSchema = new mongoose.Schema(
     },
     number: {
       type: String,
+      trim: true,
       required: [true, "name is required"],
     },
     email: {
       type: String,
+      trim: true,
       required: [true, "email is required"],
     },
     password: {
       type: String,
+      trim: true,
       required: [true, "password is required"],
     },
     licenceImg: {
@@ -80,6 +91,7 @@ const doctorSchema = new mongoose.Schema(
     },
     status: {
       type: String,
+      trim: true,
       default: "pending",
     },
     block: {
@@ -91,6 +103,6 @@ const doctorSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-doctorSchema.plugin(mongoosePaginate);
+// doctorSchema.plugin(mongoosePaginate);
 const doctorModel = mongoose.model("doctors", doctorSchema);
 module.exports = doctorModel;

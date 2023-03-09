@@ -5,10 +5,13 @@ import { InfinitySpin } from "react-loader-spinner";
 import TouchAppIcon from '@mui/icons-material/TouchApp';
 import Moment from "react-moment";
 import axios from "../../Axios/Axios";
+import { useDispatch } from "react-redux";
+import { setLogin } from "../../Store/Slice/ClientSlice";
 
 
 
 function DoctorAppointments() {
+  const dispatch = useDispatch();
   const [Appointments, setAppointments] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -60,6 +63,14 @@ function DoctorAppointments() {
       )
       .then((response) => {
         if (response.data.success) {
+          console.log(response.data.count,"countttttt");
+          dispatch(
+            setLogin({
+              client:"client",
+            count:response.data.count
+             
+            })
+          );
           message.success(response.data.message);
           setRefresh(!refresh);
         } else {

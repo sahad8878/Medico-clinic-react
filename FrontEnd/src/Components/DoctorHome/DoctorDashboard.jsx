@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
+import { CSVLink } from 'react-csv';
 import { message } from "antd";
 import profile from "../../Assets/user.png";
 import clientIcon from "../../Assets/group.ico";
 import confirm from "../../Assets/customer.png";
-import totalSales from '../../Assets/gross.png'
+import cancelled from '../../Assets/cancelled.png'
 import axios from "../../Axios/Axios";
+import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
 
 function DoctorDashboard() {
   const doctor = JSON.parse(localStorage.getItem("doctorToken"));
   const doctorToken = doctor.doctorToken;
-  const [patients, setPatients] = useState("");
-  const [confirmedPatients, setConfirmedPatients] = useState("");
-  const [totalFees,setTotalFees] = useState('')
+  const [totalAppointments, setTotalAppointments] = useState("");
+  const [checkedAppointments, setCheckedAppointments] = useState("");
+  const [canceledAppointments,setCanceledAppointments] = useState('')
 const [salesReport,setSalesReport ] = useState([])
   useEffect(() => {
     axios
@@ -21,9 +23,9 @@ const [salesReport,setSalesReport ] = useState([])
       .then((response) => {
         const result = response.data;
         if (result.success) {
-          setPatients(result.patients);
-          setConfirmedPatients(result.confirmedPatients)
-          setTotalFees(result.totalFees)
+          setTotalAppointments(result.totalAppointments);
+          setCheckedAppointments(result.checkedAppointments)
+          setCanceledAppointments(result.canceledAppointments)
           setSalesReport(result.salesReport)
         
         } else {
@@ -31,8 +33,18 @@ const [salesReport,setSalesReport ] = useState([])
         }
       });
   }, []);
+  const headers = [
+    { label: 'Month', key: 'month' },
+    { label: 'Year', key: 'year' },
+    { label: 'Total Sales', key: 'totalSales' },
+  ];
 
-
+  const transformData = (data, headers) => {
+    return [
+      ['Month', 'Year', 'Total Sales'],
+      ...data.map(row => [row.month, row.year, `$${row.totalSales}`])
+    ];
+  };
   return (
     <div className=" ">
       <div className="flex justify-center content-center py-5">
@@ -42,38 +54,47 @@ const [salesReport,setSalesReport ] = useState([])
       {/*  */}
 
       <div className=" grid grid-cols-1 lg:grid-cols-3  gap-4 p-4 mb-10">
-        <div className="flex flex-col w-60 h-20 shadow-xl items-center bg-white opacity-60 border border-gray-200 rounded-lg  md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 cursor-pointer">
+        <div className="flex flex-col w-60 h-24 shadow-xl items-center bg-white opacity-60 border border-gray-200 rounded-lg  md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 cursor-pointer">
           <img className=" ml-4 h-14" src={clientIcon} alt="logo" />
           <div>
-            <h1 className="pl-5 text-black font-bold">Totol Patients</h1>
+            <h1 className="pl-5 text-black font-bold">Totol Appointments</h1>
             <span className="flex justify-center text-black font-bold">
-              {patients}
+              {totalAppointments}
             </span>
           </div>
         </div>
-        <div className="flex flex-col w-60 h-20 shadow-xl items-center bg-white opacity-60 border border-gray-200 rounded-lg  md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 cursor-pointer">
+        <div className="flex flex-col w-60 h-24 shadow-xl items-center bg-white opacity-60 border border-gray-200 rounded-lg  md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 cursor-pointer">
         <img className=" ml-4 h-14" src={confirm} alt="logo" />
           <div>
-            <h1 className="pl-3 text-black font-bold">Confirmed Patients</h1>
+            <h1 className="pl-3 text-black font-bold">Checked Appointments</h1>
             <span className="flex justify-center text-black font-bold">
-              {confirmedPatients}
+              {checkedAppointments}
             </span>
           </div>
 
         </div>
-        <div className="flex flex-col w-60 h-20 shadow-xl items-center bg-white opacity-60 border border-gray-200 rounded-lg  md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 cursor-pointer">
-        <img className=" ml-4 h-14" src={totalSales} alt="logo" />
+        <div className="flex flex-col w-60 h-24 shadow-xl items-center bg-white opacity-60 border border-gray-200 rounded-lg  md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 cursor-pointer">
+        <img className=" ml-4 h-14" src={cancelled} alt="logo" />
           <div>
-            <h1 className="pl-4 text-black font-bold">Totol Sales</h1>
+            <h1 className="pl-4 text-black font-bold text-justify">Canceled Appointments</h1>
             <span className="flex justify-center text-black font-bold">
-              {totalFees}
+              {canceledAppointments}
             </span>
           </div>
         </div>
       </div>
 
+{salesReport.length !== 0 &&
       <div className="overflow-auto rounded-lg shadow ">
-        <table className="w-full ">
+        <div className="flex justify-end mr-2">
+          <span className="text-[#194569]">
+
+        <DownloadForOfflineIcon/>
+          </span>
+        <CSVLink className="text-[#194569]" data={salesReport} headers={headers} filename={'sales Report.csv'} transformer={transformData}>Download</CSVLink>
+
+        </div>
+        <table className="w-full  table">
           <thead className=" bg-gray-50 border-b-2 border-gray-200">
             <tr>
               <th className="p-3 text-sm font-semibold tracking-wide text-center">
@@ -106,6 +127,9 @@ const [salesReport,setSalesReport ] = useState([])
           </tbody>
         </table>
       </div>
+}
+{/*  */}
+
 
       {/*  */}
     </div>

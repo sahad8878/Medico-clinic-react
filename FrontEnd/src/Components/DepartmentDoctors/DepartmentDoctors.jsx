@@ -75,12 +75,6 @@ function DepartmentDoctors() {
           </div>
         ) : (
           <div>
-            {/* {appointments &&(
-              <div className="flex p-16 justify-center font-serif text-[#194569] text-xl">
-                {" "}
-                Doctors Not Available..!
-              </div>
-            ) : ( */}
             <div>
               <dir className="sm:px-36 pt-7 px-10 ">
                 <div className="relative ">
@@ -127,6 +121,7 @@ function DepartmentDoctors() {
                     </label>
                     <select
                       id="sortBy"
+                      className="w-28"
                       value={sortBy}
                       onChange={handleSortChange}
                     >
@@ -144,6 +139,7 @@ function DepartmentDoctors() {
                     </label>
                     <select
                       id="sortOrder"
+                      className="w-28"
                       value={sortOrder}
                       onChange={handleOrderChange}
                     >
@@ -160,6 +156,7 @@ function DepartmentDoctors() {
                     </label>
                     <input
                       id="feeFilter"
+                      className="w-28"
                       placeholder="Enter Fee"
                       type="text"
                       value={feeFilter}
@@ -179,7 +176,10 @@ function DepartmentDoctors() {
                   </div>
                 ) : (
                   <div className="ml-[20%] mt-14 flex justify-center content-center">
-                    <img className="w-48" src={NoData} alt="" />
+                    <div className="flex p-16 justify-center font-serif text-[#194569] text-xl">
+                {" "}
+                No Data..! Try again..
+              </div>
                   </div>
                 )}
               </div>

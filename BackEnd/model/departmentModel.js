@@ -5,6 +5,7 @@ const departmentSchema = new mongoose.Schema(
   {
     department: {
       type: String,
+      trim: true
     },
     doctors: [
       {
