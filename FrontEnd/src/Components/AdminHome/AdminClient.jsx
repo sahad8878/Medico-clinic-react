@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Moment from "react-moment";
-import axios from "../../Axios/Axios";
 import { message } from "antd";
+import axios from "../../Axios/Axios";
+import profile from "../../Assets/user.png";
 
 function AdminClient() {
   const [clients, setClients] = useState([]);
@@ -26,7 +27,6 @@ function AdminClient() {
       )
       .then((response) => {
         if (response.data.success) {
-          console.log(response.data);
           message.success(response.data.message);
           setRefresh(!refresh);
         } else {
@@ -45,7 +45,6 @@ function AdminClient() {
       )
       .then((response) => {
         if (response.data.success) {
-          console.log(response.data);
           message.success(response.data.message);
           setRefresh(!refresh);
         } else {
@@ -96,11 +95,21 @@ function AdminClient() {
                   <tr key={client._id} className="">
                     <td className=" p-3 text-sm w-6 text-gray-700 ">
                       <div className="h-10 w-10">
-                        <img
-                          className="h-10 w-10 rounded-full"
-                          src={""}
-                          alt=""
-                        />
+                        {
+                          client.clientImage ?
+                          <img
+                            className="h-10 w-10 rounded-full"
+                            src={client.clientImage}
+                            alt="client image"
+                          />
+                           :
+                           <img
+                           className="h-8 w-8 rounded-full"
+                           src={profile}
+                           alt="client image"
+                         />
+
+                        }
                       </div>
                     </td>
                     <td className=" p-3 text-sm text-gray-700 whitespace-nowrap">

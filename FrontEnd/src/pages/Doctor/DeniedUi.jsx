@@ -1,23 +1,11 @@
-import React, { useEffect } from 'react'
-import { Link,useNavigate } from 'react-router-dom'
-import axios from '../../Axios/Axios'
+import React from 'react'
+import { Link} from 'react-router-dom'
 import Footer from '../../Components/Footer/Footer'
 import DoctorNavbar from '../../Components/Navbar/DoctorNavbar'
 import TopNav from '../../Components/TopNav/TopNav'
 
 function DeniedUi() {
-  const navigate = useNavigate()
-  useEffect(()=> {
-    const doctor = JSON.parse(localStorage.getItem('doctorToken'));
-    const doctorToken = doctor.doctorToken
-    axios.get(`/doctor/statusChecking`,{headers:{'doctortoken':doctorToken}}).then((response) => {
-      const result = response.data
-      if(result.doctorStatus !== "rejected"){
-        navigate('/')
-      }
-    })
 
-  },[])
   return (
     <>
     <TopNav/>

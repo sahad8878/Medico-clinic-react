@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "./DoctorCss.css";
-import image from "../../Assets/doctor.ico";
 import { useNavigate, useParams } from "react-router-dom";
 import { message } from "antd";
-import PayPalButton from "./PayPalButton";
 import moment from "moment";
 import axios from "../../Axios/Axios";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import PayPalButton from "./PayPalButton";
 
 function DoctorDetails() {
   const [Doctor, setDoctor] = useState([]);
@@ -54,7 +53,6 @@ function DoctorDetails() {
           { headers: { accesstoken: clientToken } }
         )
         .then((response) => {
-          console.log(response, "responseeee");
           const result = response.data;
 
           if (result.success) {
@@ -63,7 +61,6 @@ function DoctorDetails() {
             setSchedulTime(result.schedulTime);
             setShowPaypal(true);
             message.success(result.message);
-            console.log(token, schedulTime, "schedullllll");
           } else {
             message.error(result.message).then(() => {});
           }
@@ -236,95 +233,97 @@ function DoctorDetails() {
                 </div>
 
                 {/* Modal */}
-               
+
                 <div className="rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full sm:max-w-md">
                   <div className="bg-[#EDF4FE] bg-opacity-70 px-4 py-3">
                     <h2 className="text-lg text-center font-medium text-gray-900">
                       Make Your Appointment
                     </h2>
                   </div>
-                {
-                  availableDays.length === 0 ?
-
-                  <div className="bg-[#EDF4FE] py-10 font-serif font-medium text-xl">Not available yer</div>
-                  :
-                  <div className=" bg-[#EDF4FE]    px-4 pt-5 pb-4">
-                    <div></div>
-                    <form
-                      component="form "
-                      className="flex-col items-center justify-center"
-                      onSubmit={handleAppointment}
-                    >
-                      <div className="mb-4 text-center ">
-                        <label
-                          className=" block text-gray-700 font-medium mb-2 "
-                          htmlFor="department"
-                        >
-                          Availabel Date
-                        </label>
-                        {/* <input
+                  {availableDays.length === 0 ? (
+                    <div className="bg-[#EDF4FE] py-10 font-serif font-medium text-xl">
+                      Not available yer
+                    </div>
+                  ) : (
+                    <div className=" bg-[#EDF4FE]    px-4 pt-5 pb-4">
+                      <div></div>
+                      <form
+                        component="form "
+                        className="flex-col items-center justify-center"
+                        onSubmit={handleAppointment}
+                      >
+                        <div className="mb-4 text-center ">
+                          <label
+                            className=" block text-gray-700 font-medium mb-2 "
+                            htmlFor="department"
+                          >
+                            Availabel Date
+                          </label>
+                          {/* <input
                           type="date"
                           value={selectedDate}
                           min={new Date()}
                           onChange={handleDateChange}
                         /> */}
-                        <div className="ml-9">
-                          <Calendar
-                            tileDisabled={tileDisabled}
-                            tileClassName={tileClassName}
-                            onChange={handleDateChange}
-                          />
-                          {selectedDate && (
-                            <p>You selected: {selectedDate.toDateString()}</p>
+                          <div className="ml-9">
+                            <Calendar
+                              tileDisabled={tileDisabled}
+                              tileClassName={tileClassName}
+                              onChange={handleDateChange}
+                            />
+                            {selectedDate && (
+                              <p>You selected: {selectedDate.toDateString()}</p>
+                            )}
+                          </div>
+                        </div>
+
+                        {selectedDate && (
+                          <div className="mb-4 text-center">
+                            <label className="block text-gray-700 font-medium mb-2 ">
+                              Select a time:
+                            </label>
+
+                            <select
+                              value={selectedTime}
+                              onChange={(e) => setSelectedTime(e.target.value)}
+                              className
+                            >
+                              <option value="">--Select a time--</option>
+
+                              {availability &&
+                                availability.time.map((times) => (
+                                  <option key={times.start} value={times._id}>
+                                    {moment(times.start).format(" h:mm ")} To
+                                    {moment(times.end).format(" h:mm ")}
+                                  </option>
+                                ))}
+                            </select>
+                          </div>
+                        )}
+                        <div className="mb-4 mt-10 flex justify-center">
+                          {!showPaypal ? (
+                            <button
+                              className="bg-white  hover:bg-[#194569] text-black font-bold py-2 px-20 rounded-lg"
+                              type="submit"
+                              disabled={!selectedDate || !selectedTime}
+                            >
+                              Continue{" "}
+                            </button>
+                          ) : (
+                            <PayPalButton
+                              selectedDate={selectedDate}
+                              doctorId={doctorId}
+                              token={token}
+                              schedulTime={schedulTime}
+                              consultationFees={Doctor.consultationFees}
+                              setShowPaypal={setShowPaypal}
+                              handleCloseModal={handleCloseModal}
+                            />
                           )}
                         </div>
-                      </div>
-                      <div className="mb-4 text-center">
-                        <label className="block text-gray-700 font-medium mb-2 ">
-                          Select a time:
-                        </label>
-
-                        <select
-                          value={selectedTime}
-                          onChange={(e) => setSelectedTime(e.target.value)}
-                          className
-                        >
-                          <option value="">--Select a time--</option>
-
-                          {availability &&
-                            availability.time.map((times) => (
-                              <option key={times.start} value={times._id}>
-                                {moment(times.start).format(" h:mm ")} To
-                                {moment(times.end).format(" h:mm ")}
-                              </option>
-                            ))}
-                        </select>
-                      </div>
-
-                      <div className="mb-4 mt-10 flex justify-center">
-                        {!showPaypal ? (
-                          <button
-                            className="bg-white  hover:bg-[#194569] text-black font-bold py-2 px-20 rounded-lg"
-                            type="submit"
-                            disabled={!selectedDate || !selectedTime}
-                          >
-                            Continue{" "}
-                          </button>
-                        ) : (
-                          <PayPalButton
-                            selectedDate={selectedDate}
-                            doctorId={doctorId}
-                            token={token}
-                            schedulTime={schedulTime}
-                            consultationFees={Doctor.consultationFees}
-                            setShowPaypal={setShowPaypal}
-                            handleCloseModal={handleCloseModal}
-                          />
-                        )}
-                      </div>
-                    </form>
-                  </div>
-                }
+                      </form>
+                    </div>
+                  )}
                   <div className="bg-[#EDF4FE] bg-opacity-70 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                     <button
                       type="button"

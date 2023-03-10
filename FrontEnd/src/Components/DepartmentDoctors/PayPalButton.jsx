@@ -17,10 +17,7 @@ function PayPalButton({selectedDate,token,schedulTime,doctorId,consultationFees,
   
   
     const paypalOptions = {
-      "client-id":
-        "AR9rPCNyMwEXNemm95XvdI32AEqLbAxrtV0Q1MLtScf_hvTo81IBAsiMiuiyY3oMI8WejvaXwZYbzRFr",
-      currency: "USD",
-      intent: "capture",
+      "client-id":"AR9rPCNyMwEXNemm95XvdI32AEqLbAxrtV0Q1MLtScf_hvTo81IBAsiMiuiyY3oMI8WejvaXwZYbzRFr",
     };
   
     const createOrder = (data, actions) => {
@@ -28,51 +25,65 @@ function PayPalButton({selectedDate,token,schedulTime,doctorId,consultationFees,
         purchase_units: [
           {
             amount: {
+              currency_code:'USD',
               value: consultationFees,
             },
           },
         ],
-      });
+        applicaton_context:{
+          shipping_context:"NO_SHIPPING"
+        }
+      })
+      .then((orderID) => {
+        return orderID
+      })
     };
-    const onApprove = async (data, actions) => {
-      const result = await actions.order.capture();
-      setPaymentComplete(true);
-    //   console.log(notification._id );
-console.log(schedulTime,"ttttttttttttttttt");
-    axios
-    .post("/postAppointment", {
-      date: selectedDate,
-      time: schedulTime,
-      token:token,
-      doctor: doctorId,
-      consultationFees:consultationFees,
-    },
-    { headers: { accesstoken: clientToken } }
-    
-    )
-    .then((response) => {
-      console.log(response, "responseeee");
-      const result = response.data;
+    const onApprove =  (data, actions) => {
+      return actions.order.capture().then(function (details){
+        console.log(details,"detailsssssssss");
+        setPaymentComplete(true);
+      //   console.log(notification._id );
+  console.log(schedulTime,"ttttttttttttttttt");
+      axios
+      .post("/postAppointment", {
+        date: selectedDate,
+        time: schedulTime,
+        token:token,
+        doctor: doctorId,
+        consultationFees:consultationFees,
+      },
+      { headers: { accesstoken: clientToken } }
       
-      if (result.success) {
-        // navigate('/clientNotificationPage');
-        setShowPaypal(false)
-        handleCloseModal()
-        message.success(result.message);
-      } else {
-        message.error(result.message).then(() => {});
-      }
-    });
+      )
+      .then((response) => {
+        console.log(response, "responseeee");
+        const result = response.data;
+        
+        if (result.success) {
+          setShowPaypal(false)
+          handleCloseModal()
+          navigate('/clientAppHistory');
+          message.success(result.message);
+        } else {
+          message.error(result.message).then(() => {});
+        }
+      });
+
+      })
+   
     };
+    const onError = (data,actions) => {
+      message.error("An error occured with your payment")
+    }
   
   return (
     <div className="w-44 ">
                     {!paymentComplete && (
-                      <PayPalScriptProvider options={paypalOptions}>
+                      <PayPalScriptProvider options={{"client-id":"AR9rPCNyMwEXNemm95XvdI32AEqLbAxrtV0Q1MLtScf_hvTo81IBAsiMiuiyY3oMI8WejvaXwZYbzRFr"}}>
                         <PayPalButtons
                           createOrder={createOrder}
                           onApprove={onApprove}
-                         
+                         onError={onError}
                         />
                       </PayPalScriptProvider>
                     )}

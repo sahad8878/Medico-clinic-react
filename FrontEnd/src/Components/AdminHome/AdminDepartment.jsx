@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { message } from "antd";
-import axios from "../../Axios/Axios";
-import { useNavigate } from "react-router-dom";
 import { InfinitySpin } from "react-loader-spinner";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import { storage } from "../../Firebase/confic";
 import SingleDepartment from "./SingleDepartment";
+import axios from "../../Axios/Axios";
 
 function AdminDepartment() {
-  const navigate = useNavigate();
-
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -35,6 +32,7 @@ function AdminDepartment() {
 
   const handleCloseModal = () => {
     setIsOpen(false);
+    setDepImg(null);
   };
 
   const handleDepartments = async (event) => {
@@ -80,11 +78,11 @@ function AdminDepartment() {
           headers: { admintoken: adminToken },
         })
         .then((response) => {
-          console.log(response, "responseeee");
           const result = response.data;
           if (result.success) {
             message.success("new department Added");
             setIsLoading(false);
+            setDepImg(null);
             handleCloseModal();
             setRefresh(!refresh);
           } else {
@@ -111,15 +109,6 @@ function AdminDepartment() {
          <h1 className="bg-[#194569] flex justify-center w-[100px] rounded-lg text-white py-2 px-4 text-center">Add Department </h1>
              </div> */}
 
-        <div className="flex justify-center">
-          <button
-            onClick={handleOpenModal}
-            className="bg-[#194569] rounded-lg py-1 text-white px-11 font-medium lg:px-36 hover:bg-opacity-90 hover:text-black"
-          >
-            Add Department
-          </button>
-        </div>
-
         {isLoading ? (
           <div className=" flex justify-center">
             <InfinitySpin width="200" color="#194569" />
@@ -127,18 +116,38 @@ function AdminDepartment() {
         ) : (
           <div>
             {departments.length === 0 ? (
-              <div className="flex  justify-center  pt-28 font-serif text-[#194569] text-xl ">
-                Departments Not Exist...!
+              <div className="">
+                <div className="flex  justify-center  pt-28 font-serif text-[#194569] text-xl ">
+                  Departments Not Exist...!
+                </div>
+                <div className="flex  justify-center">
+                  <button
+                    onClick={handleOpenModal}
+                    className="bg-[#194569] text-center px-6 mt-6 rounded-lg py-1 text-white  font-medium  hover:bg-opacity-90 hover:text-black"
+                  >
+                    Add Department
+                  </button>
+                </div>
               </div>
             ) : (
-              <div className=" grid grid-cols-1 lg:grid-cols-2  gap-4 p-5 ">
-                {departments.map((department) => (
-                  <SingleDepartment
-                    department={department}
-                    refresh={refresh}
-                    setRefresh={setRefresh}
-                  />
-                ))}
+              <div>
+                <div className="flex justify-center">
+                  <button
+                    onClick={handleOpenModal}
+                    className="bg-[#194569] rounded-lg py-1 text-white px-11 font-medium lg:px-36 hover:bg-opacity-90 hover:text-black"
+                  >
+                    Add Department
+                  </button>
+                </div>
+                <div className=" grid grid-cols-1 lg:grid-cols-2  gap-4 p-5 ">
+                  {departments.map((department) => (
+                    <SingleDepartment
+                      department={department}
+                      refresh={refresh}
+                      setRefresh={setRefresh}
+                    />
+                  ))}
+                </div>
               </div>
             )}
           </div>
@@ -251,7 +260,6 @@ function AdminDepartment() {
             </div>
           </div>
         </div>
-     
       )}
     </>
   );

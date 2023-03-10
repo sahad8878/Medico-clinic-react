@@ -83,7 +83,8 @@ const doctorSchema = new mongoose.Schema(
       type: String,
     },
     consultationFees:{
-      type:Number
+      type:Number,
+      trim:true
     },
     availablity:[daySchema],
     doctorImg: {
@@ -91,8 +92,7 @@ const doctorSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      trim: true,
-      default: "pending",
+      default:"pending",
     },
     block: {
       type: Boolean,

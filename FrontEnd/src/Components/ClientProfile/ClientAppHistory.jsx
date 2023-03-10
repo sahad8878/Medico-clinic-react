@@ -28,12 +28,12 @@ function ClientAppHistory() {
       });
   }, [refresh]);
 
-    const cancelAppointment = (id) => {
+  const cancelAppointment = (id) => {
     axios
       .patch(
         "/patchCancelAppointment",
         { id },
-        {  headers: { accesstoken: clientToken } }
+        { headers: { accesstoken: clientToken } }
       )
       .then((response) => {
         if (response.data.success) {
@@ -59,7 +59,6 @@ function ClientAppHistory() {
           <div>
             {Appointments.length === 0 ? (
               <div className="flex p-16 justify-center font-serif text-[#194569] text-xl">
-            
                 No Appointments Yet..
               </div>
             ) : (
@@ -82,9 +81,7 @@ function ClientAppHistory() {
                       <th className="p-3 text-sm font-semibold tracking-wide text-left">
                         status
                       </th>
-                      <th className="p-3 text-sm font-semibold tracking-wide text-left">
-                      </th>
-                      
+                      <th className="p-3 text-sm font-semibold tracking-wide text-left"></th>
                     </tr>
                   </thead>
                   <tbody className="  bg-white divide-y divide-gray-200 ">
@@ -94,7 +91,9 @@ function ClientAppHistory() {
                           {appointment.doctor.fName}
                         </td>
                         <td className=" p-3 text-base text-gray-700 whitespace-nowrap">
-                          {appointment.date}
+                          <Moment format="YYYY/MM/DD">
+                            {appointment.date}
+                          </Moment>
                         </td>
                         <td className=" p-3 text-base text-gray-700 whitespace-nowrap">
                           {appointment.time}
@@ -102,17 +101,25 @@ function ClientAppHistory() {
                         <td className=" p-3 text-base text-gray-700 whitespace-nowrap">
                           {appointment.consultationFees}
                         </td>
-                        <td className={` ${appointment.status === "cancelled" && "text-red-600"} ${appointment.status === "confirmed" && "text-[#194569]"}  p-3 text-base text-black whitespace-nowrap`}>
-                          
+                        <td
+                          className={` ${
+                            appointment.status === "cancelled" && "text-red-600"
+                          } ${
+                            appointment.status === "confirmed" &&
+                            "text-[#194569]"
+                          }  p-3 text-base text-black whitespace-nowrap`}
+                        >
                           {appointment.status}
                         </td>
                         <td className=" p-3 text-base text-gray-700 whitespace-nowrap">
-                           {
-                            appointment.status === "confirmed" && 
+                          {appointment.status === "confirmed" && (
                             <span
-                            onClick={() => cancelAppointment(appointment._id)}
-                             className=" rounded-lg bg-red-400 px-1 text-white cursor-pointer text-sm hover:bg-opacity-70">CANCEL</span>  
-                           }
+                              onClick={() => cancelAppointment(appointment._id)}
+                              className=" rounded-lg bg-red-400 px-1 text-white cursor-pointer text-sm hover:bg-opacity-70"
+                            >
+                              CANCEL
+                            </span>
+                          )}
                         </td>
                       </tr>
                     ))}

@@ -117,7 +117,7 @@ const loginController = async (req, res) => {
           .send({ message: "Invalid Email or Password", success: false });
       }
       const clientToken = jwt.sign({ id: client._id }, process.env.JWT_SECRET, {
-        expiresIn: "1d",
+        expiresIn: 60 * 60 * 24 ,
       });
       const clientName = client.fName;
       const clientId = client._id;
@@ -162,7 +162,7 @@ const adminLogin = async (req, res) => {
           .send({ message: "Invalid Email or Password", success: false });
       }
       const adminToken = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, {
-        expiresIn: "1d",
+        expiresIn: 60 * 60 * 24 ,
       });
       const AdminEmail = admin.email;
       res.status(200).send({
@@ -231,12 +231,12 @@ const doctorSignup = async (req, res) => {
       }
 
       const existingDoctor = await DoctorModel.findOne({ email: email });
-      if (existingDoctor.status === "rejected") {
-        return res
-          .status(200)
-          .send({ message: "This account already rejected", success: false });
-      }
       if (existingDoctor) {
+        if (existingDoctor.status === "rejected") {
+          return res
+            .status(200)
+            .send({ message: "This account already rejected", success: false });
+        }
         return res
           .status(200)
           .send({ message: "Doctor Already Exist", success: false });
@@ -265,7 +265,7 @@ const doctorSignup = async (req, res) => {
           { id: doctor._id },
           process.env.JWT_SECRET,
           {
-            expiresIn: "1d",
+            expiresIn: 60 * 60 * 24 ,
           }
         );
         const doctorId = doctor._id;
@@ -331,7 +331,7 @@ const doctorLogin = async (req, res) => {
               { id: doctor._id },
               process.env.JWT_SECRET,
               {
-                expiresIn: "1d",
+                expiresIn: 60 * 60 * 24 ,
               }
             );
             const doctorId = doctor._id;
