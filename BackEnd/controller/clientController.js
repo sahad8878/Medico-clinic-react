@@ -33,13 +33,17 @@ const patchUpdateClientDetails = async (req, res) => {
   try {
     console.log(req.body.userId);
     console.log(req.body, "update client address");
-    const { address, clientImage, age } = req.body;
+    const { fName, lName, number, address, clientImage, age } = req.body;
 
     if ((address, clientImage, age)) {
       const client = await ClientModel.findByIdAndUpdate(
         req.body.userId,
         {
           $set: {
+            fName,
+            lName,
+            number,
+            address,
             address,
             clientImage,
             age,
@@ -90,43 +94,7 @@ const getdepartments = async (req, res) => {
   }
 };
 
-// const getDepartmentDoctors = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const { page, limit } = req.query;
-//     const did = mongoose.Types.ObjectId(id.trim());
-
-//     console.log(id, page, limit, "get depa");
-//     const options = {
-//       page: parseInt(page, 10) || 1,
-//       limit: parseInt(limit, 4) || 4,
-//     };
-
-//     const department = await DepartmentModel.findById(did);
-//     console.log(department, "department");
-//     if (!department) {
-//       return res.status(404).json({ message: "Department not found" });
-//     }
-//     let regExp = new RegExp(department.department, "i");
-//     const doctors = await DoctorModel.paginate(
-//       { specialization: regExp, status: "active" },
-//       options
-//     );
-//     console.log(doctors, "doctors");
-//     if (doctors) {
-//       res.status(201).json(doctors);
-//     } else {
-//       return res.status(200).send({ message: "No Doctors ", success: false });
-//     }
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send({
-//       success: false,
-//       message: `client getDepartmentDoctors  controller ${error.message}`,
-//     });
-//   }
-// };
-
+// get Doctor Details 
 const getDoctorDetails = async (req, res) => {
   try {
     const did = mongoose.Types.ObjectId(req.params.doctorId.trim());
@@ -196,17 +164,17 @@ const getAllNotifications = async (req, res) => {
 };
 
 // all notifications read
+
 const notificationMarkAllRead = async (req, res) => {
   try {
     const client = await ClientModel.findOne({ _id: req.body.userId });
-    console.log(client);
+    
     const seenNotifications = client.seenNotifications;
     const notifications = client.notifications;
     seenNotifications.push(...notifications);
     client.notifications = [];
     client.seenNotifications = notifications;
     const updatedClient = await client.save();
-    console.log(updatedClient);
     res
       .status(200)
       .send({ success: true, message: "all notifications marked as read" });
@@ -256,7 +224,6 @@ const getDepartmentDoctors = async (req, res) => {
     };
     if (feeFilter !== "") {
       const [minFee, maxFee] = feeFilter.split("-").map(parseFloat);
-      console.log(minFee, maxFee);
       if (!isNaN(minFee)) {
         query.consultationFees = { $gte: minFee };
       }

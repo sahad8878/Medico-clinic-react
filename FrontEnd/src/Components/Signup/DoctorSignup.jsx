@@ -11,12 +11,13 @@ import axios from "../../Axios/Axios";
 
 function DoctorSignup() {
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const [departments, setDepartments] = useState([]);
-  
+
   const [refresh, setRefresh] = useState(false);
   useEffect(() => {
     axios.get("/doctor/getdepartments").then((response) => {
@@ -25,71 +26,143 @@ function DoctorSignup() {
     });
   }, [refresh]);
 
-  const handleSignup = async (event) => {
-    try {
-      event.preventDefault();
-      setIsLoading(true);
-      setError(null);
-      let data = new FormData(event.currentTarget);
-      data = {
-        fName: data.get("fName"),
-        lName: data.get("lName"),
-        specialization: data.get("specialization"),
-        experience: data.get("experience"),
-        location: data.get("location"),
-        number: data.get("number"),
-        email: data.get("email"),
-        password: data.get("password"),
-        confirmPassword: data.get("confirmPassword"),
-        licenceImg: data.get("licenceImg"),
-      };
-      console.log(data);
-      if (data.licenceImg.name) {
-        const date = Date.now();
-        const rand = Math.random();
-        const image = data.licenceImg;
-        const imageRef = ref(
-          storage,
-          `/licenceImages/${date}${rand}_${image?.name}`
-        );
-        const toBase64 = (image) =>
-          new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(image);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
-          }).catch((err) => {
-            console.log(err);
-          });
-        const imgBase = await toBase64(image);
-        await uploadString(imageRef, imgBase, "data_url").then(async () => {
-          const downloadURL = await getDownloadURL(imageRef);
-          data.licenceImg = downloadURL;
-        });
-      } else {
-        data.licenceImg = "";
-      }
+  const validateFields = (data) => {
+    let errors = {};
 
-      axios.post("/auth/doctorSignup", data).then((response) => {
-        const result = response.data;
-        if (result.success) {
-          localStorage.setItem("doctorToken", JSON.stringify(result));
-          dispatch(setLogin ({
-            doctor:"doctor",
-            name:result.doctorName,
-            token:result.doctorToken
-          }))
-          setIsLoading(false);
-          message.success("Signup successfully!");
-          navigate("/doctor/doctorPendingPage");
-        } else {
-          setIsLoading(false);
-          setError(result.message);
-          message.error(result.message).then(() => {
-            setError(null);
+    // Validate fName
+    if (!data.fName.trim()) {
+      errors.fName = "First name is required";
+    }
+
+    // Validate lName
+    if (!data.lName.trim()) {
+      errors.lName = "Last name is required";
+    }
+
+    // Validate Specialization
+    if (!data.specialization) {
+      errors.specialization = "Specialization is required";
+    }
+
+    // Validate experience
+    if (!data.experience) {
+      errors.experience = "Experience is required";
+    } else if (parseInt(data.experience) < 0) {
+      errors.experience = "Experiance is invalid";
+    }
+
+    // location location
+    if (!data.location) {
+      errors.location = "Location is required";
+    }
+
+    // location licenceImg
+    if (!data.licenceImg.name) {
+      errors.licenceImg = "licence is required";
+    }
+
+    // Validate number
+    if (!data.number) {
+      errors.number = "Phone number is required";
+    }
+
+    // Validate email
+    if (!data.email.trim()) {
+      errors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(data.email)) {
+      errors.email = "Email is invalid";
+    }
+
+    // Validate password
+    if (!data.password) {
+      errors.password = "Password is required";
+    } else if (data.password.length < 6) {
+      errors.password = "Password must be at least 6 characters";
+    }
+
+    // Validate confirmPassword
+    if (!data.confirmPassword) {
+      errors.confirmPassword = "Confirm password is required";
+    } else if (data.password !== data.confirmPassword) {
+      errors.confirmPassword = "Passwords do not match";
+    }
+
+    setErrors(errors);
+
+    // Return true if there are no errors, false otherwise
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleSignup = async (event) => {
+    event.preventDefault();
+
+    let data = new FormData(event.currentTarget);
+    data = {
+      fName: data.get("fName"),
+      lName: data.get("lName"),
+      specialization: data.get("specialization"),
+      experience: data.get("experience"),
+      location: data.get("location"),
+      number: data.get("number"),
+      email: data.get("email"),
+      password: data.get("password"),
+      confirmPassword: data.get("confirmPassword"),
+      licenceImg: data.get("licenceImg"),
+    };
+
+    try {
+      if (validateFields(data)) {
+        setIsLoading(true);
+        setError(null);
+        if (data.licenceImg.name) {
+          const date = Date.now();
+          const rand = Math.random();
+          const image = data.licenceImg;
+          const imageRef = ref(
+            storage,
+            `/licenceImages/${date}${rand}_${image?.name}`
+          );
+          const toBase64 = (image) =>
+            new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.readAsDataURL(image);
+              reader.onload = () => resolve(reader.result);
+              reader.onerror = (error) => reject(error);
+            }).catch((err) => {
+              console.log(err);
+            });
+          const imgBase = await toBase64(image);
+          await uploadString(imageRef, imgBase, "data_url").then(async () => {
+            const downloadURL = await getDownloadURL(imageRef);
+            data.licenceImg = downloadURL;
           });
+        } else {
+          data.licenceImg = "";
         }
-      });
+
+        axios.post("/auth/doctorSignup", data).then((response) => {
+          const result = response.data;
+          if (result.success) {
+            localStorage.setItem("doctorToken", JSON.stringify(result));
+            dispatch(
+              setLogin({
+                doctor: "doctor",
+                name: result.doctorName,
+                token: result.doctorToken,
+              })
+            );
+            setIsLoading(false);
+            message.success("Signup successfully!");
+            navigate("/doctor/doctorPendingPage");
+          } else {
+            setIsLoading(false);
+            setError(result.message);
+            message.error(result.message).then(() => {
+              setError(null);
+            });
+          }
+        });
+      }
     } catch (error) {
       console.log(error);
       message.error("Somthing went wrong!");
@@ -110,14 +183,13 @@ function DoctorSignup() {
           >
             Name
           </label>
-          <div className="mb-4 md:flex md:flex-row">
+          <div className=" md:flex md:flex-row">
             <input
               className="bg-white p-2  w-full"
               type="text"
               id="fName"
               name="fName"
               placeholder="First Name"
-              required
             />
             <input
               className="bg-white p-2 w-full md:border-l mt-5 md:mt-0 md:border-l-black"
@@ -125,10 +197,23 @@ function DoctorSignup() {
               id="lName"
               name="lName"
               placeholder="Last Name"
-              required
             />
           </div>
-          <div className="mb-4">
+          {errors.fName && errors.lName ? (
+            <span className="error text-red-400">
+              fName and lName are required
+            </span>
+          ) : (
+            <div>
+              {errors.fName && (
+                <span className="error text-red-400">{errors.fName}</span>
+              )}
+              {errors.lName && (
+                <span className="error text-red-400"> {errors.lName}</span>
+              )}
+            </div>
+          )}
+          <div className="my-4">
             <label
               className="block text-gray-700 font-medium mb-2 "
               htmlFor="specialization"
@@ -141,6 +226,11 @@ function DoctorSignup() {
                 <option key={department._id}>{department.department}</option>
               ))}
             </select>
+            {errors.specialization && (
+              <span className="error text-red-400">
+                {errors.specialization}
+              </span>
+            )}
           </div>
           <div className="mb-4   flex flex-row">
             <div className>
@@ -156,8 +246,10 @@ function DoctorSignup() {
                 id="experience"
                 name="experience"
                 placeholder="Experience"
-                required
               />
+              {errors.experience && (
+                <span className="error text-red-400">{errors.experience}</span>
+              )}
             </div>
             <div className="sm:ml-20 ml-5 w-full sm:w-72 mt-1">
               <label
@@ -174,6 +266,9 @@ function DoctorSignup() {
                 placeholder="Location"
                 required
               />
+              {errors.location && (
+                <span className="error text-red-400">{errors.location}</span>
+              )}
             </div>
           </div>
           <div className="mb-4 ">
@@ -191,6 +286,9 @@ function DoctorSignup() {
               placeholder="Add your licence Image"
             />
           </div>
+          {errors.licenceImg && (
+            <span className="error text-red-400">{errors.licenceImg}</span>
+          )}
           <div className="mb-4">
             <label
               className="block text-gray-700 font-medium mb-2 "
@@ -204,8 +302,10 @@ function DoctorSignup() {
               id="number"
               name="number"
               placeholder="Phone Number"
-              required
             />
+            {errors.number && (
+              <span className="error text-red-400">{errors.number}</span>
+            )}
           </div>
           <div className="mb-4">
             <label
@@ -220,8 +320,10 @@ function DoctorSignup() {
               id="email"
               name="email"
               placeholder="Enter Your Email"
-              required
             />
+            {errors.email && (
+              <span className="error text-red-400">{errors.email}</span>
+            )}
           </div>
           <div className="mb-4">
             <label
@@ -236,8 +338,10 @@ function DoctorSignup() {
               id="password"
               name="password"
               placeholder="Enter Your Password"
-              required
             />
+            {errors.password && (
+              <span className="error text-red-400">{errors.password}</span>
+            )}
           </div>
           <div className="mb-4">
             <label
@@ -252,8 +356,12 @@ function DoctorSignup() {
               id="confirmPassword"
               name="confirmPassword"
               placeholder="Confirm Your Password"
-              required
             />
+            {errors.confirmPassword && (
+              <span className="error text-red-400">
+                {errors.confirmPassword}
+              </span>
+            )}
           </div>
           {error && (
             <div className="error text-center w-full p-2 bg-red-600 bg-opacity-30 text-red-500">

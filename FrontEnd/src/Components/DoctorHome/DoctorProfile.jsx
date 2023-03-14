@@ -11,8 +11,7 @@ function DoctorProfile() {
   const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState(null);
   const [departments, setDepartments] = useState([]);
-
-  const [doctorImg, setDoctorImg] = useState(null);
+  const [errors, setErrors] = useState({});
   const [refresh, setRefresh] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -45,76 +44,142 @@ function DoctorProfile() {
   const handleCloseModal = () => {
     setIsOpen(false);
   };
+
+  const validateFields = (data) => {
+    let errors = {};
+
+    // Validate fName
+    if (!data.fName.trim()) {
+      errors.fName = "First name is required";
+    }
+
+    // Validate lName
+    if (!data.lName.trim()) {
+      errors.lName = "Last name is required";
+    }
+
+    // Validate specialization
+    if (!data.specialization) {
+      errors.specialization = "Specialization is required";
+    }
+
+    // Validate experience
+    if (!data.experience) {
+      errors.experience = "experience is required";
+    } else if (parseInt(data.experience) < 0) {
+      errors.experience = "experience not valid";
+    }
+
+    // Validate location
+    if (!data.location) {
+      errors.location = "Location is required";
+    }
+    // gender address
+    if (!data.address) {
+      errors.address = "Address is required";
+    }
+    // Validate number
+    if (!data.number) {
+      errors.number = "Phone number is required";
+    }
+
+    // Validate education
+    if (!data.education) {
+      errors.education = "Education is required";
+    }
+    // Validate doctorImg
+    if (!data.doctorImg) {
+      errors.doctorImg = "Profile  is required";
+    }
+
+    // Validate consultationFees
+    if (!data.consultationFees) {
+      errors.consultationFees = "consultation Fees is required";
+    } else if (data.consultationFees < 0) {
+      errors.consultationFees = "consultation Fees not valid";
+    }
+
+    setErrors(errors);
+
+    // Return true if there are no errors, false otherwise
+    return Object.keys(errors).length === 0;
+  };
   const handleUpdateClient = async (event) => {
+    event.preventDefault();
+
+    let data = new FormData(event.currentTarget);
+    data = {
+      fName: data.get("fName"),
+      lName: data.get("lName"),
+      specialization: data.get("specialization"),
+      experience: data.get("experience"),
+      location: data.get("location"),
+      number: data.get("number"),
+      education: data.get("education"),
+      address: data.get("address"),
+      doctorImg: data.get("doctorImg"),
+      consultationFees: data.get("consultationFees"),
+    };
+    console.log(data, "dataaaaa");
     try {
-      event.preventDefault();
-      setIsLoading(true);
-      setError(null);
-
-      let data = new FormData(event.currentTarget);
-      data = {
-        fName: data.get("fName"),
-        lName: data.get("lName"),
-        specialization: data.get("specialization"),
-        experience: data.get("experience"),
-        location: data.get("location"),
-        number: data.get("number"),
-        education: data.get("education"),
-        address: data.get("address"),
-        doctorImg: data.get("doctorImg"),
-        consultationFees: data.get("consultationFees"),
-      };
-      console.log(data, "dataaaaa");
-      if (data.doctorImg.name) {
-        const dirs = Date.now();
-        const rand = Math.random();
-        const image = data.doctorImg;
-        const imageRef = ref(
-          storage,
-          `/doctorImages/${dirs}${rand}_${image?.name}`
-        );
-        const toBase64 = (image) =>
-          new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(image);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
-          }).catch((err) => {
-            console.log(err);
-          });
-        const imgBase = await toBase64(image);
-        await uploadString(imageRef, imgBase, "data_url").then(async () => {
-          const downloadURL = await getDownloadURL(imageRef);
-          data.doctorImg = downloadURL;
-        });
-      } else {
-        if (Doctor.doctorImg) {
-          data.doctorImg = Doctor.doctorImg;
-        } else {
-          data.doctorImg = "";
-        }
-      }
-
-      axios
-        .patch("/doctor/updateDoctorDetails", data, {
-          headers: { doctortoken: doctorToken },
-        })
-        .then((response) => {
-          const result = response.data;
-          if (result.success) {
-            setRefresh(!refresh);
-            setIsLoading(false);
-            message.success("Your details have been updated ");
-            handleCloseModal();
-          } else {
-            setIsLoading(false);
-            setError(result.message);
-            message.error(result.message).then(() => {
-              setError(null);
+      if (validateFields(data)) {
+        setIsLoading(true);
+        setError(null);
+        if (data.doctorImg.name) {
+          const dirs = Date.now();
+          const rand = Math.random();
+          const image = data.doctorImg;
+          const imageRef = ref(
+            storage,
+            `/doctorImages/${dirs}${rand}_${image?.name}`
+          );
+          const toBase64 = (image) =>
+            new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.readAsDataURL(image);
+              reader.onload = () => resolve(reader.result);
+              reader.onerror = (error) => reject(error);
+            }).catch((err) => {
+              console.log(err);
             });
+          const imgBase = await toBase64(image);
+          await uploadString(imageRef, imgBase, "data_url").then(async () => {
+            const downloadURL = await getDownloadURL(imageRef);
+            data.doctorImg = downloadURL;
+          });
+        } else {
+          if (Doctor.doctorImg) {
+            data.doctorImg = Doctor.doctorImg;
+          } else {
+            data.doctorImg = "";
           }
-        });
-    } catch (error) {}
+        }
+
+        axios
+          .patch("/doctor/updateDoctorDetails", data, {
+            headers: { doctortoken: doctorToken },
+          })
+          .then((response) => {
+            const result = response.data;
+            if (result.success) {
+              setRefresh(!refresh);
+              setIsLoading(false);
+              message.success("Your details have been updated ");
+              handleCloseModal();
+            } else {
+              setIsLoading(false);
+              setError(result.message);
+              message.error(result.message).then(() => {
+                setError(null);
+              });
+            }
+          });
+      }
+    } catch (error) {
+
+      console.log(error);
+      message.error("Somthing went wrong!");
+    }
   };
 
   return (
@@ -226,6 +291,11 @@ function DoctorProfile() {
                         name="fName"
                         defaultValue={Doctor.fName}
                       />
+                      {errors.fName && (
+                        <span className="error text-red-400">
+                          {errors.fName}
+                        </span>
+                      )}
                     </div>
                     <div className="mb-4">
                       <label
@@ -242,6 +312,11 @@ function DoctorProfile() {
                         placeholder="last  Name"
                         defaultValue={Doctor.lName}
                       />
+                      {errors.lName && (
+                        <span className="error text-red-400">
+                          {errors.lName}
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div className="md:flex">
@@ -263,6 +338,11 @@ function DoctorProfile() {
                           </option>
                         ))}
                       </select>
+                      {errors.specialization && (
+                        <span className="error text-red-400">
+                          {errors.specialization}
+                        </span>
+                      )}
                     </div>
                     <div className="mb-4 md:w-6/12">
                       <label
@@ -279,6 +359,11 @@ function DoctorProfile() {
                         placeholder="Education"
                         defaultValue={Doctor.education}
                       />
+                      {errors.education && (
+                        <span className="error text-red-400">
+                          {errors.education}
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div className="md:flex">
@@ -296,6 +381,11 @@ function DoctorProfile() {
                         name="number"
                         defaultValue={Doctor.number}
                       />
+                      {errors.number && (
+                        <span className="error text-red-400">
+                          {errors.number}
+                        </span>
+                      )}
                     </div>
                     <div className="mb-4">
                       <label
@@ -312,6 +402,11 @@ function DoctorProfile() {
                         placeholder="Location"
                         defaultValue={Doctor.location}
                       />
+                      {errors.location && (
+                        <span className="error text-red-400">
+                          {errors.location}
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div className="md:flex">
@@ -329,6 +424,11 @@ function DoctorProfile() {
                         name="experience"
                         defaultValue={Doctor.experience}
                       />
+                      {errors.experience && (
+                        <span className="error text-red-400">
+                          {errors.experience}
+                        </span>
+                      )}
                     </div>
                     <div className="mb-4">
                       <label
@@ -345,6 +445,11 @@ function DoctorProfile() {
                         placeholder="Address"
                         defaultValue={Doctor.address}
                       />
+                      {errors.address && (
+                        <span className="error text-red-400">
+                          {errors.address}
+                        </span>
+                      )}
                     </div>
                   </div>
 
@@ -363,6 +468,11 @@ function DoctorProfile() {
                         name="consultationFees"
                         defaultValue={Doctor.consultationFees}
                       />
+                      {errors.consultationFees && (
+                        <span className="error text-red-400">
+                          {errors.consultationFees}
+                        </span>
+                      )}
                     </div>
                     <div className="mb-4">
                       <label
@@ -371,21 +481,19 @@ function DoctorProfile() {
                       >
                         Image
                       </label>
-                      {/* <div>
-                      <img src={doctorImg ? window.URL.createObjectURL(doctorImg) : null} alt="" />
-                    </div> */}
+
                       <input
                         className="bg-white p-1 rounded-lg w-full"
                         type="file"
                         id="doctorImg"
                         name="doctorImg"
                         placeholder="doctorImg"
-                        // onChange={(e) => {
-                        //   setDoctorImg(e.target.files[0]);
-                        // }}
-                        // value={email}
-                        // onChange={(event) => setEmail(event.target.value)}
                       />
+                      {errors.doctorImg && (
+                        <span className="error text-red-400">
+                          {errors.doctorImg}
+                        </span>
+                      )}
                     </div>
                   </div>
 

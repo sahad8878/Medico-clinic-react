@@ -1,37 +1,26 @@
-
-const  AppointmentModel = require("../model/appointmentModel");
-const DoctorModel = require("../model/doctorModel")
-const ClientModel = require("../model/clientModel")
+const AppointmentModel = require("../model/appointmentModel");
+const DoctorModel = require("../model/doctorModel");
+const ClientModel = require("../model/clientModel");
 
 const moment = require("moment");
 
-
-
-// post appointments 
+// post appointments
 const verifyAppointment = async (req, res) => {
   try {
-    const { date, timeId, doctor,} = req.body;
-    const client = req.body.userId
-    console.log(date, timeId, doctor, client);
+    const { date, timeId, doctor } = req.body;
+    const client = req.body.userId;
     const selectedDay = moment(date).format("dddd");
-    // const query = {
-    //   _id: doctor,
-    //   "availablity.day": selectedDay,
-    //   "availablity.time._id": timeId,
-    // };
 
-    // const projection = {
-    //   "availablity.$": 1,
-    // };
-
-    DoctorModel.findOne({
-      _id: doctor,
-      "availablity.day": selectedDay,
-      "availablity.time._id": timeId,
-    }, {
-      "availablity.$": 1,
-    }).
-    then(async (doctor) => {
+    DoctorModel.findOne(
+      {
+        _id: doctor,
+        "availablity.day": selectedDay,
+        "availablity.time._id": timeId,
+      },
+      {
+        "availablity.$": 1,
+      }
+    ).then(async (doctor) => {
       if (!doctor) {
         res.status(200).send({
           message: "Doctor not found",
@@ -58,7 +47,7 @@ const verifyAppointment = async (req, res) => {
         time: toTime,
         client: client,
       });
-      console.log(allreadyBooked.length,"boooked");
+      console.log(allreadyBooked.length, "boooked");
       if (allreadyBooked.length !== 0) {
         res.status(200).send({
           message: "You have already booked this slot",
@@ -80,8 +69,13 @@ const verifyAppointment = async (req, res) => {
         });
         return;
       }
-         
-      res.send({schedulTime:toTime,token:appointmentsCount + 1, message: "Appointment verifyd.", success: true });
+
+      res.send({
+        schedulTime: toTime,
+        token: appointmentsCount + 1,
+        message: "Appointment verifyd.",
+        success: true,
+      });
     });
   } catch (error) {
     console.log(error);
@@ -92,63 +86,56 @@ const verifyAppointment = async (req, res) => {
   }
 };
 
-
-
-const postAppointment = async(req, res) => {
+// post appointments
+const postAppointment = async (req, res) => {
   try {
-      console.log(req.body,"post appoijnmtnet ");
-      const { date, time, doctor,token ,consultationFees } = req.body;
-  const client =  req.body.userId
-  
-  
-    const newAppointment = new AppointmentModel({
-          date,
-          time,
-          doctor,
-           token,
-           status:"confirmed",
-          consultationFees,
-          client,
-        });
-        console.log(newAppointment,"new appointmentsssssss");
-        await newAppointment.save();
-        res.send({ message: "Appointment succeffully completed.", success: true });
-  }catch(error) {
-      console.log(error);
-      res.status(500).send({
-        success: false,
-        message: `patchConfirmAppointment controller ${error.message}`,
-      });
-  
-  }
-  }
+    console.log(req.body, "post appoijnmtnet ");
+    const { date, time, doctor, token, consultationFees } = req.body;
+    const client = req.body.userId;
 
-// check available slotes 
+    const newAppointment = new AppointmentModel({
+      date,
+      time,
+      doctor,
+      token,
+      status: "confirmed",
+      consultationFees,
+      client,
+    });
+    console.log(newAppointment, "new appointmentsssssss");
+    await newAppointment.save();
+    res.send({ message: "Appointment succeffully completed.", success: true });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: `patchConfirmAppointment controller ${error.message}`,
+    });
+  }
+};
+
+// check available slotes
 
 const availableSlot = async (req, res) => {
   try {
     const { doctorId, selectedDay } = req.params;
     console.log(doctorId, selectedDay);
-    // const selectedDay = moment(selectedDate).format("dddd"); // convert selected date to day
     const doctor = await DoctorModel.findById(doctorId);
     console.log(doctor);
     const availability = doctor.availablity.find(
       (day) => day.day === selectedDay
     );
 
-    console.log(availability);
     if (!availability) {
       res.status(200).send({
         message: "Doctor is not available on this day.",
         success: false,
       });
       return;
-      // return res.status(404).json({ message: 'Doctor is not available on this day',success: false });
     }
     // return availability for selected day
     res.status(201).send({ availability, success: true });
 
-    // res.json(availableSlots);
   } catch (error) {
     console.log(error);
     res.status(500).send({
@@ -158,98 +145,84 @@ const availableSlot = async (req, res) => {
   }
 };
 
+// get confirmed appointments
+const getConfirmedAppointments = async (req, res) => {
+  try {
+    const clientId = req.body.userId;
 
-
-
-
-
-
-
-
-
-
-
-
-const getConfirmedAppointments = async(req, res) => {
-try{
-
-    const clientId = req.body.userId
-
-const confirmedAppointments = await AppointmentModel.find({client:clientId}) .populate("doctor")
-.sort({ updatedAt:-1 });
-if(confirmedAppointments){
-
-  res.status(201).send({confirmedAppointments, success: true });
-}else{
-  return res
-  .status(200)
-  .send({ message: "No notifications Exist  ", success: false });
-}
-
-}catch(error){
+    const confirmedAppointments = await AppointmentModel.find({
+      client: clientId,
+    })
+      .populate("doctor")
+      .sort({ updatedAt: -1 });
+    if (confirmedAppointments) {
+      res.status(201).send({ confirmedAppointments, success: true });
+    } else {
+      return res
+        .status(200)
+        .send({ message: "No notifications Exist  ", success: false });
+    }
+  } catch (error) {
     console.log(error);
     res.status(500).send({
       success: false,
       message: `getConfirmedAppointments controller ${error.message}`,
     });
+  }
+};
 
-}
-
-}
-
-
+// cancel appointments
 const patchCancelAppointment = async (req, res) => {
-  try{
-  const appointment= await AppointmentModel.findByIdAndUpdate(
-    req.body.id,
-    { status: "cancelled" },
-    { new: true }
-  );
-     console.log(appointment,"apooooooooooooooooooooooooooooo"); 
-     if (appointment) {
-     
-    const client = await ClientModel.findById(appointment.client)
+  try {
+    const appointment = await AppointmentModel.findByIdAndUpdate(
+      req.body.id,
+      { status: "cancelled" },
+      { new: true }
+    );
 
-    if(client.wallet === 0){
-    await  ClientModel.findByIdAndUpdate( appointment.client,{wallet:appointment.consultationFees},{ new: true })
-    }else{
+    if (appointment) {
+      const client = await ClientModel.findById(appointment.client);
 
-      await ClientModel.findOneAndUpdate(
-        { _id: appointment.client },
-        {
-          $inc: {
-            wallet: appointment.consultationFees,
-          },
-        }
-      );
+      if (client.wallet === 0) {
+        await ClientModel.findByIdAndUpdate(
+          appointment.client,
+          { wallet: appointment.consultationFees },
+          { new: true }
+        );
+      } else {
+        await ClientModel.findOneAndUpdate(
+          { _id: appointment.client },
+          {
+            $inc: {
+              wallet: appointment.consultationFees,
+            },
+          }
+        );
+      }
+
+      res.status(201).send({
+        message: ` Booking cancelled successfull check your wallet  `,
+        success: true,
+      });
+    } else {
+      return res.status(200).send({
+        message: `Patient  doesnot exist`,
+        success: false,
+      });
     }
-  
-
-    res.status(201).send({
-      message: ` Booking cancelled successfull check your wallet  `,
-      success: true,
-    });
-  } else {
-    return res.status(200).send({
-      message: `Patient  doesnot exist`,
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
       success: false,
+      message: `patchCancelAppointment controller ${error.message}`,
     });
   }
-} catch (error) {
-  console.log(error);
-  res.status(500).send({
-    success: false,
-    message: `patchCancelAppointment controller ${error.message}`,
-  });
-}
-}
+};
 
 module.exports = {
   availableSlot,
   verifyAppointment,
   postAppointment,
-  
-    getConfirmedAppointments,
-    patchCancelAppointment
-
-}
+  getConfirmedAppointments,
+  patchCancelAppointment,
+};

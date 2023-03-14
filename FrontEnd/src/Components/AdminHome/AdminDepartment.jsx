@@ -14,6 +14,8 @@ function AdminDepartment() {
   const [departments, setDepartments] = useState([]);
   const [depImg, setDepImg] = useState(null);
   const [refresh, setRefresh] = useState(false);
+  const [errors, setErrors] = useState({});
+
   const admin = JSON.parse(localStorage.getItem("adminToken"));
   const adminToken = admin.adminToken;
   useEffect(() => {
@@ -34,65 +36,89 @@ function AdminDepartment() {
     setIsOpen(false);
     setDepImg(null);
   };
+  const validateFields = (data) => {
+    let errors = {};
 
+    // Validate department
+    if (!data.department) {
+      errors.department = "Department is required";
+    }
+
+    // Validate description
+    if (!data.description) {
+      errors.description = "description is required";
+    }
+
+    // Validate departmentImg
+    if (!data.departmentImg) {
+      errors.departmentImg = "departmentImg is required";
+    }
+
+    setErrors(errors);
+
+    // Return true if there are no errors, false otherwise
+    return Object.keys(errors).length === 0;
+  };
   const handleDepartments = async (event) => {
+    event.preventDefault();
+
+    let data = new FormData(event.currentTarget);
+    data = {
+      department: data.get("department"),
+      description: data.get("description"),
+      departmentImg: depImg,
+    };
+
     try {
-      event.preventDefault();
-      setError(null);
-      setIsLoading(true);
-
-      let data = new FormData(event.currentTarget);
-      data = {
-        department: data.get("department"),
-        description: data.get("description"),
-        departmentImg: depImg,
-      };
-
-      if (data.departmentImg.name) {
-        const date = Date.now();
-        const rand = Math.random();
-        const departmentImg = data.departmentImg;
-        const imageRef = ref(
-          storage,
-          `/departmentImages/${date}${rand}_${departmentImg?.name}`
-        );
-        const toBase64 = (departmentImg) =>
-          new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(departmentImg);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
-          }).catch((err) => {
-            console.log(err);
-          });
-        const imgBase = await toBase64(departmentImg);
-        await uploadString(imageRef, imgBase, "data_url").then(async () => {
-          const downloadURL = await getDownloadURL(imageRef);
-          data.departmentImg = downloadURL;
-        });
-      } else {
-        data.departmentImg = null;
-      }
-      axios
-        .post("/admin/postDepartments", data, {
-          headers: { admintoken: adminToken },
-        })
-        .then((response) => {
-          const result = response.data;
-          if (result.success) {
-            message.success("new department Added");
-            setIsLoading(false);
-            setDepImg(null);
-            handleCloseModal();
-            setRefresh(!refresh);
-          } else {
-            setError(result.message);
-            setIsLoading(false);
-            message.error(result.message).then(() => {
-              setError(null);
+      if (validateFields(data)) {
+        setError(null);
+        setIsLoading(true);
+        if (data.departmentImg.name) {
+          const date = Date.now();
+          const rand = Math.random();
+          const departmentImg = data.departmentImg;
+          const imageRef = ref(
+            storage,
+            `/departmentImages/${date}${rand}_${departmentImg?.name}`
+          );
+          const toBase64 = (departmentImg) =>
+            new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.readAsDataURL(departmentImg);
+              reader.onload = () => resolve(reader.result);
+              reader.onerror = (error) => reject(error);
+            }).catch((err) => {
+              console.log(err);
             });
-          }
-        });
+          const imgBase = await toBase64(departmentImg);
+          await uploadString(imageRef, imgBase, "data_url").then(async () => {
+            const downloadURL = await getDownloadURL(imageRef);
+            data.departmentImg = downloadURL;
+          });
+        } else {
+          data.departmentImg = null;
+        }
+        axios
+          .post("/admin/postDepartments", data, {
+            headers: { admintoken: adminToken },
+          })
+          .then((response) => {
+            const result = response.data;
+            if (result.success) {
+              message.success("new department Added");
+              setIsLoading(false);
+              setDepImg(null);
+              handleCloseModal();
+              setRefresh(!refresh);
+            } else {
+              setError(result.message);
+              setIsLoading(false);
+              message.error(result.message).then(() => {
+                setError(null);
+              });
+            }
+          });
+      }
     } catch (error) {
       console.log(error);
       message.error("Somthing went wrong!");
@@ -105,10 +131,6 @@ function AdminDepartment() {
         <h1 className="font-semibold pl-5 text-center sm:text-left mb-2 pb-9 font-serif text-2xl">
           Departments
         </h1>
-        {/* <div className=" text-center ">
-         <h1 className="bg-[#194569] flex justify-center w-[100px] rounded-lg text-white py-2 px-4 text-center">Add Department </h1>
-             </div> */}
-
         {isLoading ? (
           <div className=" flex justify-center">
             <InfinitySpin width="200" color="#194569" />
@@ -188,6 +210,11 @@ function AdminDepartment() {
                       name="department"
                       placeholder="Department Name"
                     />
+                    {errors.department && (
+                      <span className="error text-red-400">
+                        {errors.department}
+                      </span>
+                    )}
                   </div>
                   <div className="mb-4">
                     <label
@@ -212,6 +239,11 @@ function AdminDepartment() {
                         setDepImg(e.target.files[0]);
                       }}
                     />
+                    {errors.departmentImg && (
+                      <span className="error text-red-400">
+                        {errors.departmentImg}
+                      </span>
+                    )}
                   </div>
                   <div className="mb-4">
                     <label
@@ -226,6 +258,11 @@ function AdminDepartment() {
                       name="description"
                       placeholder="Add Discription"
                     />
+                    {errors.description && (
+                      <span className="error text-red-400">
+                        {errors.description}
+                      </span>
+                    )}
                   </div>
                   {error && (
                     <div className="error text-center w-full p-2 bg-red-600 bg-opacity-30 text-red-500">

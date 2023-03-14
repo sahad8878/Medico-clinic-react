@@ -119,14 +119,14 @@ function DoctorTimeSchedule() {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Selected day:", selectedDay);
-    console.log("Timings:", timings);
+  
     let filled = true;
     for (let i = 0; i < timings.length; i++) {
+      const slots = parseInt(timings[i].slots)
       if (
         timings[i].startTime == "" ||
         timings[i].endTime == "" ||
-        timings[i].slots == ""
+        isNaN(slots) || slots < 0
       ) {
         filled = false;
       }

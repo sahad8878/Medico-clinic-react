@@ -15,7 +15,7 @@ function ClientProfile() {
   const [error, setError] = useState(null);
   const [refresh, setRefresh] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [errors, setErrors] = useState({});
   const [addressModal, setAddressModal] = useState(false);
 
   const clientloc = JSON.parse(localStorage.getItem("clientToken"));
@@ -43,17 +43,65 @@ function ClientProfile() {
   const handleCloseModal = () => {
     setIsOpen(false);
   };
+  const validateFields = (data) => {
+    let errors = {};
+
+    // Validate fName
+    if (!data.fName.trim()) {
+      errors.fName = "First name is required";
+    }
+
+    // Validate lName
+    if (!data.lName.trim()) {
+      errors.lName = "Last name is required";
+    }
+
+    // Validate age
+    if (!data.age) {
+      errors.age = "Age is required";
+    } else if (data.age < 0) {
+      errors.age = "Age not valid";
+    }
+
+    // Validate number
+    if (!data.number) {
+      errors.number = "Phone number is required";
+    }
+
+    // Validate address
+    if (!data.address) {
+      errors.address = "Address is required";
+    }
+
+       // Validate clientImage
+    if (!data.clientImage) {
+      errors.clientImage = "profile image is required";
+    }
+    
+    setErrors(errors);
+
+    // Return true if there are no errors, false otherwise
+    return Object.keys(errors).length === 0;
+  };
 
   const handleUpdateAddress = async (event) => {
     event.preventDefault();
-    setIsLoading(true);
-    setError(null);
+    
     let data = new FormData(event.currentTarget);
     data = {
+      fName: data.get("fName"),
+      lName: data.get("lName"),
+      number: data.get("number"),
       address: data.get("address"),
       clientImage: data.get("clientImage"),
       age: data.get("age"),
     };
+
+
+      try {
+       if (validateFields(data)) { 
+        setIsLoading(true);
+    setError(null);
     if (data.clientImage.name) {
       const dirs = Date.now();
       const rand = Math.random();
@@ -103,6 +151,11 @@ function ClientProfile() {
           });
         }
       });
+    }
+      } catch (error) {
+        console.log(error);
+      message.error("Somthing went wrong!");
+      }
   };
   return (
     <>
@@ -266,7 +319,7 @@ function ClientProfile() {
 
       {/* Address Modal */}
       {addressModal && (
-        <div className="fixed z-50 inset-0 overflow-y-auto">
+        <div className="fixed z-[200] inset-0 overflow-y-auto">
           <div className="flex items-center justify-center min-h-screen px-4">
             <div
               className="fixed inset-0 transition-opacity"
@@ -284,7 +337,70 @@ function ClientProfile() {
               </div>
               <div className=" bg-[#EDF4FE]    px-4 pt-5 pb-4">
                 <form component="form" onSubmit={handleUpdateAddress}>
-                  {" "}
+                  {" "}  <div className="md:flex">
+                    <div className=" md:mr-4 mb-4">
+                      <label
+                        className="block text-gray-700 font-medium mb-2 "
+                        htmlFor="fName"
+                      >
+                        First Name
+                      </label>
+                      <input
+                        className="bg-white p-2 rounded-lg w-full"
+                        type="text"
+                        id="fName"
+                        name="fName"
+                        defaultValue={client.fName}
+                      />
+                      {errors.fName && (
+                        <span className="error text-red-400">
+                          {errors.fName}
+                        </span>
+                      )}
+                    </div>
+                    <div className="mb-4">
+                      <label
+                        className="block text-gray-700 font-medium mb-2 "
+                        htmlFor="lName"
+                      >
+                        Last Name
+                      </label>
+                      <input
+                        className="bg-white p-2 rounded-lg w-full"
+                        type="text"
+                        id="lName"
+                        name="lName"
+                        placeholder="last  Name"
+                        defaultValue={client.lName}
+                      />
+                      {errors.lName && (
+                        <span className="error text-red-400">
+                          {errors.lName}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="mb-4">
+                    <label
+                      className="block text-gray-700 font-medium mb-2 "
+                      htmlFor="number"
+                    >
+                      Phone Number
+                    </label>
+
+                    <input
+                      className="bg-white p-2  w-full"
+                      type="number"
+                      id="number"
+                      name="number"
+                      defaultValue={client.number}        
+                    />
+                    {errors.number && (
+                        <span className="error text-red-400">
+                          {errors.number}
+                        </span>
+                      )}
+                  </div>
                   <div className="flex">
                     <div className="mb-4">
                       <label
@@ -299,9 +415,12 @@ function ClientProfile() {
                         id="clientImage"
                         name="clientImage"
                         placeholder="Add Your Profile Image"
-                        // value={password}
-                        // onChange={(event) => setPassword(event.target.value)}
                       />
+                      {errors.clientImage && (
+                        <span className="error text-red-400">
+                          {errors.clientImage}
+                        </span>
+                      )}
                     </div>
                     <div className=" ml-4 mb-4">
                       <label
@@ -317,10 +436,12 @@ function ClientProfile() {
                         name="age"
                         defaultValue={client.age}
                         placeholder="Age"
-                        // value={number}
-                        // onChange={(event) => setNumber(event.target.value)}
-                        required
                       />
+                      {errors.age && (
+                        <span className="error text-red-400">
+                          {errors.age}
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div className="mb-4">
@@ -337,10 +458,12 @@ function ClientProfile() {
                       id="address"
                       name="address"
                       defaultValue={client.address}
-                      // value={email}
-                      // onChange={(event) => setEmail(event.target.value)}
-                      required
                     />
+                    {errors.address && (
+                        <span className="error text-red-400">
+                          {errors.address}
+                        </span>
+                      )}
                   </div>
                   {error && (
                     <div className="text-center error text-red-500 w-full bg-red-500 bg-opacity-50 ">
