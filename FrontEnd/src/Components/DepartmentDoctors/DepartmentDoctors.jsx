@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { InfinitySpin } from "react-loader-spinner";
-import { FiChevronRight, FiChevronLeft, FiLogIn } from "react-icons/fi";
 import Pagination from "@mui/material/Pagination";
 import axios from "../../Axios/Axios";
 import SingleDoctor from "./SingleDoctor";
-import NoData from "../../Assets/NoData.png";
+
 
 function DepartmentDoctors() {
   const [doctors, setDoctors] = useState([]);
@@ -31,7 +30,6 @@ function DepartmentDoctors() {
             { headers: { accesstoken: clientToken } }
           )
           .then((response) => {
-            console.log(response);
             setDoctors(response.data.data);
             setCurrentPage(response.data.currentPage);
             setTotalPages(response.data.totalPages);
@@ -184,7 +182,7 @@ function DepartmentDoctors() {
                 )}
               </div>
               <div className=" flex justify-center py-5 ">
-                <div>
+                <div >
                   {totalPages !== 0 && (
                     <Pagination
                       count={totalPages}

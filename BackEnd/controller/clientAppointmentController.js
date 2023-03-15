@@ -8,9 +8,9 @@ const moment = require("moment");
 const verifyAppointment = async (req, res) => {
   try {
     const { date, timeId, doctor } = req.body;
+    console.log(req.body);
     const client = req.body.userId;
     const selectedDay = moment(date).format("dddd");
-
     DoctorModel.findOne(
       {
         _id: doctor,

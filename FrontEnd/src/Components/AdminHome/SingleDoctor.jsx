@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { message } from "antd";
+import { message,Modal } from "antd";
 import axios from "../../Axios/Axios";
 import Moment from "react-moment";
 
@@ -17,8 +17,13 @@ function SingleDoctor({ doctor, refresh, setRefresh }) {
 
   // Block doctor
   const blockDoctor = (id) => {
-    console.log(id, "unblock");
-    axios
+    Modal.confirm({
+      title: 'Are you sure you want to Block this Doctor?',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        axios
       .patch(
         "/admin/blockDoctor",
         { id },
@@ -33,26 +38,41 @@ function SingleDoctor({ doctor, refresh, setRefresh }) {
           message.error(response.data.message);
         }
       });
+      },
+      onCancel() {},
+    });
+
+   
   };
 
   // UnBlock Doctor
   const unBlockDoctor = (id) => {
-    console.log(id, "unblock");
-    axios
-      .patch(
-        "/admin/unBlockDoctor",
-        { id },
-        { headers: { admintoken: adminToken } }
-      )
-      .then((response) => {
-        if (response.data.success) {
-          console.log(response.data);
-          message.success(response.data.message);
-          setRefresh(!refresh);
-        } else {
-          message.error(response.data.message);
-        }
-      });
+    
+    Modal.confirm({
+      title: 'Are you sure you want to unBlock this Doctor?',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        axios
+        .patch(
+          "/admin/unBlockDoctor",
+          { id },
+          { headers: { admintoken: adminToken } }
+        )
+        .then((response) => {
+          if (response.data.success) {
+            console.log(response.data);
+            message.success(response.data.message);
+            setRefresh(!refresh);
+          } else {
+            message.error(response.data.message);
+          }
+        });
+      },
+      onCancel() {},
+    });
+   
   };
 
   return (

@@ -7,11 +7,20 @@ const AppointmentModel = require("../model/appointmentModel");
 
 const getPendingDoctors = async (req, res) => {
   try {
-    const pendingDoctors = await DoctorModel.find({ status: "pending" }).sort({
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+
+    const pendingDoctors = await DoctorModel.find({status:"pending"}).sort({
       updatedAt: -1,
-    });
+    })
+    .skip((page - 1) * limit)
+    .limit(limit);
+
     if (pendingDoctors) {
-      res.status(201).send({ pendingDoctors, success: true });
+      res.status(201).send({ pendingDoctors,
+        currentPage: page,
+        totalPages: Math.ceil((await DoctorModel.countDocuments({status:"pending"})) / limit),
+        success: true });
     } else {
       return res
         .status(200)
@@ -89,11 +98,22 @@ const rejectDoctorAppointment = async (req, res) => {
 
 const getDoctorsDetails = async (req, res) => {
   try {
-    const doctors = await DoctorModel.find({
-      status: { $nin: ["pending", "rejected"] },
-    }).sort({ updatedAt: -1 });
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const query = {
+      status: { $nin: ["pending", "rejected"] }
+    };
+
+    const doctors = await DoctorModel.find(query)
+    .sort({ updatedAt: -1 })
+    .skip((page - 1) * limit)
+    .limit(limit);
+
     if (doctors) {
-      res.status(201).send({ doctors, success: true });
+      res.json({ doctors,
+        currentPage: page,
+        totalPages: Math.ceil((await DoctorModel.countDocuments(query)) / limit),
+         success: true });
     } else {
       return res.status(200).send({ message: "No doctors ", success: false });
     }
@@ -163,9 +183,19 @@ const unBlockDoctor = async (req, res) => {
 
 const getClientDetails = async (req, res) => {
   try {
-    const clients = await ClientModel.find().sort({ updatedAt: -1 });
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const clients = await ClientModel.find()
+    .sort({ updatedAt: -1 })
+    .skip((page - 1) * limit)
+    .limit(limit);
+
     if (clients) {
-      res.status(201).send({ clients, success: true });
+      res.json({ clients,
+        currentPage: page,
+        totalPages: Math.ceil((await ClientModel.countDocuments()) / limit),
+        success: true });
     } else {
       return res.status(200).send({ message: "No Clients ", success: false });
     }
@@ -389,16 +419,24 @@ const putEditDepartment = async (req, res) => {
 
 const getAllAppointments = async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
     const appointments = await AppointmentModel.find()
       .populate("client")
       .populate("doctor")
-      .sort({ updatedAt: 1 });
+      .sort({ updatedAt: 1 })
+      .skip((page - 1) * limit)
+    .limit(limit);
+
     if (!appointments) {
       return res
         .status(200)
         .send({ message: "No Appointments exist ", success: false });
     } else {
-      res.status(201).send({ appointments, success: true });
+      res.status(201).send({ appointments,
+        currentPage: page,
+        totalPages: Math.ceil((await AppointmentModel.countDocuments()) / limit),
+        success: true });
     }
   } catch (error) {
     console.log(error);
