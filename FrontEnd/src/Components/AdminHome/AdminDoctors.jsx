@@ -13,7 +13,7 @@ function AdminDoctors() {
   const adminToken = admin.adminToken;
   useEffect(() => {
     axios
-      .get(`/admin/getDoctorsDetails?page=${currentPage}&limit=5`, { headers: { admintoken: adminToken } })
+      .get(`/admin/getDoctorsDetails?page=${currentPage}&limit=2`, { headers: { admintoken: adminToken } })
       .then((response) => {
         setdoctors(response.data.doctors);
         setCurrentPage(response.data.currentPage);
